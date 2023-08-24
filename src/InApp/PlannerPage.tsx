@@ -103,10 +103,10 @@ function Task({
       />
 
       <div className="flex flex-row flex-wrap sm:flex-nowrap items-center justify-between sm:justify-normal w-[calc(100%-1.5rem-0.5rem)]">
-        <div className="flex-shrink-0 sm:basis-24 sm:text-center">
+        <div className="flex-shrink-0 sm:basis-24">
           <button
             className={classNames(
-              "text-xs font-light text-right button sm:text-sm",
+              "text-xs font-light sm:text-center text-right button sm:text-sm",
               { "font-bold text-red-700": taskIsLate }
             )}
           >
