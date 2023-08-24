@@ -16,3 +16,19 @@
 .without-ring {
   @apply focus:ring-0 focus:ring-offset-0  focus-visible:outline-none;
 }
+
+.button {
+  @apply p-1 border border-transparent rounded-lg hover:border-gray-400 focus:border-gray-300 focus-within:border-gray-300 animated;
+}
+
+.sidemenu-button {
+  @apply button focus:border-transparent focus-within:border-transparent;
+}
+
+.sidemenu-button-active {
+  @apply sidemenu-button bg-gray-200;
+}
+
+.animated {
+  @apply transition duration-150 ease-in-out;
+}
