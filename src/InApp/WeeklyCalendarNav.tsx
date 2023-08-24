@@ -124,7 +124,7 @@ function CalendarDayItem({ date }: { date: Dayjs }) {
         classNames(
           "flex flex-row grow items-center justify-center opacity-40 hover:opacity-90 animated",
           {
-            "opacity-100": isActive,
+            "!opacity-100": isActive,
             "w-18": isToday,
           }
         )

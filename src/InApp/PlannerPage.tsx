@@ -107,7 +107,7 @@ function Task({
           <button
             className={classNames(
               "text-xs font-light sm:text-center text-right button sm:text-sm",
-              { "font-bold text-red-700": taskIsLate }
+              { "!font-bold text-red-700": taskIsLate }
             )}
           >
             {dateFormatted} <br className="hidden sm:block" />
