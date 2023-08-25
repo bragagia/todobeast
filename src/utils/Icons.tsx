@@ -1,8 +1,16 @@
 // Icons from Heroicons
 
-import classNames from "classnames";
+export const IconMap: {
+  [key: string]: () => JSX.Element;
+} = {
+  calendar: IconCalendar,
+  burger: IconBurger,
+  inbox: IconInbox,
+  archive: IconArchive,
+  computer: IconComputer,
+};
 
-export function IconCalendar({ mini }: { mini?: boolean }) {
+export function IconCalendar() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +18,7 @@ export function IconCalendar({ mini }: { mini?: boolean }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
@@ -40,7 +48,7 @@ export function IconBurger() {
   );
 }
 
-export function IconInbox({ mini }: { mini?: boolean }) {
+export function IconInbox() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +56,7 @@ export function IconInbox({ mini }: { mini?: boolean }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
@@ -59,7 +67,7 @@ export function IconInbox({ mini }: { mini?: boolean }) {
   );
 }
 
-export function IconChevronLeft({ mini }: { mini?: boolean }) {
+export function IconChevronLeft() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +75,7 @@ export function IconChevronLeft({ mini }: { mini?: boolean }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
@@ -78,7 +86,7 @@ export function IconChevronLeft({ mini }: { mini?: boolean }) {
   );
 }
 
-export function IconChevronRight({ mini }: { mini?: boolean }) {
+export function IconChevronRight() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +94,7 @@ export function IconChevronRight({ mini }: { mini?: boolean }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
@@ -97,7 +105,7 @@ export function IconChevronRight({ mini }: { mini?: boolean }) {
   );
 }
 
-export function IconPlus({ mini }: { mini?: boolean }) {
+export function IconPlus() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +113,7 @@ export function IconPlus({ mini }: { mini?: boolean }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
@@ -116,7 +124,7 @@ export function IconPlus({ mini }: { mini?: boolean }) {
   );
 }
 
-export function IconCheck({ mini }: { mini?: boolean }) {
+export function IconCheck() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +132,7 @@ export function IconCheck({ mini }: { mini?: boolean }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
@@ -135,13 +143,13 @@ export function IconCheck({ mini }: { mini?: boolean }) {
   );
 }
 
-export function IconBug({ mini }: { mini?: boolean }) {
+export function IconBug() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         fillRule="evenodd"
@@ -152,7 +160,7 @@ export function IconBug({ mini }: { mini?: boolean }) {
   );
 }
 
-export function IconSettings({ mini }: { mini?: boolean }) {
+export function IconSettings() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -160,12 +168,50 @@ export function IconSettings({ mini }: { mini?: boolean }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames({ "w-6 h-6": !mini, "w-4 h-4": mini })}
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+      />
+    </svg>
+  );
+}
+
+export function IconArchive() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="w-6 h-6"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"
+      />
+    </svg>
+  );
+}
+
+export function IconComputer() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="w-6 h-6"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"
       />
     </svg>
   );

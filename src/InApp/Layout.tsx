@@ -1,7 +1,8 @@
 import classNames from "classnames";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { NavContent, SidemenuContent } from "./Nav";
+import { MobileNavContent } from "./Components/MobileNavContent";
+import { SidebarContent } from "./Components/SidebarContent";
 
 export function InAppLayout() {
   const [sidebarOpened, setSidebarOpened] = useState(false);
@@ -17,7 +18,7 @@ export function InAppLayout() {
   return (
     <div className="inter">
       <nav className="fixed bottom-0 z-20 w-screen h-16 text-black bg-gray-100 sm:hidden">
-        <NavContent
+        <MobileNavContent
           openSidebarHandler={() => setSidebarOpened(!sidebarOpened)}
         />
       </nav>
@@ -31,7 +32,7 @@ export function InAppLayout() {
           }
         )}
       >
-        <SidemenuContent />
+        <SidebarContent />
       </div>
 
       <div className="pb-16 sm:pb-0 w-full sm:w-[calc(100vw-12rem)] md:w-[calc(100vw-16rem)] sm:ml-48 md:ml-64">
