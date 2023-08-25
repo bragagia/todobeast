@@ -34,7 +34,7 @@ export function SidemenuItem({
         {Icon ? (
           <div
             className={classNames(
-              "flex-shrink-0 w-5 h-5 flex items-center",
+              "flex-shrink-0 w-4 h-4 flex items-center",
               iconColor
             )}
           >
@@ -42,7 +42,7 @@ export function SidemenuItem({
           </div>
         ) : (
           /* If no emoji, still keep element to preserve spacing */
-          <div className="flex-shrink-0 w-5 text-center">{emoji}</div>
+          <div className="flex-shrink-0 w-4 text-center">{emoji}</div>
         )}
 
         <span className="flex-1 ml-3 font-light text-gray-800 whitespace-nowrap">

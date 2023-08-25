@@ -32,18 +32,16 @@ export function SidebarContent() {
         className="hidden sm:list-item"
         Icon={IconCalendar}
         iconColor="text-green-600"
-        chip="5"
         active
       >
         Today
       </SidemenuItem>
-      {/* <SidemenuItem Icon={CiCalendar} iconColor="text-green-600">
-            Coming
-          </SidemenuItem> */}
 
       <h3 className="mt-8 mb-2 text-sm font-medium text-gray-500">Projects</h3>
+
       {dataProjects.map((project) => (
         <SidemenuItem
+          key={project.id}
           to={UrlProject(project.id, project.name)}
           Icon={IconMap[project.icon]}
           emoji={project.icon}

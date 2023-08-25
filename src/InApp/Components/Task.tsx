@@ -1,8 +1,9 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { dataTasks, dataProjects } from "../../FakeData";
-import { IconMap, IconCheck } from "../../utils/Icons";
+import { dataTasks } from "../../FakeData";
+import { IconCheck } from "../../utils/Icons";
+import { ProjectName } from "./ProjectName";
 
 export function Task({ taskId }: { taskId: number }) {
   const [task, setTask] = useState(dataTasks[taskId]);
@@ -17,10 +18,6 @@ export function Task({ taskId }: { taskId: number }) {
 
   let dateFormatted = "Today";
   let dateFormattedSecondLine = "";
-
-  let taskProject = dataProjects[task.projectId];
-  let TaskProjectIcon = IconMap[taskProject.icon];
-  let taskProjectEmoji = !TaskProjectIcon ? taskProject.icon : "";
 
   if (!taskDate.isSame(today)) {
     dateFormatted = taskDate.format("dddd");
@@ -38,11 +35,7 @@ export function Task({ taskId }: { taskId: number }) {
   }
 
   return (
-    <div
-      id={"task-" + taskId}
-      key={"task-" + taskId}
-      className="hover:bg-gray-50 animated"
-    >
+    <div id={"task-" + taskId} className="hover:bg-gray-50 animated">
       <div
         className={classNames(
           "flex flex-row items-center w-full gap-2 py-2 border-b border-gray-200 rounded sm:py-1",
@@ -73,18 +66,12 @@ export function Task({ taskId }: { taskId: number }) {
           </div>
 
           <div className="flex-shrink-0 sm:w-24">
-            <button className="flex flex-row items-center w-full gap-1 text-xs font-light sm:text-sm sm:justify-center button">
-              <span
-                className={classNames(
-                  "w-4 h-4 flex items-center",
-                  taskProject.icon_color
-                )}
-              >
-                {TaskProjectIcon ? <TaskProjectIcon /> : taskProjectEmoji}
-              </span>
-              <span className="overflow-auto break-words hyphens-auto">
-                {taskProject.name}
-              </span>
+            <button className="w-full text-xs font-light sm:text-sm button">
+              <ProjectName
+                projectId={task.projectId}
+                className="sm:justify-center"
+                iconClassName="w-4 h-4"
+              />
             </button>
           </div>
 

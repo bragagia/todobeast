@@ -1,11 +1,10 @@
 import dayjs, { Dayjs } from "dayjs";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { InAppLayout } from "./InApp/Layout";
+import { PlannerPage } from "./InApp/Planner/Page";
 import { ProjectPage } from "./InApp/Project/Page";
 import { ProjectListPage } from "./InApp/ProjectsList/Page";
 import { areSameDay } from "./utils/Dates";
-import { PlannerPage } from "./InApp/Planner/Page";
-import { PlannerTasksPage } from "./InApp/Planner/PlannerTasks/Page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -14,14 +13,10 @@ export const appRouter = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/planner" /> },
       {
-        path: "planner/",
+        path: "planner/today/",
         element: <PlannerPage />,
-        children: [
-          { index: true, element: <Navigate to="/planner/today" /> },
-          { path: "today/", element: <PlannerTasksPage /> },
-          { path: ":year/:month/:day", element: <PlannerTasksPage /> },
-        ],
       },
+      { path: "planner/:year/:month/:day", element: <PlannerPage /> },
       {
         path: "projects/",
         element: <ProjectListPage />,
