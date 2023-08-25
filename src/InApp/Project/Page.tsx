@@ -1,9 +1,9 @@
 import { Dayjs } from "dayjs";
 import { useParams } from "react-router-dom";
+import { dataProjects, dataTasks } from "../../FakeDat";
 import { ProjectName } from "../Components/ProjectName";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
-import { dataProjects, dataTasks } from "../../FakeData";
 
 export function ProjectPage() {
   let { id } = useParams();

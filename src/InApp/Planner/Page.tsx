@@ -1,9 +1,9 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useParams } from "react-router-dom";
+import { dataTasks } from "../../FakeDat";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
 import { WeeklyCalendarNav } from "./Components/WeeklyCalendarNav";
-import { dataTasks } from "../../FakeData";
 
 export function PlannerPage() {
   let { year, month, day } = useParams();
