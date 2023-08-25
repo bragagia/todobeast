@@ -11,7 +11,7 @@ export const appRouter = createBrowserRouter([
     path: "/",
     element: <InAppLayout />,
     children: [
-      { index: true, element: <Navigate to="/planner" /> },
+      { index: true, element: <Navigate to={UrlPlanner()} /> },
       {
         path: "planner/today/",
         element: <PlannerPage />,
