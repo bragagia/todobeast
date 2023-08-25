@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
-import { dataProjects } from "../../FakeDat";
+import { dataProjects } from "../../FakeData";
 import { UrlProject } from "../../Router";
 import { IconCalendar, IconMap, IconSettings } from "../../utils/Icons";
 import { SidemenuItem } from "./SidebarItem";

@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useParams } from "react-router-dom";
-import { dataTasks } from "../../FakeDat";
+import { dataTasks } from "../../FakeData";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
 import { WeeklyCalendarNav } from "./Components/WeeklyCalendarNav";

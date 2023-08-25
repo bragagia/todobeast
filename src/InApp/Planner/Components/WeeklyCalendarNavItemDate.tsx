@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import dayjs, { Dayjs } from "dayjs";
-import { dataTasks } from "../../../FakeDat";
+import { dataTasks } from "../../../FakeData";
 import { IconBug, IconCheck } from "../../../utils/Icons";
 
 export function WeeklyCalendarNavItemDate({ date }: { date: Dayjs }) {

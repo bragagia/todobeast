@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TaskType } from "../../FakeDat";
+import { TaskType } from "../../FakeData";
 import { Task } from "./Task";
 
 export function TaskList({ tasks }: { tasks: TaskType[] }) {

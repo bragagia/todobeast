@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { dataTasks } from "../../FakeDat";
+import { dataTasks } from "../../FakeData";
 import { IconCheck } from "../../utils/Icons";
 import { ProjectName } from "./ProjectName";
 

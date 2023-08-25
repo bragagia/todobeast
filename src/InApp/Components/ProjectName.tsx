@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { dataProjects } from "../../FakeDat";
+import { dataProjects } from "../../FakeData";
 import { IconMap } from "../../utils/Icons";
 
 export function ProjectName({
