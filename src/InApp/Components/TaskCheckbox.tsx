@@ -17,8 +17,9 @@ export function TaskCheckbox({ taskId }: { taskId: number }) {
   return (
     <div
       className={classNames(
-        "w-6 h-6 border border-black rounded-full p-1 flex items-center",
-        { "bg-gray-200": task.done_at }
+        "w-6 h-6 border rounded-full p-1 flex items-center text-white",
+        { "bg-gray-500 border-gray-500": task.done_at },
+        { "border-gray-800 ": !task.done_at }
       )}
       onClick={handleClick}
     >
