@@ -8,7 +8,7 @@ import { SidemenuItem } from "./SidebarItem";
 export function SidebarContent() {
   return (
     <ul className="flex flex-col px-4 py-4">
-      <div className="flex flex-row items-center justify-between mt-4 mb-8">
+      <div className="flex flex-row items-center justify-between my-4">
         <h1
           className=" text-3xl text-center text-[#FD001A] align-middle josefin-sans"
           style={{ textShadow: "1px 1px black" }}
@@ -27,15 +27,16 @@ export function SidebarContent() {
         </NavLink>
       </div>
 
-      <SidemenuItem
-        to="/planner/today"
-        className="hidden sm:list-item"
-        Icon={IconCalendar}
-        iconColor="text-green-600"
-        active
-      >
-        Today
-      </SidemenuItem>
+      <div className="hidden mt-6 sm:list-item">
+        <SidemenuItem
+          to="/planner/today"
+          Icon={IconCalendar}
+          iconColor="text-green-600"
+          active
+        >
+          Today
+        </SidemenuItem>
+      </div>
 
       <h3 className="mt-8 mb-2 text-sm font-medium text-gray-500">Projects</h3>
 

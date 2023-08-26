@@ -20,7 +20,7 @@ export function ProjectName({
       <span
         className={classNames(
           iconClassName,
-          "flex items-center",
+          "flex items-center overflow-hidden",
           project.icon_color
         )}
       >

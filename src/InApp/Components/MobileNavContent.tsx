@@ -3,15 +3,7 @@ import { NavLink } from "react-router-dom";
 import { UrlInbox, UrlPlanner, UrlProjectList } from "../../Router";
 import { IconBurger, IconCalendar, IconInbox } from "../../utils/Icons";
 
-export function MobileNavContent({
-  openSidebarHandler,
-}: {
-  openSidebarHandler: () => void;
-}) {
-  function handleCreateTask() {
-    document.getElementById("task-creation-field")?.focus();
-  }
-
+export function MobileNavContent() {
   return (
     <div className="flex flex-row items-center justify-around h-full">
       <NavLink

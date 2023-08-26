@@ -13,7 +13,7 @@ export function Task({ taskId }: { taskId: number }) {
     <div id={"task-" + taskId} className="hover:bg-gray-50 animated">
       <div
         className={classNames(
-          "flex flex-row items-center gap-2 py-2 border-b border-gray-200 rounded md:py-1",
+          "flex flex-row-reverse sm:flex-row items-center gap-2 py-2 border-b border-gray-200 rounded md:py-1",
           { "opacity-40 hover:opacity-70": task.done_at }
         )}
       >
@@ -21,17 +21,16 @@ export function Task({ taskId }: { taskId: number }) {
           <TaskCheckbox taskId={taskId} />
         </div>
 
-        <div className="flex flex-row flex-wrap items-center justify-between overflow-auto grow md:flex-nowrap md:justify-normal">
-          <div className="flex-shrink-0 md:basis-24">
-            <TaskProject taskId={taskId} />
-          </div>
+        <div className="flex flex-col justify-start overflow-auto md:items-center grow md:flex-row">
+          <div className="flex flex-row items-center flex-shrink-0 text-gray-600 md:text-black md:basis-60">
+            <div className="mr-2 md:mr-0 md:basis-24">
+              <TaskProject taskId={taskId} />
+            </div>
 
-          <div className="flex-shrink-0 md:w-24">
-            <TaskDate taskId={taskId} />
+            <div className="md:basis-36">
+              <TaskDate taskId={taskId} />
+            </div>
           </div>
-
-          {/* = Flex line break */}
-          <div className="block basis-full md:hidden"></div>
 
           <div className="overflow-auto grow">
             <TaskTitle taskId={taskId} />
