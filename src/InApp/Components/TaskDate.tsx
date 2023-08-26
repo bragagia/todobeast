@@ -31,7 +31,7 @@ export function TaskDate({ taskId }: { taskId: number }) {
   return (
     <button
       className={classNames(
-        "text-xs font-light flex flex-row gap-2 items-center button sm:text-sm w-full",
+        "text-xs font-light flex flex-row gap-2 items-center button md:text-sm w-full",
         { "!font-bold text-red-700": taskIsLate }
       )}
     >

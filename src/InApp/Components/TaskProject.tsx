@@ -6,7 +6,7 @@ export function TaskProject({ taskId }: { taskId: number }) {
   const [task, setTask] = useState(dataTasks[taskId]);
 
   return (
-    <button className="flex items-center w-full text-xs font-light sm:text-sm button">
+    <button className="flex items-center w-full text-xs font-light md:text-sm button">
       <ProjectName
         projectId={task.projectId}
         className="md:justify-center"
