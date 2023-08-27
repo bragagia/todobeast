@@ -18,6 +18,10 @@ export const appRouter = createBrowserRouter([
         element: <PlannerLayout />,
         children: [
           {
+            index: true,
+            element: <PlannerPage />,
+          },
+          {
             path: "today/",
             element: <PlannerPage />,
           },
@@ -33,6 +37,10 @@ export const appRouter = createBrowserRouter([
     errorElement: <p>An error happened</p>,
   },
 ]);
+
+export function UrlNavLinkPlanner() {
+  return "/planner";
+}
 
 export function UrlPlanner(date?: Dayjs) {
   if (!date) return "/planner/today";

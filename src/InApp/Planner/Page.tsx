@@ -1,5 +1,4 @@
 import dayjs, { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { dataTasks } from "../../FakeData";
 import { AnimatedTranslate } from "../Components/AnimatedTranslate";
@@ -17,32 +16,12 @@ export function PlannerPage() {
     urlDate = dayjs().startOf("day");
   }
 
-  const [prevDate, setPrevDate] = useState(urlDate);
-
-  const [currentDate, setCurrentDate] = useState(urlDate);
-  const [direction, setDirection] = useState<"next" | "prev" | null>(null);
-
-  useEffect(() => {
-    if (urlDate.isSame(prevDate)) return;
-
-    setCurrentDate(urlDate);
-    if (urlDate.isBefore(prevDate)) {
-      setDirection("prev");
-    } else {
-      setDirection("next");
-    }
-    setPrevDate(urlDate);
-  }, [urlDate]);
-
   return (
     <>
       <WeeklyCalendarNav />
 
-      <AnimatedTranslate
-        childKey={currentDate.format("DD/MM/YYYY")}
-        direction={direction}
-      >
-        <PageContent date={currentDate} />
+      <AnimatedTranslate childKey={urlDate.format("YYYY/MM/DD")}>
+        <PageContent date={urlDate} />
       </AnimatedTranslate>
     </>
   );

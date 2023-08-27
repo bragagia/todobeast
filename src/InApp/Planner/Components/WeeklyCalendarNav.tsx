@@ -1,6 +1,8 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { IconChevronLeft, IconChevronRight } from "../../../utils/Icons";
+import { AnimatedTranslate } from "../../Components/AnimatedTranslate";
 import { WeeklyCalendarNavItem } from "./WeeklyCalendarNavItem";
 
 dayjs.extend(require("dayjs/plugin/weekday"));
@@ -12,8 +14,17 @@ declare module "dayjs" {
 }
 
 export function WeeklyCalendarNav() {
+  let { year, month, day } = useParams();
+
+  let urlDate: Dayjs;
+  if (day) {
+    urlDate = dayjs(year + "-" + month + "-" + day, "YYYY-MM-DD");
+  } else {
+    urlDate = dayjs().startOf("day");
+  }
+
   const [selectedWeekStartDate, setSelectedWeekStartDate] = useState(
-    dayjs().add(-dayjs().startOf("day").weekday(), "day")
+    urlDate.add(-urlDate.startOf("day").weekday(), "day")
   );
 
   function handlePreviousWeek() {
@@ -38,9 +49,13 @@ export function WeeklyCalendarNav() {
         <IconChevronLeft />
       </button>
 
-      {weekDates.map((date) => {
-        return <WeeklyCalendarNavItem date={date} />;
-      })}
+      <AnimatedTranslate childKey={selectedWeekStartDate.format("YYYY/MM/DD")}>
+        <div className="flex flex-row items-center justify-center w-full">
+          {weekDates.map((date) => {
+            return <WeeklyCalendarNavItem date={date} />;
+          })}
+        </div>
+      </AnimatedTranslate>
 
       <button
         onClick={handleNextWeek}

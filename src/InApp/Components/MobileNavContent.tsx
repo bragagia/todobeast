@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
-import { UrlInbox, UrlPlanner, UrlProjectList } from "../../Router";
+import { UrlInbox, UrlNavLinkPlanner, UrlProjectList } from "../../Router";
 import { IconBurger, IconCalendar, IconInbox } from "../../utils/Icons";
 
 export function MobileNavContent() {
@@ -26,7 +26,7 @@ export function MobileNavContent() {
             { "text-gray-900": isActive }
           )
         }
-        to={UrlPlanner()}
+        to={UrlNavLinkPlanner()}
       >
         <IconCalendar />
       </NavLink>
