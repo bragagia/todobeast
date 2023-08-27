@@ -1,6 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { InAppLayout } from "./InApp/Layout";
+import { PlannerLayout } from "./InApp/Planner/Layout";
 import { PlannerPage } from "./InApp/Planner/Page";
 import { ProjectPage } from "./InApp/Project/Page";
 import { ProjectListPage } from "./InApp/ProjectsList/Page";
@@ -13,10 +14,16 @@ export const appRouter = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to={UrlPlanner()} /> },
       {
-        path: "planner/today/",
-        element: <PlannerPage />,
+        path: "planner",
+        element: <PlannerLayout />,
+        children: [
+          {
+            path: "today/",
+            element: <PlannerPage />,
+          },
+          { path: ":year/:month/:day", element: <PlannerPage /> },
+        ],
       },
-      { path: "planner/:year/:month/:day", element: <PlannerPage /> },
       {
         path: "projects/",
         element: <ProjectListPage />,

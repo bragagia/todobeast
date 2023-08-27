@@ -1,34 +1,49 @@
 import classNames from "classnames";
 import dayjs, { Dayjs } from "dayjs";
-import { NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { WeeklyCalendarNavItemBeast } from "./WeeklyCalendarNavItemBeast";
 import { WeeklyCalendarNavItemDate } from "./WeeklyCalendarNavItemDate";
 
-export function WeeklyCalendarNavItem({ date }: { date: Dayjs }) {
-  date = date.startOf("day");
+export function WeeklyCalendarNavItem({
+  date: itemDate,
+  dateChange,
+}: {
+  date: Dayjs;
+  dateChange: (arg0: Dayjs) => void;
+}) {
+  let { year, month, day } = useParams();
+  let selectedDate: Dayjs;
+  if (day) {
+    selectedDate = dayjs(year + "-" + month + "-" + day, "YYYY-MM-DD");
+  } else {
+    selectedDate = dayjs().startOf("day");
+  }
 
-  const itemIsToday = dayjs(date).startOf("day").isSame(dayjs().startOf("day"));
+  itemDate = itemDate.startOf("day");
+  const itemIsToday = dayjs(itemDate)
+    .startOf("day")
+    .isSame(dayjs().startOf("day"));
+
+  let itemIsActive = itemDate.isSame(selectedDate);
+
+  function handleClick() {
+    dateChange(itemDate);
+  }
 
   return (
-    <NavLink
-      id={"weekly-calendar-nav-item-" + dayjs(date).format("YYYY/MM/DD")}
-      key={"weekly-calendar-nav-item-" + dayjs(date).format("YYYY/MM/DD")}
-      to={
-        itemIsToday
-          ? "/planner/today"
-          : "/planner/" + dayjs(date).format("YYYY/MM/DD")
-      }
-      className={({ isActive, isPending }) =>
-        classNames(
-          "flex flex-row grow justify-center opacity-40 hover:opacity-90 animated",
-          {
-            "!opacity-100": isActive,
-          }
-        )
-      }
+    <button
+      id={"weekly-calendar-nav-item-" + dayjs(itemDate).format("YYYY/MM/DD")}
+      key={"weekly-calendar-nav-item-" + dayjs(itemDate).format("YYYY/MM/DD")}
+      onClick={handleClick}
+      className={classNames(
+        "flex flex-row grow justify-center opacity-40 hover:opacity-90 animated",
+        {
+          "!opacity-100": itemIsActive,
+        }
+      )}
     >
-      {itemIsToday ? <WeeklyCalendarNavItemBeast date={date} /> : ""}
-      <WeeklyCalendarNavItemDate date={date} />
-    </NavLink>
+      {itemIsToday ? <WeeklyCalendarNavItemBeast date={itemDate} /> : ""}
+      <WeeklyCalendarNavItemDate date={itemDate} />
+    </button>
   );
 }

@@ -1,6 +1,7 @@
 import { Dayjs } from "dayjs";
 import { useParams } from "react-router-dom";
 import { dataProjects, dataTasks } from "../../FakeData";
+import { AnimatedMount } from "../Components/AnimatedMount";
 import { ProjectName } from "../Components/ProjectName";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
@@ -17,7 +18,7 @@ export function ProjectPage() {
   let project = dataProjects[projectId];
 
   return (
-    <>
+    <AnimatedMount key={id}>
       <h2 className="mt-6 mb-8">
         <ProjectName
           projectId={projectId}
@@ -33,6 +34,6 @@ export function ProjectPage() {
           return task.projectId == projectId;
         })}
       />
-    </>
+    </AnimatedMount>
   );
 }

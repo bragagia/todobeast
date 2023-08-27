@@ -11,7 +11,11 @@ declare module "dayjs" {
   }
 }
 
-export function WeeklyCalendarNav() {
+export function WeeklyCalendarNav({
+  dateChange,
+}: {
+  dateChange: (arg0: Dayjs) => void;
+}) {
   const [selectedWeekStartDate, setSelectedWeekStartDate] = useState(
     dayjs().add(-dayjs().startOf("day").weekday(), "day")
   );
@@ -39,7 +43,7 @@ export function WeeklyCalendarNav() {
       </button>
 
       {weekDates.map((date) => {
-        return <WeeklyCalendarNavItem date={date} />;
+        return <WeeklyCalendarNavItem dateChange={dateChange} date={date} />;
       })}
 
       <button

@@ -1,9 +1,10 @@
+import { AnimatedMount } from "../Components/AnimatedMount";
 import { SidebarContent } from "../Components/SidebarContent";
 
 export function ProjectListPage() {
   return (
-    <div>
+    <AnimatedMount key="project-list">
       <SidebarContent />
-    </div>
+    </AnimatedMount>
   );
 }
