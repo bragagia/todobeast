@@ -85,7 +85,7 @@ export function AnimatedTranslate({
     <div
       ref={parentRef}
       key="animation-translation"
-      className="relative w-full overflow-x-hidden"
+      className="relative w-full overflow-hidden"
     >
       {transitions((props, item, state) => (
         <animated.div
