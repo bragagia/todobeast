@@ -39,7 +39,7 @@ export function TaskDate({ taskId }: { taskId: number }) {
         <IconCalendar />
       </div>
 
-      <div className="flex flex-row gap-1 md:flex-col md:gap-0">
+      <div className="flex flex-row items-start gap-1 md:flex-col md:gap-0">
         <div>{dateFormattedFirstLine}</div>
         <div>{dateFormattedSecondLine}</div>
         <div>{dateFormattedThirdLine}</div>

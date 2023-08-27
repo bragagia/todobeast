@@ -1,16 +1,13 @@
 import classNames from "classnames";
 import dayjs, { Dayjs } from "dayjs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { UrlPlanner } from "../../../Router";
 import { WeeklyCalendarNavItemBeast } from "./WeeklyCalendarNavItemBeast";
 import { WeeklyCalendarNavItemDate } from "./WeeklyCalendarNavItemDate";
 
-export function WeeklyCalendarNavItem({
-  date: itemDate,
-  dateChange,
-}: {
-  date: Dayjs;
-  dateChange: (arg0: Dayjs) => void;
-}) {
+export function WeeklyCalendarNavItem({ date }: { date: Dayjs }) {
+  const navigate = useNavigate();
+
   let { year, month, day } = useParams();
   let selectedDate: Dayjs;
   if (day) {
@@ -19,21 +16,19 @@ export function WeeklyCalendarNavItem({
     selectedDate = dayjs().startOf("day");
   }
 
-  itemDate = itemDate.startOf("day");
-  const itemIsToday = dayjs(itemDate)
-    .startOf("day")
-    .isSame(dayjs().startOf("day"));
+  date = date.startOf("day");
+  const itemIsToday = dayjs(date).startOf("day").isSame(dayjs().startOf("day"));
 
-  let itemIsActive = itemDate.isSame(selectedDate);
+  let itemIsActive = date.isSame(selectedDate);
 
   function handleClick() {
-    dateChange(itemDate);
+    navigate(UrlPlanner(date));
   }
 
   return (
     <button
-      id={"weekly-calendar-nav-item-" + dayjs(itemDate).format("YYYY/MM/DD")}
-      key={"weekly-calendar-nav-item-" + dayjs(itemDate).format("YYYY/MM/DD")}
+      id={"weekly-calendar-nav-item-" + dayjs(date).format("YYYY/MM/DD")}
+      key={"weekly-calendar-nav-item-" + dayjs(date).format("YYYY/MM/DD")}
       onClick={handleClick}
       className={classNames(
         "flex flex-row grow justify-center opacity-40 hover:opacity-90 animated",
@@ -42,8 +37,8 @@ export function WeeklyCalendarNavItem({
         }
       )}
     >
-      {itemIsToday ? <WeeklyCalendarNavItemBeast date={itemDate} /> : ""}
-      <WeeklyCalendarNavItemDate date={itemDate} />
+      {itemIsToday ? <WeeklyCalendarNavItemBeast date={date} /> : ""}
+      <WeeklyCalendarNavItemDate date={date} />
     </button>
   );
 }
