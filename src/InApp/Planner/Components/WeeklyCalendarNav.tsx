@@ -41,10 +41,10 @@ export function WeeklyCalendarNav() {
   }
 
   return (
-    <div className="flex flex-row items-center justify-center mx-auto mb-4 sm:gap-4 group">
+    <div className="flex flex-row items-center justify-center mx-auto mb-4 group">
       <button
         onClick={handlePreviousWeek}
-        className="text-gray-500 animated no-touch:opacity-0 group-hover:opacity-100 hover:text-black"
+        className="flex items-center self-stretch justify-center w-12 text-gray-500 bg-white md:w-16 grow animated no-touch:opacity-0 group-hover:opacity-100 hover:text-black"
       >
         <IconChevronLeft />
       </button>
@@ -59,7 +59,7 @@ export function WeeklyCalendarNav() {
 
       <button
         onClick={handleNextWeek}
-        className="text-gray-500 animated no-touch:opacity-0 group-hover:opacity-100 hover:text-black"
+        className="flex items-center self-stretch justify-center w-12 text-gray-500 bg-white md:w-16 grow animated no-touch:opacity-0 group-hover:opacity-100 hover:text-black"
       >
         <IconChevronRight />
       </button>
