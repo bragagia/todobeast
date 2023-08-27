@@ -81,6 +81,24 @@ export function AnimatedTranslate({
     }
   }, []);
 
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (!animating && parentRef.current && incomingRef.current) {
+        parentRef.current.style.height = `${incomingRef.current.offsetHeight}px`;
+      }
+    });
+
+    if (incomingRef.current) {
+      resizeObserver.observe(incomingRef.current);
+    }
+
+    return () => {
+      if (incomingRef.current) {
+        resizeObserver.unobserve(incomingRef.current);
+      }
+    };
+  }, [animating]);
+
   return (
     <div
       ref={parentRef}

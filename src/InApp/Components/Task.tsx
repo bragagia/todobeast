@@ -17,7 +17,7 @@ export function Task({ taskId }: { taskId: number }) {
           { "opacity-40 hover:opacity-70": task.done_at }
         )}
       >
-        <div className="ml-1">
+        <div className="mr-1 sm:ml-1">
           <TaskCheckbox taskId={taskId} />
         </div>
 

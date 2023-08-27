@@ -31,9 +31,10 @@ export function WeeklyCalendarNavItem({ date }: { date: Dayjs }) {
       key={"weekly-calendar-nav-item-" + dayjs(date).format("YYYY/MM/DD")}
       onClick={handleClick}
       className={classNames(
-        "flex flex-row grow justify-center opacity-40 hover:opacity-90 animated",
+        "pt-2 flex flex-row grow justify-center opacity-40 hover:opacity-90 animated border-b hover:bg-gray-100",
         {
-          "!opacity-100": itemIsActive,
+          "!opacity-100 border-gray-600": itemIsActive,
+          "border-gray-300 hover:border-black": !itemIsActive,
         }
       )}
     >

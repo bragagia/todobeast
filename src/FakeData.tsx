@@ -5,11 +5,24 @@ export type ProjectType = {
   icon: string;
   icon_color?: string;
   name: string;
+  special?: "inbox" | "archive";
 };
 
 export var dataProjects: ProjectType[] = [
-  { id: 0, icon: "inbox", icon_color: "text-blue-600", name: "Inbox" },
-  { id: 1, icon: "archive", icon_color: "text-gray-700", name: "Archive" },
+  {
+    id: 0,
+    icon: "inbox",
+    icon_color: "text-blue-600",
+    name: "Inbox",
+    special: "inbox",
+  },
+  {
+    id: 1,
+    icon: "archive",
+    icon_color: "text-gray-700",
+    name: "Archive",
+    special: "archive",
+  },
   { id: 2, icon: "computer", name: "Pro" },
   { id: 3, icon: "😄", name: "Perso" },
 ];

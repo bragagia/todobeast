@@ -8,7 +8,7 @@ export function WeeklyCalendarNavItemDate({ date }: { date: Dayjs }) {
 
   const itemIsToday = dayjs(date).startOf("day").isSame(dayjs().startOf("day"));
 
-  const dayLetter = dayjs(date).format("dd").substring(0, 1);
+  const dayLetter = dayjs(date).format("ddd");
 
   const beforeToday = dayjs(date)
     .startOf("day")
@@ -50,6 +50,8 @@ export function WeeklyCalendarNavItemDate({ date }: { date: Dayjs }) {
           ) : (
             <IconBug />
           )
+        ) : tasksPendingCount == 0 ? (
+          ""
         ) : tasksPendingCount < 10 ? (
           tasksPendingCount
         ) : (
