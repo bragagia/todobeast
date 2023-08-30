@@ -18,15 +18,7 @@
 }
 
 .button {
-  @apply p-1 border border-transparent rounded-lg hover:border-gray-400 focus:border-gray-300 focus-within:border-gray-300 animated;
-}
-
-.sidemenu-button {
-  @apply button focus:border-transparent focus-within:border-transparent;
-}
-
-.sidemenu-button-active {
-  @apply sidemenu-button bg-gray-200;
+  @apply p-1 border border-transparent rounded-lg hover:border-gray-400 hover:bg-gray-100 focus:border-gray-300 focus-within:border-gray-300 animated;
 }
 
 .animated {

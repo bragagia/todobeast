@@ -15,15 +15,21 @@ export function TaskCheckbox({ taskId }: { taskId: number }) {
   }
 
   return (
-    <div
-      className={classNames(
-        "w-6 h-6 border rounded-full p-1 flex items-center text-white",
-        { "bg-gray-500 border-gray-500": task.done_at },
-        { "border-gray-800 ": !task.done_at }
-      )}
+    <button
+      className="flex items-center self-stretch justify-center"
       onClick={handleClick}
     >
-      {task.done_at ? <IconCheck /> : ""}
-    </div>
+      <div
+        className={classNames(
+          "w-6 h-6 self-strech border rounded-full p-1 flex items-center",
+          { "bg-gray-500 text-white border-gray-500": task.done_at },
+          {
+            "border-gray-800 text-white hover:text-gray-800": !task.done_at,
+          }
+        )}
+      >
+        <IconCheck />
+      </div>
+    </button>
   );
 }

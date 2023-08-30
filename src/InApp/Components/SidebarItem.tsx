@@ -26,9 +26,12 @@ export function SidemenuItem({
       <NavLink
         to={to}
         className={({ isActive, isPending }) =>
-          classNames("flex items-center mb-1 sidemenu-button group", {
-            "sidemenu-button-active": isActive,
-          })
+          classNames(
+            "flex items-center px-4 py-2 sidemenu-button group text-gray-800 hover:bg-gray-200",
+            {
+              "bg-gray-200": isActive,
+            }
+          )
         }
       >
         {Icon ? (
@@ -45,7 +48,7 @@ export function SidemenuItem({
           <div className="flex-shrink-0 w-4 text-center">{emoji}</div>
         )}
 
-        <span className="flex-1 ml-3 font-light text-gray-800 whitespace-nowrap">
+        <span className="flex-1 ml-3 font-light whitespace-nowrap">
           {children}
         </span>
 
