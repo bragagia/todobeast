@@ -1,4 +1,6 @@
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { ReadTransaction } from "replicache";
+import { taskIdPrefix } from "./App";
 
 export type ProjectType = {
   id: number;
@@ -28,62 +30,77 @@ export var dataProjects: ProjectType[] = [
 ];
 
 export type TaskType = {
-  id: number;
-  date: Dayjs;
-  projectId: number;
-  title: string;
-  done_at: Dayjs | null;
+  readonly id: string;
+  readonly date: string;
+  readonly projectId: number;
+  readonly title: string;
+  readonly done_at: string | null;
 };
+
+export function getTask(taskId: string) {
+  return async function (tx: ReadTransaction) {
+    return (await tx.get(taskId)) as TaskType;
+  };
+}
+
+export function getAllTasks() {
+  return async function (tx: ReadTransaction) {
+    return (await tx
+      .scan({ prefix: taskIdPrefix })
+      .values()
+      .toArray()) as TaskType[];
+  };
+}
 
 export var dataTasks: TaskType[] = [
   {
-    id: 0,
-    date: dayjs(),
+    id: "0",
+    date: dayjs().toISOString(),
     projectId: 0,
     title:
       "Le voyageur contemplant une mer de nuages https://image.jimcdn.com/app/cms/image/transf/none/path/s2fd05c04c76e678d/image/i0a0b157e58d083d2/version/1428491099/image.jpg",
     done_at: null,
   },
   {
-    id: 1,
-    date: dayjs(),
+    id: "1",
+    date: dayjs().toISOString(),
     projectId: 2,
     title: "Improve SunriseBriefing",
     done_at: null,
   },
   {
-    id: 2,
-    date: dayjs(),
+    id: "2",
+    date: dayjs().toISOString(),
     projectId: 3,
     title: "Organiser un chalet pour le nouvel an",
-    done_at: dayjs(),
+    done_at: dayjs().toISOString(),
   },
   {
-    id: 3,
-    date: dayjs(),
+    id: "3",
+    date: dayjs().toISOString(),
     projectId: 2,
     title: "Design Todobeast tasks",
     done_at: null,
   },
   {
-    id: 4,
-    date: dayjs().add(-1, "day"),
+    id: "4",
+    date: dayjs().add(-1, "day").toISOString(),
     projectId: 2,
     title: "Test 1",
-    done_at: dayjs().add(-1, "day"),
+    done_at: dayjs().add(-1, "day").toISOString(),
   },
   {
-    id: 5,
-    date: dayjs().add(-2, "day"),
+    id: "5",
+    date: dayjs().add(-2, "day").toISOString(),
     projectId: 2,
     title: "Test 2",
     done_at: null,
   },
   {
-    id: 6,
-    date: dayjs().add(-2, "day"),
+    id: "6",
+    date: dayjs().add(-2, "day").toISOString(),
     projectId: 2,
     title: "Test 3",
-    done_at: dayjs().add(-2, "day"),
+    done_at: dayjs().add(-2, "day").toISOString(),
   },
 ];

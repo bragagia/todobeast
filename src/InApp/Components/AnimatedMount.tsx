@@ -5,8 +5,8 @@ export function AnimatedMount({ children }: { children: ReactNode }) {
   const [identifier] = useState(Math.random());
 
   const transitions = useTransition(identifier, {
-    from: { opacity: 0, scale: 0.7 },
-    enter: { opacity: 1, scale: 1 },
+    from: { opacity: 0, scaleX: 0.7 },
+    enter: { opacity: 1, scaleX: 1 },
     config: {
       tension: 500,
       friction: 35,

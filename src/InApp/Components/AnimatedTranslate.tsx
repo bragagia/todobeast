@@ -1,4 +1,5 @@
 import { animated, useTransition } from "@react-spring/web";
+import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 
 /*
@@ -11,38 +12,16 @@ export function AnimatedTranslate({
   children: JSX.Element;
   childKey: string;
 }) {
-  const parentRef = useRef<HTMLDivElement>(null);
-  const incomingRef = useRef<HTMLDivElement>(null);
-  const itemRef = useRef({ elem: children, key: childKey });
-  const [animating, setAnimating] = useState(false); // Used to force re-rendering
+  const childRef = useRef<HTMLDivElement>(null);
+  const [currentChild, setCurrentChild] = useState({
+    elem: children,
+    key: childKey,
+  });
+  const [animating, setAnimating] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev" | null>(null);
+  const [parentHeight, setParentHeight] = useState(0);
 
-  useEffect(() => {
-    if (childKey !== itemRef.current.key) {
-      setDirection(childKey < itemRef.current.key ? "prev" : "next");
-
-      itemRef.current = { elem: children, key: childKey };
-
-      setAnimating(true);
-
-      // Add a setTimeout to allow incomingRef to be populated before measuring height
-      setTimeout(() => {
-        if (parentRef.current && incomingRef.current) {
-          const currentChild = parentRef.current.firstChild as HTMLElement;
-          const incomingChild = incomingRef.current;
-
-          // Set parent height to max of both child during transition
-          const maxChildHeight = Math.max(
-            currentChild.offsetHeight,
-            incomingChild.offsetHeight
-          );
-          parentRef.current.style.height = `${maxChildHeight}px`;
-        }
-      }, 0);
-    }
-  }, [childKey, children]);
-
-  const transitions = useTransition([itemRef.current], {
+  const transitions = useTransition([currentChild], {
     from: {
       transform: direction
         ? `translateX(${direction === "next" ? 100 : -100}%)`
@@ -60,58 +39,84 @@ export function AnimatedTranslate({
     },
 
     config: {
-      tension: 500,
+      tension: 550,
       friction: 40,
     },
 
     onRest: () => {
-      setAnimating(false);
+      // Uses because if child change before transition ends, onRest is called. With animating as a number, it will be incremented to 2 and then reset to 0 at the very end
+      setAnimating(Math.max(animating - 1, 0));
 
-      // Set the height to the incoming child after the transition ends.
-      if (parentRef.current && incomingRef.current) {
-        parentRef.current.style.height = `${incomingRef.current.offsetHeight}px`;
+      // Reset the height to the current child after the transition ends.
+      if (childRef.current) {
+        setParentHeight(childRef.current.offsetHeight);
       }
     },
   });
 
-  useEffect(() => {
-    // set parent height at mount
-    if (parentRef.current && incomingRef.current) {
-      parentRef.current.style.height = `${incomingRef.current.offsetHeight}px`;
+  function calculateHeight() {
+    if (childRef.current) {
+      const incomingChild = childRef.current;
+
+      // Set parent height to max of both child during transition
+      const maxChildHeight = Math.max(parentHeight, incomingChild.offsetHeight);
+      setParentHeight(maxChildHeight);
     }
-  }, []);
+  }
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      if (!animating && parentRef.current && incomingRef.current) {
-        parentRef.current.style.height = `${incomingRef.current.offsetHeight}px`;
-      }
-    });
+    if (childKey !== currentChild.key) {
+      setDirection(childKey < currentChild.key ? "prev" : "next");
+      setAnimating(animating + 1);
 
-    if (incomingRef.current) {
-      resizeObserver.observe(incomingRef.current);
+      setCurrentChild({ elem: children, key: childKey });
+
+      // Add a setTimeout to allow childRef and parentRef to be populated before measuring height
+      setTimeout(() => {
+        calculateHeight();
+      }, 0);
+    }
+  }, [childKey, children]);
+
+  useEffect(() => {
+    let rafId: number;
+
+    if (animating) {
+      const updateHeight = () => {
+        calculateHeight();
+
+        // Schedule the next height update
+        rafId = requestAnimationFrame(updateHeight);
+      };
+
+      // Start the height update loop
+      rafId = requestAnimationFrame(updateHeight);
     }
 
     return () => {
-      if (incomingRef.current) {
-        resizeObserver.unobserve(incomingRef.current);
-      }
+      // Clean up the loop when the component unmounts or when `animating` changes
+      cancelAnimationFrame(rafId);
     };
   }, [animating]);
 
+  // If animating or if a new child as just been mounted, render transition instead of direct child
   return (
     <div
-      ref={parentRef}
-      key="animation-translation"
-      className="relative w-full overflow-hidden"
+      key="animating-div"
+      className={classNames("w-full", {
+        "relative overflow-hidden": animating > 0,
+      })}
+      style={animating > 0 ? { height: `${parentHeight}px` } : {}}
     >
       {transitions((props, item, state) => (
         <animated.div
-          ref={incomingRef}
+          key={item.key}
+          id={item.key}
+          ref={childRef}
           style={props}
-          className="absolute w-full"
+          className={classNames("w-full", { absolute: animating > 0 })}
         >
-          {item.elem}
+          {item.key == childKey ? children : item.elem}
         </animated.div>
       ))}
     </div>

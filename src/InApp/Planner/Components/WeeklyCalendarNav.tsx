@@ -49,10 +49,17 @@ export function WeeklyCalendarNav() {
         <IconChevronLeft />
       </button>
 
-      <AnimatedTranslate childKey={selectedWeekStartDate.format("YYYY/MM/DD")}>
+      <AnimatedTranslate
+        childKey={"week-" + selectedWeekStartDate.format("YYYY/MM/DD")}
+      >
         <div className="flex flex-row items-center justify-center w-full">
           {weekDates.map((date) => {
-            return <WeeklyCalendarNavItem date={date} />;
+            return (
+              <WeeklyCalendarNavItem
+                key={"day-nav-item-" + date.format("YYYY/MM/DD")}
+                date={date}
+              />
+            );
           })}
         </div>
       </AnimatedTranslate>

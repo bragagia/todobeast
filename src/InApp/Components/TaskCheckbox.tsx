@@ -1,17 +1,15 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { useState } from "react";
-import { dataTasks } from "../../FakeData";
+import { rep } from "../../App";
+import { TaskType } from "../../FakeData";
 import { IconCheck } from "../../utils/Icons";
 
-export function TaskCheckbox({ taskId }: { taskId: number }) {
-  const [task, setTask] = useState(dataTasks[taskId]);
-
+export function TaskCheckbox({ task }: { task: TaskType }) {
   function handleClick() {
-    setTask((oldTask) => ({
-      ...oldTask,
-      done_at: task.done_at ? null : dayjs(),
-    }));
+    rep.mutate.taskUpdate({
+      id: task.id,
+      done_at: task.done_at ? null : dayjs().toISOString(),
+    });
   }
 
   return (
@@ -22,9 +20,9 @@ export function TaskCheckbox({ taskId }: { taskId: number }) {
       <div
         className={classNames(
           "w-6 h-6 self-strech border rounded-full p-1 flex items-center",
-          { "bg-gray-500 text-white border-gray-500": task.done_at },
+          { "bg-gray-500 text-white border-gray-500": task?.done_at },
           {
-            "border-gray-800 text-white hover:text-gray-800": !task.done_at,
+            "border-gray-800 text-white hover:text-gray-800": !task?.done_at,
           }
         )}
       >

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useState } from "react";
 import { TaskType } from "../../FakeData";
 import { Task } from "./Task";
@@ -19,13 +20,13 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
           if (a.projectId < b.projectId) return -1;
           if (a.projectId > b.projectId) return 1;
 
-          if (a.date.isBefore(b.date)) return -1;
-          if (b.date.isBefore(a.date)) return 1;
+          if (dayjs(a.date).isBefore(b.date)) return -1;
+          if (dayjs(b.date).isBefore(a.date)) return 1;
 
           return 0;
         })
         .map((task) => {
-          return <Task key={task.id} taskId={task.id} />;
+          return <Task key={task.id} task={task} />;
         })}
       {/* <div>
         <button onClick={handleToggleTasksDone}>Open</button>

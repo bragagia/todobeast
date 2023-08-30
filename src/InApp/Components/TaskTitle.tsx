@@ -1,15 +1,23 @@
-import { useState } from "react";
-import { dataTasks } from "../../FakeData";
+import Document from "@tiptap/extension-document";
+import History from "@tiptap/extension-history";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import { EditorContent, useEditor } from "@tiptap/react";
+import { TaskType } from "../../FakeData";
 
-export function TaskTitle({ taskId }: { taskId: number }) {
-  const [task, setTask] = useState(dataTasks[taskId]);
+export function TaskTitle({ task }: { task: TaskType }) {
+  const editor = useEditor(
+    {
+      extensions: [Document, Paragraph, Text, History],
+      autofocus: false,
+      content: task.title,
+    },
+    [task]
+  );
 
   return (
-    <div
-      contentEditable
-      className="break-words button hyphens-auto without-ring"
-    >
-      {task.title}
+    <div className="button">
+      {editor ? <EditorContent editor={editor} /> : null}
     </div>
   );
 }

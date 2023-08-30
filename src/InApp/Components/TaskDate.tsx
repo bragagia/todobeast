@@ -1,30 +1,24 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { useState } from "react";
-import { dataTasks } from "../../FakeData";
+import { TaskType } from "../../FakeData";
 import { IconCalendar } from "../../utils/Icons";
 
-export function TaskDate({ taskId }: { taskId: number }) {
-  const [task, setTask] = useState(dataTasks[taskId]);
-
-  let taskDate = task.date.startOf("day");
+export function TaskDate({ task }: { task: TaskType }) {
+  let taskDate = dayjs(task.date).startOf("day");
 
   let today = dayjs().startOf("day");
 
   let taskIsLate =
     taskDate.isBefore(today) &&
-    (!task.done_at || task.done_at.isAfter(task.date));
+    (!task.done_at || dayjs(task.done_at).isAfter(task.date));
 
-  let dateFormattedFirstLine = "Today";
-  let dateFormattedSecondLine = "";
-  let dateFormattedThirdLine = "";
+  let dateFormatted = "Today";
 
   if (!taskDate.isSame(today)) {
-    dateFormattedFirstLine = taskDate.format("dddd");
-    dateFormattedSecondLine = taskDate.format("D MMMM");
+    dateFormatted = taskDate.format("dddd\nD MMMM");
 
     if (taskDate.year() != dayjs().year()) {
-      dateFormattedThirdLine = taskDate.format(" YYYY");
+      dateFormatted = taskDate.format("\nYYYY");
     }
   }
 
@@ -40,9 +34,9 @@ export function TaskDate({ taskId }: { taskId: number }) {
       </div>
 
       <div className="flex flex-row items-start gap-1 md:flex-col md:gap-0">
-        <div>{dateFormattedFirstLine}</div>
-        <div>{dateFormattedSecondLine}</div>
-        <div>{dateFormattedThirdLine}</div>
+        {dateFormatted.split("\n").map((dateLine, i) => {
+          return <div key={i}>{dateLine}</div>;
+        })}
       </div>
     </button>
   );

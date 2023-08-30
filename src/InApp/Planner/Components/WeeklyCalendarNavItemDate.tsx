@@ -15,7 +15,7 @@ export function WeeklyCalendarNavItemDate({ date }: { date: Dayjs }) {
     .isBefore(dayjs().startOf("day"));
 
   let dailyTasks = dataTasks.filter((task) => {
-    return task.date.startOf("day").isSame(date);
+    return dayjs(task.date).startOf("day").isSame(date);
   });
 
   let tasksDoneCount = dailyTasks.filter((task) => {
