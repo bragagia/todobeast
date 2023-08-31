@@ -57,7 +57,11 @@ export function WeeklyCalendarNavItemDate({
             <IconBug />
           )
         ) : tasksPendingCount === 0 ? (
-          ""
+          itemIsToday ? (
+            <IconCheck />
+          ) : (
+            ""
+          )
         ) : tasksPendingCount < 10 ? (
           tasksPendingCount
         ) : (

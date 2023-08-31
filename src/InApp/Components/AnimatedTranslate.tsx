@@ -30,6 +30,8 @@ export function AnimatedTranslate({
   const [parentHeight, setParentHeight] = useState(0);
 
   const transitions = useTransition([currentChild], {
+    initial: { transform: "translateX(0%)", opacity: 1 },
+
     from: {
       transform: direction
         ? `translateX(${direction === "next" ? 100 : -100}%)`
