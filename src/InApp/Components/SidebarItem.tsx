@@ -52,7 +52,7 @@ export function SidemenuItem({
           {children}
         </span>
 
-        {chip != "" ? (
+        {chip !== "" ? (
           <span className="inline-flex items-center justify-center w-5 h-5 ml-3 text-xs text-black rounded-full bg-zinc-300">
             {chip}
           </span>

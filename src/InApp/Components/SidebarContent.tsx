@@ -44,7 +44,7 @@ export function SidebarContent() {
 
       {dataProjects.map((project) => (
         <SidemenuItem
-          key={project.id}
+          key={"sidebar/project/" + project.id}
           to={UrlProject(project.id, project.name)}
           Icon={IconMap[project.icon]}
           emoji={project.icon}

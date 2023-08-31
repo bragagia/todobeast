@@ -1,34 +1,42 @@
 import classNames from "classnames";
-import dayjs, { Dayjs } from "dayjs";
+import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { TaskType } from "../../../FakeData";
 import { UrlPlanner } from "../../../Router";
+import { DayjsDate } from "../../../utils/PlainDate";
+import useDate from "../../../utils/UseDate";
 import { WeeklyCalendarNavItemBeast } from "./WeeklyCalendarNavItemBeast";
 import { WeeklyCalendarNavItemDate } from "./WeeklyCalendarNavItemDate";
 
-export function WeeklyCalendarNavItem({ date }: { date: Dayjs }) {
+export function WeeklyCalendarNavItem({
+  date,
+  tasksByDays,
+}: {
+  date: DayjsDate;
+  tasksByDays: {
+    [key: string]: TaskType[];
+  };
+}) {
   const navigate = useNavigate();
 
   let { year, month, day } = useParams();
-  let selectedDate: Dayjs;
-  if (day) {
-    selectedDate = dayjs(year + "-" + month + "-" + day, "YYYY-MM-DD");
-  } else {
-    selectedDate = dayjs().startOf("day");
-  }
 
-  date = date.startOf("day");
-  const itemIsToday = dayjs(date).startOf("day").isSame(dayjs().startOf("day"));
+  const todayDate = useDate();
+
+  const selectedDate = useMemo(() => {
+    return year && month && day ? new DayjsDate(year, month, day) : todayDate;
+  }, [year, month, day, todayDate]);
+
+  const itemIsToday = useMemo(() => date.isSame(todayDate), [date, todayDate]);
 
   let itemIsActive = date.isSame(selectedDate);
 
   function handleClick() {
-    navigate(UrlPlanner(date));
+    navigate(UrlPlanner(date, todayDate));
   }
 
   return (
     <button
-      id={"weekly-calendar-nav-item-" + dayjs(date).format("YYYY/MM/DD")}
-      key={"weekly-calendar-nav-item-" + dayjs(date).format("YYYY/MM/DD")}
       onClick={handleClick}
       className={classNames(
         "pt-2 flex flex-row grow justify-center opacity-40 hover:opacity-90 animated border-b hover:bg-gray-100",
@@ -39,7 +47,10 @@ export function WeeklyCalendarNavItem({ date }: { date: Dayjs }) {
       )}
     >
       {itemIsToday ? <WeeklyCalendarNavItemBeast date={date} /> : ""}
-      <WeeklyCalendarNavItemDate date={date} />
+      <WeeklyCalendarNavItemDate
+        date={date}
+        dailyTasks={tasksByDays[date.toString()]}
+      />
     </button>
   );
 }

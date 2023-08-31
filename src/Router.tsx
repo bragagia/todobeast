@@ -1,11 +1,10 @@
-import dayjs, { Dayjs } from "dayjs";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { InAppLayout } from "./InApp/Layout";
 import { PlannerLayout } from "./InApp/Planner/Layout";
 import { PlannerPage } from "./InApp/Planner/Page";
 import { ProjectPage } from "./InApp/Project/Page";
 import { ProjectListPage } from "./InApp/ProjectsList/Page";
-import { areSameDay } from "./utils/Dates";
+import { DayjsDate } from "./utils/PlainDate";
 
 export const appRouter = createBrowserRouter([
   {
@@ -42,12 +41,12 @@ export function UrlNavLinkPlanner() {
   return "/planner";
 }
 
-export function UrlPlanner(date?: Dayjs) {
-  if (!date) return "/planner/today";
+export function UrlPlanner(date?: DayjsDate, today?: DayjsDate) {
+  if (!date || !today) return "/planner/today";
 
-  if (areSameDay(date, dayjs())) return "/planner/today";
+  if (date.isSame(today)) return "/planner/today";
 
-  return "/planner/" + dayjs(date).format("YYYY/MM/DD");
+  return "/planner/" + date.toString("/");
 }
 
 export function UrlProjectList() {
@@ -64,5 +63,5 @@ export function UrlProject(projectId: number, projectName: string) {
 }
 
 export function UrlInbox() {
-  return "/projects/" + 0 + "/" + "inbox";
+  return "/projects/0/inbox";
 }

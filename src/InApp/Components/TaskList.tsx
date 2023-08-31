@@ -1,17 +1,25 @@
 import dayjs from "dayjs";
-import { useState } from "react";
 import { TaskType } from "../../FakeData";
+import { DayjsDate } from "../../utils/PlainDate";
 import { Task } from "./Task";
 
 export function TaskList({ tasks }: { tasks: TaskType[] }) {
-  const [showDoneTasks, setshowDoneTasks] = useState(false);
+  //const [showDoneTasks, setshowDoneTasks] = useState(false);
 
-  function handleToggleTasksDone() {
-    setshowDoneTasks(!showDoneTasks);
+  // function handleToggleTasksDone() {
+  //   setshowDoneTasks(!showDoneTasks);
+  // }
+
+  if (!tasks || tasks.length === 0) {
+    return (
+      <p className="pt-10 font-bold text-center text-gray-400">
+        Task list is empty!
+      </p>
+    );
   }
 
   return (
-    <div>
+    <div className="pt-4">
       {tasks
         .sort((a, b) => {
           if (!a.done_at && b.done_at) return -1;
@@ -20,13 +28,29 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
           if (a.projectId < b.projectId) return -1;
           if (a.projectId > b.projectId) return 1;
 
-          if (dayjs(a.date).isBefore(b.date)) return -1;
-          if (dayjs(b.date).isBefore(a.date)) return 1;
+          if (a.date && !b.date) return -1;
+          if (!a.date && b.date) return 1;
+
+          if (
+            a.date &&
+            b.date &&
+            new DayjsDate(a.date).isBefore(new DayjsDate(b.date))
+          )
+            return -1;
+          if (
+            a.date &&
+            b.date &&
+            new DayjsDate(b.date).isBefore(new DayjsDate(a.date))
+          )
+            return 1;
+
+          if (dayjs(a.created_at).isBefore(dayjs(b.created_at))) return -1;
+          if (dayjs(b.created_at).isBefore(dayjs(a.created_at))) return 1;
 
           return 0;
         })
         .map((task) => {
-          return <Task key={task.id} task={task} />;
+          return <Task key={"task/" + task.id} task={task} />;
         })}
       {/* <div>
         <button onClick={handleToggleTasksDone}>Open</button>

@@ -1,43 +1,52 @@
-import dayjs, { Dayjs } from "dayjs";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { TaskType } from "../../../FakeData";
 import { IconChevronLeft, IconChevronRight } from "../../../utils/Icons";
+import { DayjsDate } from "../../../utils/PlainDate";
+import useDate from "../../../utils/UseDate";
 import { AnimatedTranslate } from "../../Components/AnimatedTranslate";
 import { WeeklyCalendarNavItem } from "./WeeklyCalendarNavItem";
 
-dayjs.extend(require("dayjs/plugin/weekday"));
-
-declare module "dayjs" {
-  interface Dayjs {
-    weekday(): number;
-  }
-}
-
-export function WeeklyCalendarNav() {
+export function WeeklyCalendarNav({
+  tasksByDays,
+}: {
+  tasksByDays: {
+    [key: string]: TaskType[];
+  };
+}) {
   let { year, month, day } = useParams();
 
-  let urlDate: Dayjs;
-  if (day) {
-    urlDate = dayjs(year + "-" + month + "-" + day, "YYYY-MM-DD");
-  } else {
-    urlDate = dayjs().startOf("day");
-  }
+  const todayDate = useDate();
+
+  const urlDate = useMemo(() => {
+    return year && month && day ? new DayjsDate(year, month, day) : todayDate;
+  }, [year, month, day, todayDate]);
 
   const [selectedWeekStartDate, setSelectedWeekStartDate] = useState(
-    urlDate.add(-urlDate.startOf("day").weekday(), "day")
+    urlDate.startOfWeek()
   );
 
+  useEffect(() => {
+    let newSelectedWeekStartDate = urlDate.startOfWeek();
+    if (!newSelectedWeekStartDate.isSame(selectedWeekStartDate)) {
+      setSelectedWeekStartDate(newSelectedWeekStartDate);
+    }
+  }, [urlDate]);
+
+  const weekDates = useMemo(() => {
+    var weekDates: DayjsDate[] = [];
+    for (let i = 0; i < 7; i++) {
+      weekDates.push(selectedWeekStartDate.addDays(i));
+    }
+    return weekDates;
+  }, [selectedWeekStartDate]);
+
   function handlePreviousWeek() {
-    setSelectedWeekStartDate(selectedWeekStartDate.add(-7, "day"));
+    setSelectedWeekStartDate(selectedWeekStartDate.addDays(-7));
   }
 
   function handleNextWeek() {
-    setSelectedWeekStartDate(selectedWeekStartDate.add(7, "day"));
-  }
-
-  var weekDates: Dayjs[] = [];
-  for (let i = 0; i < 7; i++) {
-    weekDates.push(selectedWeekStartDate.add(i, "day"));
+    setSelectedWeekStartDate(selectedWeekStartDate.addDays(7));
   }
 
   return (
@@ -50,14 +59,15 @@ export function WeeklyCalendarNav() {
       </button>
 
       <AnimatedTranslate
-        childKey={"week-" + selectedWeekStartDate.format("YYYY/MM/DD")}
+        childKey={"week-planner/week/" + selectedWeekStartDate.toString()}
       >
         <div className="flex flex-row items-center justify-center w-full">
           {weekDates.map((date) => {
             return (
               <WeeklyCalendarNavItem
-                key={"day-nav-item-" + date.format("YYYY/MM/DD")}
+                key={"day-nav-item/" + date.toString()}
                 date={date}
+                tasksByDays={tasksByDays}
               />
             );
           })}

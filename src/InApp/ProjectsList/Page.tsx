@@ -3,8 +3,8 @@ import { SidebarContent } from "../Components/SidebarContent";
 
 export function ProjectListPage() {
   return (
-    <AnimatedMount key="project-list">
-      <SidebarContent />
+    <AnimatedMount>
+      <SidebarContent key="project-list" />
     </AnimatedMount>
   );
 }

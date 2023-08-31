@@ -7,7 +7,7 @@ import { TaskTitle } from "./TaskTitle";
 
 export function Task({ task }: { task: TaskType }) {
   return (
-    <div id={task.id} className="hover:bg-gray-50 animated">
+    <div className="hover:bg-gray-50 animated">
       <div
         className={classNames(
           "flex flex-row-reverse sm:flex-row items-center gap-2 py-2 border-b border-gray-200 rounded md:py-1",

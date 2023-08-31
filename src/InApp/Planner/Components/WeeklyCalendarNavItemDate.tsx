@@ -1,28 +1,34 @@
 import classNames from "classnames";
-import dayjs, { Dayjs } from "dayjs";
-import { dataTasks } from "../../../FakeData";
+import { TaskType } from "../../../FakeData";
 import { IconBug, IconCheck } from "../../../utils/Icons";
+import { DayjsDate } from "../../../utils/PlainDate";
+import useDate from "../../../utils/UseDate";
 
-export function WeeklyCalendarNavItemDate({ date }: { date: Dayjs }) {
-  date = date.startOf("day");
+export function WeeklyCalendarNavItemDate({
+  date,
+  dailyTasks,
+}: {
+  date: DayjsDate;
+  dailyTasks: TaskType[];
+}) {
+  const todayDate = useDate();
 
-  const itemIsToday = dayjs(date).startOf("day").isSame(dayjs().startOf("day"));
+  const itemIsToday = date.isSame(todayDate);
 
-  const dayLetter = dayjs(date).format("ddd");
+  const dayLetter = date.format("ddd");
 
-  const beforeToday = dayjs(date)
-    .startOf("day")
-    .isBefore(dayjs().startOf("day"));
+  const beforeToday = date.isBefore(new DayjsDate());
 
-  let dailyTasks = dataTasks.filter((task) => {
-    return dayjs(task.date).startOf("day").isSame(date);
-  });
+  let tasksCount = dailyTasks ? dailyTasks.length : 0;
 
-  let tasksDoneCount = dailyTasks.filter((task) => {
-    return task.done_at;
-  }).length;
+  let tasksDoneCount = dailyTasks
+    ? dailyTasks.filter((task) => {
+        return task.done_at;
+      }).length
+    : 0;
 
-  const tasksPendingCount = dailyTasks.length - tasksDoneCount;
+  const tasksPendingCount = tasksCount - tasksDoneCount;
+
   return (
     <div className="flex flex-col items-center h-16">
       <div className={classNames("text-xs", { "font-bold": itemIsToday })}>
@@ -30,7 +36,7 @@ export function WeeklyCalendarNavItemDate({ date }: { date: Dayjs }) {
       </div>
 
       <div className={classNames({ "font-bold": itemIsToday })}>
-        {date.date()}
+        {date.Day()}
       </div>
 
       <div
@@ -39,18 +45,18 @@ export function WeeklyCalendarNavItemDate({ date }: { date: Dayjs }) {
           {
             invisible: false,
             "bg-green-600": beforeToday || itemIsToday,
-            "bg-violet-600": beforeToday && tasksDoneCount != dailyTasks.length,
-            "bg-transparent text-transparent": dailyTasks.length == 0,
+            "bg-violet-600": beforeToday && tasksDoneCount !== tasksCount,
+            "bg-transparent text-transparent": tasksCount === 0,
           }
         )}
       >
         {beforeToday ? (
-          tasksDoneCount == dailyTasks.length ? (
+          tasksDoneCount === tasksCount ? (
             <IconCheck />
           ) : (
             <IconBug />
           )
-        ) : tasksPendingCount == 0 ? (
+        ) : tasksPendingCount === 0 ? (
           ""
         ) : tasksPendingCount < 10 ? (
           tasksPendingCount

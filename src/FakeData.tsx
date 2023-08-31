@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { ReadTransaction } from "replicache";
 import { taskIdPrefix } from "./App";
+import { DayjsDate } from "./utils/PlainDate";
 
 export type ProjectType = {
   id: number;
@@ -31,7 +32,8 @@ export var dataProjects: ProjectType[] = [
 
 export type TaskType = {
   readonly id: string;
-  readonly date: string;
+  readonly created_at: string;
+  readonly date: string | null;
   readonly projectId: number;
   readonly title: string;
   readonly done_at: string | null;
@@ -52,9 +54,42 @@ export function getAllTasks() {
   };
 }
 
+export function getTasksByDays(allTasks: TaskType[], today: DayjsDate) {
+  let tasksByDays: { [key: string]: TaskType[] } = {};
+
+  allTasks.forEach((task) => {
+    if (task.done_at) {
+      // Done tasks are displayed on the day they are done
+      (tasksByDays[new DayjsDate(task.done_at).toString()] ??= []).push(task);
+    } else {
+      if (!task.date) {
+        // Non planned and not done tasks are not displayed
+        return;
+      }
+
+      let taskDate = new DayjsDate(task.date);
+      if (taskDate.isBefore(today)) {
+        // Late tasks are displayed today
+        (tasksByDays[today.toString()] ??= []).push(task);
+      } else {
+        // Planned and not done tasks are displayed on their planned day
+        (tasksByDays[taskDate.toString()] ??= []).push(task);
+      }
+    }
+  });
+
+  return tasksByDays;
+}
+
+export function getTasksOfProject(allTasks: TaskType[], projectId: Number) {
+  if (!allTasks) return [];
+  return allTasks.filter((task) => task.projectId == projectId);
+}
+
 export var dataTasks: TaskType[] = [
   {
     id: "0",
+    created_at: dayjs().toISOString(),
     date: dayjs().toISOString(),
     projectId: 0,
     title:
@@ -63,6 +98,7 @@ export var dataTasks: TaskType[] = [
   },
   {
     id: "1",
+    created_at: dayjs().toISOString(),
     date: dayjs().toISOString(),
     projectId: 2,
     title: "Improve SunriseBriefing",
@@ -70,6 +106,7 @@ export var dataTasks: TaskType[] = [
   },
   {
     id: "2",
+    created_at: dayjs().toISOString(),
     date: dayjs().toISOString(),
     projectId: 3,
     title: "Organiser un chalet pour le nouvel an",
@@ -77,6 +114,7 @@ export var dataTasks: TaskType[] = [
   },
   {
     id: "3",
+    created_at: dayjs().toISOString(),
     date: dayjs().toISOString(),
     projectId: 2,
     title: "Design Todobeast tasks",
@@ -84,6 +122,7 @@ export var dataTasks: TaskType[] = [
   },
   {
     id: "4",
+    created_at: dayjs().toISOString(),
     date: dayjs().add(-1, "day").toISOString(),
     projectId: 2,
     title: "Test 1",
@@ -91,6 +130,7 @@ export var dataTasks: TaskType[] = [
   },
   {
     id: "5",
+    created_at: dayjs().toISOString(),
     date: dayjs().add(-2, "day").toISOString(),
     projectId: 2,
     title: "Test 2",
@@ -98,6 +138,7 @@ export var dataTasks: TaskType[] = [
   },
   {
     id: "6",
+    created_at: dayjs().toISOString(),
     date: dayjs().add(-2, "day").toISOString(),
     projectId: 2,
     title: "Test 3",

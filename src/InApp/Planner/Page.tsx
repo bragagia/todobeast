@@ -1,50 +1,40 @@
-import dayjs from "dayjs";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import { rep } from "../../App";
-import { getAllTasks } from "../../FakeData";
+import { getAllTasks, getTasksByDays } from "../../FakeData";
+import { DayjsDate } from "../../utils/PlainDate";
+import useDate from "../../utils/UseDate";
 import { AnimatedTranslate } from "../Components/AnimatedTranslate";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
 import { WeeklyCalendarNav } from "./Components/WeeklyCalendarNav";
 
 export function PlannerPage() {
+  let { year, month, day } = useParams();
+
+  const todayDate = useDate();
+
+  const urlDate = useMemo(() => {
+    return year && month && day ? new DayjsDate(year, month, day) : todayDate;
+  }, [year, month, day, todayDate]);
+
   const allTasks = useSubscribe(rep, getAllTasks(), [], [rep]);
 
-  let { year, month, day } = useParams();
-  const urlDate = useMemo(() => {
-    return day
-      ? dayjs(`${year}-${month}-${day}`, "YYYY-MM-DD")
-      : dayjs().startOf("day");
-  }, [year, month, day]);
-
-  const pageIsBeforeToday = useMemo(() => {
-    return dayjs(urlDate).startOf("day").isBefore(dayjs().startOf("day"));
-  }, [urlDate]);
-
-  const pageIsToday = useMemo(() => {
-    return dayjs(urlDate).isSame(dayjs().startOf("day"));
-  }, [urlDate]);
-
-  const tasksOfDay = useMemo(() => {
-    return allTasks.filter((task) => {
-      return (
-        dayjs(task.date).startOf("day").isSame(urlDate) ||
-        (pageIsToday && !task.done_at && dayjs(task.date).isBefore(urlDate))
-      );
-    });
-  }, [allTasks, urlDate, pageIsToday]);
+  const tasksByDays = useMemo(
+    () => getTasksByDays(allTasks, todayDate),
+    [allTasks, todayDate]
+  );
 
   // TODO: Disable TaskCreator if pageisbeforetoday
   return (
     <>
-      <WeeklyCalendarNav />
+      <WeeklyCalendarNav tasksByDays={tasksByDays} />
 
-      <TaskCreator />
+      <TaskCreator date={urlDate} />
 
-      <AnimatedTranslate childKey={urlDate.format("YYYY/MM/DD")}>
-        <TaskList tasks={tasksOfDay} />
+      <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
+        <TaskList tasks={tasksByDays[urlDate.toString()]} />
       </AnimatedTranslate>
     </>
   );

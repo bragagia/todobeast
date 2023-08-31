@@ -17,7 +17,7 @@ export function TaskTitle({ task }: { task: TaskType }) {
 
   return (
     <div className="button">
-      {editor ? <EditorContent editor={editor} /> : null}
+      {editor ? <EditorContent editor={editor} /> : <p>{task.title}</p>}
     </div>
   );
 }

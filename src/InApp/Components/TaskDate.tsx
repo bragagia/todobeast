@@ -2,23 +2,30 @@ import classNames from "classnames";
 import dayjs from "dayjs";
 import { TaskType } from "../../FakeData";
 import { IconCalendar } from "../../utils/Icons";
+import { DayjsDate } from "../../utils/PlainDate";
+import useDate from "../../utils/UseDate";
 
 export function TaskDate({ task }: { task: TaskType }) {
-  let taskDate = dayjs(task.date).startOf("day");
+  let taskDate = task.date ? new DayjsDate(task.date) : null;
 
-  let today = dayjs().startOf("day");
+  let today = useDate();
 
   let taskIsLate =
+    taskDate &&
     taskDate.isBefore(today) &&
-    (!task.done_at || dayjs(task.done_at).isAfter(task.date));
+    (!task.done_at || dayjs(task.done_at).startOf("day").isAfter(task.date));
 
-  let dateFormatted = "Today";
+  let dateFormatted = "No date";
 
-  if (!taskDate.isSame(today)) {
-    dateFormatted = taskDate.format("dddd\nD MMMM");
+  if (taskDate) {
+    if (taskDate.isSame(today)) {
+      dateFormatted = "Today";
+    } else {
+      dateFormatted = taskDate.format("dddd\nD MMMM");
 
-    if (taskDate.year() != dayjs().year()) {
-      dateFormatted = taskDate.format("\nYYYY");
+      if (taskDate.Year() !== dayjs().year()) {
+        dateFormatted = taskDate.format("\nYYYY");
+      }
     }
   }
 
@@ -35,7 +42,7 @@ export function TaskDate({ task }: { task: TaskType }) {
 
       <div className="flex flex-row items-start gap-1 md:flex-col md:gap-0">
         {dateFormatted.split("\n").map((dateLine, i) => {
-          return <div key={i}>{dateLine}</div>;
+          return <div key={"date-line/" + i}>{dateLine}</div>;
         })}
       </div>
     </button>

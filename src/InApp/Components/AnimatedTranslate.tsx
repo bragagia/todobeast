@@ -1,6 +1,6 @@
 import { animated, useTransition } from "@react-spring/web";
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /*
  Animated translate need a comparable childkey to know the direction to which the translation must take place.
@@ -12,13 +12,21 @@ export function AnimatedTranslate({
   children: JSX.Element;
   childKey: string;
 }) {
-  const childRef = useRef<HTMLDivElement>(null);
+  //
   const [currentChild, setCurrentChild] = useState({
     elem: children,
     key: childKey,
   });
-  const [animating, setAnimating] = useState(0);
+  const [previousChild, setPreviousChild] = useState({
+    elem: children,
+    key: childKey,
+  });
+
+  // Styling status
+  let [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState<"next" | "prev" | null>(null);
+
+  const childRef = useRef<HTMLDivElement>(null);
   const [parentHeight, setParentHeight] = useState(0);
 
   const transitions = useTransition([currentChild], {
@@ -39,22 +47,26 @@ export function AnimatedTranslate({
     },
 
     config: {
-      tension: 550,
+      tension: 500,
       friction: 40,
     },
 
-    onRest: () => {
-      // Uses because if child change before transition ends, onRest is called. With animating as a number, it will be incremented to 2 and then reset to 0 at the very end
-      setAnimating(Math.max(animating - 1, 0));
+    onDestroyed(item: { elem: JSX.Element; key: string }) {
+      // We keep in memory previous child, because onDestroyed is called for every destroyed child, so we want to make sure the destroyed item is the last one == when the animation really stop
+      if (item.key === previousChild.key) {
+        // Uses because if child change before transition ends, onRest is called. With animating as a number, it will be incremented to 2 and then reset to 0 at the very end
+        setAnimating(false);
 
-      // Reset the height to the current child after the transition ends.
-      if (childRef.current) {
-        setParentHeight(childRef.current.offsetHeight);
+        // Reset the height to the current child after the transition ends.
+        if (childRef.current) {
+          setParentHeight(childRef.current.offsetHeight);
+        }
       }
+      return;
     },
   });
 
-  function calculateHeight() {
+  const calculateHeight = useCallback(() => {
     if (childRef.current) {
       const incomingChild = childRef.current;
 
@@ -62,22 +74,24 @@ export function AnimatedTranslate({
       const maxChildHeight = Math.max(parentHeight, incomingChild.offsetHeight);
       setParentHeight(maxChildHeight);
     }
-  }
+  }, [childRef, parentHeight]);
 
   useEffect(() => {
     if (childKey !== currentChild.key) {
       setDirection(childKey < currentChild.key ? "prev" : "next");
-      setAnimating(animating + 1);
+      setAnimating(true);
 
+      setPreviousChild(currentChild);
       setCurrentChild({ elem: children, key: childKey });
-
-      // Add a setTimeout to allow childRef and parentRef to be populated before measuring height
-      setTimeout(() => {
-        calculateHeight();
-      }, 0);
     }
-  }, [childKey, children]);
 
+    // Add a setTimeout to allow childRef and parentRef to be populated before measuring height
+    setTimeout(() => {
+      calculateHeight();
+    }, 0);
+  }, [childKey, children, calculateHeight, currentChild]);
+
+  // Used to recalculate height on every frame
   useEffect(() => {
     let rafId: number;
 
@@ -97,16 +111,19 @@ export function AnimatedTranslate({
       // Clean up the loop when the component unmounts or when `animating` changes
       cancelAnimationFrame(rafId);
     };
-  }, [animating]);
+  }, [animating, calculateHeight]);
+
+  if (!animating && childKey !== currentChild.key) {
+    animating = true;
+  }
 
   // If animating or if a new child as just been mounted, render transition instead of direct child
   return (
     <div
-      key="animating-div"
       className={classNames("w-full", {
-        "relative overflow-hidden": animating > 0,
+        "relative overflow-hidden": animating,
       })}
-      style={animating > 0 ? { height: `${parentHeight}px` } : {}}
+      style={animating ? { height: `${parentHeight}px` } : {}}
     >
       {transitions((props, item, state) => (
         <animated.div
@@ -114,9 +131,9 @@ export function AnimatedTranslate({
           id={item.key}
           ref={childRef}
           style={props}
-          className={classNames("w-full", { absolute: animating > 0 })}
+          className={classNames("w-full", { absolute: animating })}
         >
-          {item.key == childKey ? children : item.elem}
+          {item.key === childKey ? children : item.elem}
         </animated.div>
       ))}
     </div>
