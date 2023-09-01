@@ -1,11 +1,11 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { projectIdRemovePrefix } from "./db/projects";
 import { InAppLayout } from "./InApp/Layout";
-import { PlannerLayout } from "./InApp/Planner/Layout";
 import { PlannerPage } from "./InApp/Planner/Page";
+import { ProjectsNewPage } from "./InApp/Project/New/Page";
 import { ProjectPage } from "./InApp/Project/Page";
 import { ProjectListPage } from "./InApp/ProjectsList/Page";
 import { DayjsDate } from "./utils/PlainDate";
-import { projectIdRemovePrefix } from "./db/projects";
 
 export const appRouter = createBrowserRouter([
   {
@@ -14,23 +14,21 @@ export const appRouter = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to={UrlPlanner()} /> },
       {
-        path: "planner",
-        element: <PlannerLayout />,
-        children: [
-          {
-            index: true,
-            element: <PlannerPage />,
-          },
-          {
-            path: "today/",
-            element: <PlannerPage />,
-          },
-          { path: ":year/:month/:day", element: <PlannerPage /> },
-        ],
+        path: "planner/",
+        element: <PlannerPage />,
       },
+      {
+        path: "planner/today/",
+        element: <PlannerPage />,
+      },
+      { path: "planner/:year/:month/:day", element: <PlannerPage /> },
       {
         path: "projects/",
         element: <ProjectListPage />,
+      },
+      {
+        path: "projects/new",
+        element: <ProjectsNewPage />,
       },
       { path: "projects/:id/:name/", element: <ProjectPage /> },
     ],
@@ -50,8 +48,12 @@ export function UrlPlanner(date?: DayjsDate, today?: DayjsDate) {
   return "/planner/" + date.toString("/");
 }
 
-export function UrlProjectList() {
+export function UrlProjectsList() {
   return "/projects/";
+}
+
+export function UrlProjectsNew() {
+  return "/projects/new";
 }
 
 export function UrlProject(projectId: string, projectName: string) {

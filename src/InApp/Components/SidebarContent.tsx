@@ -1,10 +1,15 @@
 import classNames from "classnames";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import { rep } from "../../Replicache";
-import { UrlNavLinkPlanner, UrlProject } from "../../Router";
+import { UrlNavLinkPlanner, UrlProject, UrlProjectsNew } from "../../Router";
 import { getAllProjects } from "../../db/projects";
-import { IconCalendar, IconMap, IconSettings } from "../../utils/Icons";
+import {
+  IconCalendar,
+  IconMap,
+  IconPlus,
+  IconSettings,
+} from "../../utils/Icons";
 import { SidemenuItem } from "./SidebarItem";
 
 export function SidebarContent() {
@@ -42,11 +47,18 @@ export function SidebarContent() {
         </SidemenuItem>
       </div>
 
-      <h3 className="mt-8 mb-2 text-sm font-medium text-gray-500">Projects</h3>
+      <div className="group">
+        <div className="flex flex-row items-center justify-between mt-8 mb-2">
+          <h3 className="text-sm font-medium text-gray-500 ">Projects</h3>
+          <Link
+            className="flex w-5 h-5 text-gray-400 no-touch:invisible group-hover:visible hover:text-gray-900"
+            to={UrlProjectsNew()}
+          >
+            <IconPlus />
+          </Link>
+        </div>
 
-      {allProjects
-        .sort((a, b) => a.order - b.order)
-        .map((project) => (
+        {allProjects.map((project) => (
           <SidemenuItem
             key={"sidebar/project/" + project.id}
             to={UrlProject(project.id, project.name)}
@@ -57,6 +69,7 @@ export function SidebarContent() {
             {project.name}
           </SidemenuItem>
         ))}
+      </div>
     </ul>
   );
 }

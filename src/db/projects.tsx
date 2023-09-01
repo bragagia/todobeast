@@ -46,12 +46,15 @@ export function getProject(projectId: string) {
   };
 }
 
+// getAllProjects return all project sorted by their order
 export function getAllProjects() {
   return async function (tx: ReadTransaction) {
-    return (await tx
-      .scan({ prefix: projectIdPrefix })
-      .values()
-      .toArray()) as ProjectType[];
+    return (
+      (await tx
+        .scan({ prefix: projectIdPrefix })
+        .values()
+        .toArray()) as ProjectType[]
+    ).sort((a, b) => a.order - b.order);
   };
 }
 

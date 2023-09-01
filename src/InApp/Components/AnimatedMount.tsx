@@ -1,9 +1,7 @@
 import { animated, useTransition } from "@react-spring/web";
 import { ReactNode, useState } from "react";
 
-export function AnimatedMount({ children }: { children: ReactNode }) {
-  return <>{children}</>;
-
+export function AnimatedMountArchive({ children }: { children: ReactNode }) {
   const [identifier] = useState(Math.random());
 
   const transitions = useTransition(identifier, {

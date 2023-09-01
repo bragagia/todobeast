@@ -1,26 +1,26 @@
 import classNames from "classnames";
+import { TaskType } from "../../db/tasks";
 import { TaskCheckbox } from "./TaskCheckbox";
 import { TaskDate } from "./TaskDate";
 import { TaskProject } from "./TaskProject";
 import { TaskTitle } from "./TaskTitle";
-import { TaskType } from "../../db/tasks";
 
 export function Task({ task }: { task: TaskType }) {
   return (
     <div className="hover:bg-gray-50">
       <div
         className={classNames(
-          "flex flex-row-reverse sm:flex-row items-center gap-2 py-2 border-b border-gray-200 rounded md:py-1",
+          "flex flex-row-reverse sm:flex-row items-center gap-1 py-1 page-padding border-b border-gray-200 md:py-1",
           { "opacity-40 hover:opacity-70": task?.done_at }
         )}
       >
-        <div className="flex items-center self-stretch justify-center mr-1 sm:ml-1">
+        <div className="flex items-center self-stretch justify-center">
           <TaskCheckbox task={task} />
         </div>
 
         <div className="flex flex-col justify-start overflow-auto md:items-center grow md:flex-row">
           <div className="flex flex-row items-center flex-shrink-0 text-gray-600 md:text-black md:basis-60">
-            <div className="mr-2 md:mr-0 md:basis-24">
+            <div className="mr-2 md:mr-0 max-w-[8rem] md:max-w-[7rem] md:w-[7rem]">
               <TaskProject task={task} />
             </div>
 

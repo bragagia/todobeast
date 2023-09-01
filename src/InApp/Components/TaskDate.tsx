@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
+import { TaskType } from "../../db/tasks";
 import { IconCalendar } from "../../utils/Icons";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
-import { TaskType } from "../../db/tasks";
 
 export function TaskDate({ task }: { task: TaskType }) {
   let taskDate = task.date ? new DayjsDate(task.date) : null;
@@ -15,9 +15,11 @@ export function TaskDate({ task }: { task: TaskType }) {
     taskDate.isBefore(today) &&
     (!task.done_at || dayjs(task.done_at).startOf("day").isAfter(task.date));
 
-  let dateFormatted = "No date";
+  let dateFormatted = "Set date";
+  let noDate = true;
 
   if (taskDate) {
+    noDate = false;
     if (taskDate.isSame(today)) {
       dateFormatted = "Today";
     } else {
@@ -33,6 +35,7 @@ export function TaskDate({ task }: { task: TaskType }) {
     <button
       className={classNames(
         "text-xs font-light flex flex-row gap-2 items-center button md:text-sm w-full",
+        { "text-gray-400": noDate },
         { "!font-bold text-red-700": taskIsLate }
       )}
     >

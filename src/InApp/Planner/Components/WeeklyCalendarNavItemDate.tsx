@@ -1,8 +1,8 @@
 import classNames from "classnames";
+import { TaskType } from "../../../db/tasks";
 import { IconBug, IconCheck } from "../../../utils/Icons";
 import { DayjsDate } from "../../../utils/PlainDate";
 import useDate from "../../../utils/UseDate";
-import { TaskType } from "../../../db/tasks";
 
 export function WeeklyCalendarNavItemDate({
   date,
@@ -41,12 +41,12 @@ export function WeeklyCalendarNavItemDate({
 
       <div
         className={classNames(
-          "flex items-center justify-center w-4 h-4 p-[2px] text-xs text-white bg-black rounded-full",
+          "flex items-center border justify-center w-4 h-4 p-[2px] text-xs rounded-full border-black text-black",
           {
-            invisible: false,
-            "bg-green-600": beforeToday || itemIsToday,
-            "bg-violet-600": beforeToday && tasksDoneCount !== tasksCount,
-            "bg-transparent text-transparent": tasksCount === 0,
+            "!border-green-600 !text-green-600": beforeToday || itemIsToday,
+            "!border-violet-600 !text-violet-600":
+              beforeToday && tasksDoneCount !== tasksCount,
+            invisible: tasksCount === 0,
           }
         )}
       >

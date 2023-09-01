@@ -38,7 +38,7 @@ export var initProjects: Omit<ProjectType, "id">[] = [
     special: "inbox",
   },
   {
-    order: 1,
+    order: 99999,
     icon: "archive",
     icon_color: "text-gray-700",
     name: "Archive",
@@ -55,7 +55,7 @@ export var initProjects: Omit<ProjectType, "id">[] = [
     order: 3,
     icon: "😄",
     icon_color: "text-gray-700",
-    name: "Perso",
+    name: "A very very very very very long project name",
     special: null,
   },
 ];

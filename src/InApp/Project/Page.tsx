@@ -1,14 +1,13 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
-import { AnimatedMount } from "../Components/AnimatedMount";
+import { rep } from "../../Replicache";
+import { getProject, projectIdPrefix } from "../../db/projects";
+import { getTasksOfProject } from "../../db/tasks";
 import { PageTitle } from "../Components/PageTitle";
 import { ProjectName } from "../Components/ProjectName";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
-import { rep } from "../../Replicache";
-import { projectIdPrefix, getProject } from "../../db/projects";
-import { getTasksOfProject } from "../../db/tasks";
 
 export function ProjectPage() {
   let { id } = useParams();
@@ -32,7 +31,7 @@ export function ProjectPage() {
   }
 
   return (
-    <AnimatedMount key={projectId}>
+    <>
       <PageTitle>
         <ProjectName
           project={project}
@@ -41,9 +40,11 @@ export function ProjectPage() {
         />
       </PageTitle>
 
-      <TaskCreator projectId={projectId} />
+      <div className="page-padding">
+        <TaskCreator projectId={projectId} />
+      </div>
 
       <TaskList tasks={tasksofProject} />
-    </AnimatedMount>
+    </>
   );
 }

@@ -45,7 +45,7 @@ export function SidemenuItem({
           <div className="flex-shrink-0 w-4 text-center">{emoji}</div>
         )}
 
-        <span className="flex-1 ml-3 font-light whitespace-nowrap">
+        <span className="flex-1 ml-3 overflow-hidden font-light whitespace-nowrap text-ellipsis">
           {children}
         </span>
 

@@ -5,11 +5,11 @@ import { rep } from "../../Replicache";
 import { getTasksByDays } from "../../db/tasks";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
+import { AnimatedTranslate } from "../Components/AnimatedTranslate";
 import { PageTitle } from "../Components/PageTitle";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
 import { WeeklyCalendarNav } from "./Components/WeeklyCalendarNav";
-import { AnimatedTranslate } from "../Components/AnimatedTranslate";
 
 export function PlannerPage() {
   let { year, month, day } = useParams();
@@ -31,7 +31,9 @@ export function PlannerPage() {
         <WeeklyCalendarNav tasksByDays={tasksByDays} />
       </PageTitle>
 
-      <TaskCreator date={urlDate} />
+      <div className="page-padding">
+        <TaskCreator date={urlDate} />
+      </div>
 
       <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
         <TaskList tasks={tasksByDays[urlDate.toString()]} />
