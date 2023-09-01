@@ -1,34 +1,7 @@
-import { nanoid } from "nanoid";
 import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
-import { Replicache, WriteTransaction } from "replicache";
-import { TaskType } from "./FakeData";
+import { rep } from "./Replicache";
 import { appRouter } from "./Router";
-
-export const taskIdPrefix = "tasks/";
-
-export const rep = new Replicache({
-  licenseKey: "le17c8453f94e462e92cae4e1797cd24b",
-  name: "mathias.bragagia.pro+test2@gmail.com",
-  mutators: {
-    taskCreate: async (tx: WriteTransaction, task: Omit<TaskType, "id">) => {
-      let taskId = taskIdPrefix + nanoid();
-
-      await tx.put(taskId, { id: taskId, ...task });
-
-      return taskId;
-    },
-    taskUpdate: async (
-      tx: WriteTransaction,
-      task: Required<Pick<TaskType, "id">> & Partial<TaskType>
-    ) => {
-      const prev = (await tx.get(task.id)) as TaskType;
-      const next = { ...prev, ...task };
-
-      await tx.put(task.id, next);
-    },
-  },
-});
 
 export default function App() {
   const cleanup = () => {
@@ -37,6 +10,8 @@ export default function App() {
   };
 
   useEffect(() => {
+    rep.mutate.createInitData();
+
     window.addEventListener("beforeunload", cleanup);
 
     // return a cleanup function from useEffect

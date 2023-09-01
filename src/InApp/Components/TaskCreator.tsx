@@ -1,4 +1,3 @@
-import { Editor } from "@tiptap/core";
 import Document from "@tiptap/extension-document";
 import History from "@tiptap/extension-history";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -6,8 +5,11 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import { EditorContent, Extension, useEditor } from "@tiptap/react";
 import dayjs from "dayjs";
-import { useMemo } from "react";
-import { rep } from "../../App";
+import { useMemo, useState } from "react";
+import { useSubscribe } from "replicache-react";
+import { rep } from "../../Replicache";
+import { getProjectInbox } from "../../db/projects";
+import { newTaskId } from "../../db/tasks";
 import { IconPlus } from "../../utils/Icons";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
@@ -17,26 +19,27 @@ export function TaskCreator({
   projectId,
 }: {
   date?: DayjsDate;
-  projectId?: number;
+  projectId?: string;
 }) {
   const placeholder = "Add task. Press enter to create.";
 
   const today = useDate();
-  const disabled = useMemo(() => date?.isBefore(today), [today, date]);
 
-  const onEnterPressed = useMemo(() => {
-    return (editor: Editor) => {
-      rep.mutate.taskCreate({
-        created_at: dayjs().toISOString(),
-        title: editor?.getText() || "",
-        date: date ? date.toString() : null,
-        projectId: projectId ? projectId : 0,
-        done_at: null,
-      });
+  const creationDate = useMemo(() => {
+    if (!date) {
+      return null;
+    }
 
-      return editor.commands.setContent(null);
-    };
-  }, [date, projectId]);
+    if (date.isBefore(today)) {
+      return today.toString();
+    }
+
+    return date.toString();
+  }, [today, date]);
+
+  const [content, setContent] = useState("");
+
+  const projectInbox = useSubscribe(rep, getProjectInbox(), null, [rep]);
 
   const editor = useEditor(
     {
@@ -48,23 +51,48 @@ export function TaskCreator({
         Extension.create({
           addKeyboardShortcuts(this) {
             return {
-              Enter: () => onEnterPressed(this.editor),
+              Enter: () => {
+                if (!projectId) {
+                  if (!projectInbox) {
+                    return true;
+                  }
+                  projectId = projectInbox.id;
+                }
+
+                let title = this.editor.getText();
+                if (title === "") {
+                  return true;
+                }
+
+                rep.mutate.taskCreate({
+                  id: newTaskId(),
+                  created_at: dayjs().toISOString(),
+                  title: title,
+                  date: creationDate,
+                  projectId: projectId,
+                  done_at: null,
+                });
+
+                return this.editor.commands.setContent(null);
+              },
             };
           },
         }),
+
         Placeholder.configure({
           placeholder: placeholder,
         }),
       ],
 
+      onBlur({ editor, event }) {
+        setContent(editor.getText());
+      },
+
+      content: content,
       autofocus: false,
     },
-    [onEnterPressed]
+    [creationDate, projectId, projectInbox]
   );
-
-  if (disabled) {
-    return null;
-  }
 
   return (
     <div className="flex flex-row items-center w-full button-visible ">

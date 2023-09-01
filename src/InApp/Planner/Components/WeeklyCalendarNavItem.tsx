@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { TaskType } from "../../../FakeData";
 import { UrlPlanner } from "../../../Router";
+import { TaskType } from "../../../db/tasks";
 import { DayjsDate } from "../../../utils/PlainDate";
 import useDate from "../../../utils/UseDate";
 import { WeeklyCalendarNavItemBeast } from "./WeeklyCalendarNavItemBeast";

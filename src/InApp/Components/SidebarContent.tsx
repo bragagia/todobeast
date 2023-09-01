@@ -1,11 +1,15 @@
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
-import { dataProjects } from "../../FakeData";
+import { useSubscribe } from "replicache-react";
+import { rep } from "../../Replicache";
 import { UrlNavLinkPlanner, UrlProject } from "../../Router";
+import { getAllProjects } from "../../db/projects";
 import { IconCalendar, IconMap, IconSettings } from "../../utils/Icons";
 import { SidemenuItem } from "./SidebarItem";
 
 export function SidebarContent() {
+  const allProjects = useSubscribe(rep, getAllProjects(), [], [rep]);
+
   return (
     <ul className="flex flex-col p-4">
       <div className="flex flex-row items-center justify-between my-4">
@@ -40,17 +44,19 @@ export function SidebarContent() {
 
       <h3 className="mt-8 mb-2 text-sm font-medium text-gray-500">Projects</h3>
 
-      {dataProjects.map((project) => (
-        <SidemenuItem
-          key={"sidebar/project/" + project.id}
-          to={UrlProject(project.id, project.name)}
-          Icon={IconMap[project.icon]}
-          emoji={project.icon}
-          iconColor={project.icon_color}
-        >
-          {project.name}
-        </SidemenuItem>
-      ))}
+      {allProjects
+        .sort((a, b) => a.order - b.order)
+        .map((project) => (
+          <SidemenuItem
+            key={"sidebar/project/" + project.id}
+            to={UrlProject(project.id, project.name)}
+            Icon={IconMap[project.icon]}
+            emoji={project.icon}
+            iconColor={project.icon_color}
+          >
+            {project.name}
+          </SidemenuItem>
+        ))}
     </ul>
   );
 }

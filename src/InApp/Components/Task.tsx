@@ -1,9 +1,9 @@
 import classNames from "classnames";
-import { TaskType } from "../../FakeData";
 import { TaskCheckbox } from "./TaskCheckbox";
 import { TaskDate } from "./TaskDate";
 import { TaskProject } from "./TaskProject";
 import { TaskTitle } from "./TaskTitle";
+import { TaskType } from "../../db/tasks";
 
 export function Task({ task }: { task: TaskType }) {
   return (

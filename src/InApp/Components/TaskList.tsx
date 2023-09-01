@@ -1,15 +1,9 @@
 import dayjs from "dayjs";
-import { TaskType } from "../../FakeData";
+import { TaskType } from "../../db/tasks";
 import { DayjsDate } from "../../utils/PlainDate";
 import { Task } from "./Task";
 
 export function TaskList({ tasks }: { tasks: TaskType[] }) {
-  //const [showDoneTasks, setshowDoneTasks] = useState(false);
-
-  // function handleToggleTasksDone() {
-  //   setshowDoneTasks(!showDoneTasks);
-  // }
-
   if (!tasks || tasks.length === 0) {
     return (
       <p className="pt-10 font-bold text-center text-gray-400">
@@ -50,31 +44,39 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
           return 0;
         })
         .map((task) => {
-          return <Task key={"task/" + task.id} task={task} />;
+          return <Task key={task.id} task={task} />;
         })}
-      {/* <div>
-        <button onClick={handleToggleTasksDone}>Open</button>
-        <div
-          className={classNames("transition-all duration-150 ease-in-out h-0", {
-            "h-full": showDoneTasks,
-          })}
-        >
-          COUCOU
-          <br />
-          COUCOU
-          <br />
-          COUCOU
-          <br />
-          COUCOU
-          <br />
-          COUCOU
-          <br />
-          COUCOU
-          <br />
-          COUCOU
-          <br />
-        </div>
-      </div> */}
     </div>
   );
 }
+
+//const [showDoneTasks, setshowDoneTasks] = useState(false);
+
+// function handleToggleTasksDone() {
+//   setshowDoneTasks(!showDoneTasks);
+// }
+
+/* <div>
+    <button onClick={handleToggleTasksDone}>Open</button>
+    <div
+      className={classNames("transition-all duration-150 ease-in-out h-0", {
+        "h-full": showDoneTasks,
+      })}
+    >
+      COUCOU
+      <br />
+      COUCOU
+      <br />
+      COUCOU
+      <br />
+      COUCOU
+      <br />
+      COUCOU
+      <br />
+      COUCOU
+      <br />
+      COUCOU
+      <br />
+    </div>
+  </div>
+  */

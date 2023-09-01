@@ -1,35 +1,41 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
-import { rep } from "../../App";
-import { getAllTasks, getTasksOfProject } from "../../FakeData";
 import { AnimatedMount } from "../Components/AnimatedMount";
 import { PageTitle } from "../Components/PageTitle";
 import { ProjectName } from "../Components/ProjectName";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
+import { rep } from "../../Replicache";
+import { projectIdPrefix, getProject } from "../../db/projects";
+import { getTasksOfProject } from "../../db/tasks";
 
 export function ProjectPage() {
   let { id } = useParams();
 
-  let projectId = useMemo(() => (id ? +id : 0), [id]);
+  let projectId = useMemo(() => (id ? projectIdPrefix + id : ""), [id]);
 
-  const allTasks = useSubscribe(rep, getAllTasks(), [], [rep]);
+  const project = useSubscribe(rep, getProject(projectId), null, [
+    rep,
+    projectId,
+  ]);
 
-  const tasksofProject = useMemo(
-    () => getTasksOfProject(allTasks, projectId),
-    [allTasks, projectId]
+  const tasksofProject = useSubscribe(
+    rep,
+    getTasksOfProject(projectId),
+    [],
+    [rep, projectId]
   );
 
-  if (!id) {
+  if (!projectId || !project) {
     return <p>Error: Missing project id</p>;
   }
 
   return (
-    <AnimatedMount key={id}>
+    <AnimatedMount key={projectId}>
       <PageTitle>
         <ProjectName
-          projectId={projectId}
+          project={project}
           className="justify-center gap-2 text-xl"
           iconClassName="w-5 h-5"
         />

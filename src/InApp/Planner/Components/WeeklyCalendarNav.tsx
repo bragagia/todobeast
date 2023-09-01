@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TaskType } from "../../../FakeData";
+import { TaskType } from "../../../db/tasks";
 import { IconChevronLeft, IconChevronRight } from "../../../utils/Icons";
 import { DayjsDate } from "../../../utils/PlainDate";
 import useDate from "../../../utils/UseDate";

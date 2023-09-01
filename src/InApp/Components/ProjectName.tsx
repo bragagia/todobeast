@@ -1,17 +1,20 @@
 import classNames from "classnames";
-import { dataProjects } from "../../FakeData";
+import { ProjectType } from "../../db/projects";
 import { IconMap } from "../../utils/Icons";
 
 export function ProjectName({
-  projectId,
+  project,
   className = "",
   iconClassName = "",
 }: {
-  projectId: number;
+  project: ProjectType | null;
   className?: string;
   iconClassName?: string;
 }) {
-  let project = dataProjects[projectId];
+  if (!project) {
+    return <></>;
+  }
+
   let Icon = IconMap[project.icon];
   let emoji = !Icon ? project.icon : "";
 

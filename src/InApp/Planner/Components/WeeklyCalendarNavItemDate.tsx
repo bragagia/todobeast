@@ -1,8 +1,8 @@
 import classNames from "classnames";
-import { TaskType } from "../../../FakeData";
 import { IconBug, IconCheck } from "../../../utils/Icons";
 import { DayjsDate } from "../../../utils/PlainDate";
 import useDate from "../../../utils/UseDate";
+import { TaskType } from "../../../db/tasks";
 
 export function WeeklyCalendarNavItemDate({
   date,

@@ -5,6 +5,7 @@ import { PlannerPage } from "./InApp/Planner/Page";
 import { ProjectPage } from "./InApp/Project/Page";
 import { ProjectListPage } from "./InApp/ProjectsList/Page";
 import { DayjsDate } from "./utils/PlainDate";
+import { projectIdRemovePrefix } from "./db/projects";
 
 export const appRouter = createBrowserRouter([
   {
@@ -53,10 +54,10 @@ export function UrlProjectList() {
   return "/projects/";
 }
 
-export function UrlProject(projectId: number, projectName: string) {
+export function UrlProject(projectId: string, projectName: string) {
   return (
     "/projects/" +
-    projectId +
+    projectIdRemovePrefix(projectId) +
     "/" +
     projectName.replaceAll(" ", "-").toLowerCase()
   );

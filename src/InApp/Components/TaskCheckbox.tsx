@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { rep } from "../../App";
-import { TaskType } from "../../FakeData";
+import { rep } from "../../Replicache";
+import { TaskType } from "../../db/tasks";
 import { IconCheck } from "../../utils/Icons";
 
 export function TaskCheckbox({ task }: { task: TaskType }) {

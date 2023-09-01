@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
-import { rep } from "../../App";
-import { getAllTasks, getTasksByDays } from "../../FakeData";
+import { rep } from "../../Replicache";
+import { getTasksByDays } from "../../db/tasks";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
-import { AnimatedTranslate } from "../Components/AnimatedTranslate";
+import { PageTitle } from "../Components/PageTitle";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
 import { WeeklyCalendarNav } from "./Components/WeeklyCalendarNav";
-import { PageTitle } from "../Components/PageTitle";
+import { AnimatedTranslate } from "../Components/AnimatedTranslate";
 
 export function PlannerPage() {
   let { year, month, day } = useParams();
@@ -20,14 +20,11 @@ export function PlannerPage() {
     return year && month && day ? new DayjsDate(year, month, day) : todayDate;
   }, [year, month, day, todayDate]);
 
-  const allTasks = useSubscribe(rep, getAllTasks(), [], [rep]);
+  const tasksByDays = useSubscribe(rep, getTasksByDays(todayDate), {}, [
+    rep,
+    todayDate,
+  ]);
 
-  const tasksByDays = useMemo(
-    () => getTasksByDays(allTasks, todayDate),
-    [allTasks, todayDate]
-  );
-
-  // TODO: Disable TaskCreator if pageisbeforetoday
   return (
     <>
       <PageTitle>

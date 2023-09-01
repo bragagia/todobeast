@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { TaskType } from "../../FakeData";
 import { IconCalendar } from "../../utils/Icons";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
+import { TaskType } from "../../db/tasks";
 
 export function TaskDate({ task }: { task: TaskType }) {
   let taskDate = task.date ? new DayjsDate(task.date) : null;
