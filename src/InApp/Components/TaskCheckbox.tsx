@@ -20,7 +20,7 @@ export function TaskCheckbox({ task }: { task: TaskType }) {
       <div
         className={classNames(
           "w-6 h-6 self-strech border rounded-full p-1 flex items-center",
-          { "bg-gray-500 text-white border-gray-500": task?.done_at },
+          { "bg-gray-800 text-white border-gray-800": task?.done_at },
           {
             "border-gray-800 text-white hover:text-gray-800": !task?.done_at,
           }

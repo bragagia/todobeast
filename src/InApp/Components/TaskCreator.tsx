@@ -67,7 +67,7 @@ export function TaskCreator({
   }
 
   return (
-    <div className="flex flex-row items-center w-full button-visible focus-within:bg-gray-100 ">
+    <div className="flex flex-row items-center w-full button-visible ">
       <span className="text-gray-500">
         <IconPlus />
       </span>

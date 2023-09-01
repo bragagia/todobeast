@@ -4,6 +4,7 @@ import { useSubscribe } from "replicache-react";
 import { rep } from "../../App";
 import { getAllTasks, getTasksOfProject } from "../../FakeData";
 import { AnimatedMount } from "../Components/AnimatedMount";
+import { PageTitle } from "../Components/PageTitle";
 import { ProjectName } from "../Components/ProjectName";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
@@ -26,13 +27,13 @@ export function ProjectPage() {
 
   return (
     <AnimatedMount key={id}>
-      <h2 className="mt-6 mb-8">
+      <PageTitle>
         <ProjectName
           projectId={projectId}
           className="justify-center gap-2 text-xl"
           iconClassName="w-5 h-5"
         />
-      </h2>
+      </PageTitle>
 
       <TaskCreator projectId={projectId} />
 

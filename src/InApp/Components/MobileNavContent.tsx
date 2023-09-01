@@ -1,47 +1,21 @@
-import classNames from "classnames";
-import { NavLink } from "react-router-dom";
 import { UrlInbox, UrlNavLinkPlanner, UrlProjectList } from "../../Router";
 import { IconBurger, IconCalendar, IconInbox } from "../../utils/Icons";
+import { MobileNavItem } from "./MobileNavItem";
 
 export function MobileNavContent() {
   return (
     <div className="flex flex-row items-center justify-around h-full">
-      <NavLink
-        className={({ isActive, isPending }) =>
-          classNames(
-            "flex items-center justify-center w-20 h-full text-gray-400",
-            { "text-gray-900": isActive }
-          )
-        }
-        to={UrlProjectList()}
-        end
-      >
+      <MobileNavItem to={UrlProjectList()}>
         <IconBurger />
-      </NavLink>
+      </MobileNavItem>
 
-      <NavLink
-        className={({ isActive, isPending }) =>
-          classNames(
-            "flex items-center justify-center w-20 h-full text-gray-400",
-            { "text-gray-900": isActive }
-          )
-        }
-        to={UrlNavLinkPlanner()}
-      >
+      <MobileNavItem to={UrlNavLinkPlanner()}>
         <IconCalendar />
-      </NavLink>
+      </MobileNavItem>
 
-      <NavLink
-        className={({ isActive, isPending }) =>
-          classNames(
-            "flex items-center justify-center w-20 h-full text-gray-400",
-            { "text-gray-900": isActive }
-          )
-        }
-        to={UrlInbox()}
-      >
+      <MobileNavItem to={UrlInbox()}>
         <IconInbox />
-      </NavLink>
+      </MobileNavItem>
     </div>
   );
 }

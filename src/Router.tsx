@@ -50,7 +50,7 @@ export function UrlPlanner(date?: DayjsDate, today?: DayjsDate) {
 }
 
 export function UrlProjectList() {
-  return "/projects";
+  return "/projects/";
 }
 
 export function UrlProject(projectId: number, projectName: string) {

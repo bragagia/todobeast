@@ -9,6 +9,7 @@ import { AnimatedTranslate } from "../Components/AnimatedTranslate";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
 import { WeeklyCalendarNav } from "./Components/WeeklyCalendarNav";
+import { PageTitle } from "../Components/PageTitle";
 
 export function PlannerPage() {
   let { year, month, day } = useParams();
@@ -29,7 +30,9 @@ export function PlannerPage() {
   // TODO: Disable TaskCreator if pageisbeforetoday
   return (
     <>
-      <WeeklyCalendarNav tasksByDays={tasksByDays} />
+      <PageTitle>
+        <WeeklyCalendarNav tasksByDays={tasksByDays} />
+      </PageTitle>
 
       <TaskCreator date={urlDate} />
 

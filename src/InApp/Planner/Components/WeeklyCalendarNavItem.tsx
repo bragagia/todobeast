@@ -38,19 +38,22 @@ export function WeeklyCalendarNavItem({
   return (
     <button
       onClick={handleClick}
-      className={classNames(
-        "pt-2 flex flex-row grow justify-center opacity-40 hover:opacity-90 animated border-b hover:bg-gray-100",
-        {
-          "!opacity-100 border-gray-600": itemIsActive,
-          "border-gray-300 hover:border-black": !itemIsActive,
-        }
-      )}
+      className={classNames("grow opacity-40 hover:opacity-90 border-b", {
+        "!opacity-100 border-gray-600": itemIsActive,
+        "border-gray-300": !itemIsActive,
+      })}
     >
-      {itemIsToday ? <WeeklyCalendarNavItemBeast date={date} /> : ""}
-      <WeeklyCalendarNavItemDate
-        date={date}
-        dailyTasks={tasksByDays[date.toString()]}
-      />
+      <div
+        className={classNames("flex flex-row justify-center mb-2 button", {
+          "button-active": itemIsActive,
+        })}
+      >
+        {itemIsToday ? <WeeklyCalendarNavItemBeast date={date} /> : ""}
+        <WeeklyCalendarNavItemDate
+          date={date}
+          dailyTasks={tasksByDays[date.toString()]}
+        />
+      </div>
     </button>
   );
 }

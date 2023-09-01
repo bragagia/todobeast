@@ -7,10 +7,10 @@ import { SidemenuItem } from "./SidebarItem";
 
 export function SidebarContent() {
   return (
-    <ul className="flex flex-col py-4">
-      <div className="flex flex-row items-center justify-between px-4 my-4">
+    <ul className="flex flex-col p-4">
+      <div className="flex flex-row items-center justify-between my-4">
         <h1
-          className="text-3xl text-center text-red-500 align-middle josefin-sans"
+          className="text-5xl text-center text-red-500 align-middle sm:text-2xl md:text-3xl josefin-sans"
           style={{ textShadow: "1px 1px black" }}
         >
           Todobeast
@@ -18,8 +18,8 @@ export function SidebarContent() {
         <NavLink
           to="/settings"
           className={({ isActive, isPending }) =>
-            classNames("text-gray-800 sidemenu-button", {
-              "sidemenu-button-active": isActive,
+            classNames("text-gray-800 button", {
+              "button-active": isActive,
             })
           }
         >
@@ -38,9 +38,7 @@ export function SidebarContent() {
         </SidemenuItem>
       </div>
 
-      <h3 className="px-4 mt-8 mb-2 text-sm font-medium text-gray-500">
-        Projects
-      </h3>
+      <h3 className="mt-8 mb-2 text-sm font-medium text-gray-500">Projects</h3>
 
       {dataProjects.map((project) => (
         <SidemenuItem

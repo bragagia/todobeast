@@ -18,15 +18,19 @@
 }
 
 .button-base {
-  @apply p-1 border rounded-lg hover:border-gray-400 hover:bg-gray-100 focus:border-gray-300 focus-within:border-gray-300 animated;
+  @apply p-1 border rounded-lg mt-[1px] ml-[1px];
 }
 
 .button {
-  @apply button-base border-transparent;
+  @apply button-base border-transparent hover:border-opacity-10 hover:border-gray-700;
+}
+
+.button-active {
+  @apply button-base border-gray-700 !border-opacity-20;
 }
 
 .button-visible {
-  @apply button-base border-gray-200;
+  @apply button-base border-gray-700 border-opacity-10 hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40;
 }
 
 .animated {
