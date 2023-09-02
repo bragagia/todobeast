@@ -22,21 +22,21 @@ export class DayjsDate {
   ) {
     let date: dayjs.Dayjs;
     if (dayjs.isDayjs(yearOrMonthOrDateString)) {
-      date = dayjs.utc(yearOrMonthOrDateString.format("YYYY-MM-DD"));
+      date = dayjs(yearOrMonthOrDateString.format("YYYY-MM-DD"));
     } else if (
       typeof yearOrMonthOrDateString === "string" &&
       monthOrDay === undefined &&
       day === undefined
     ) {
-      date = dayjs.utc(yearOrMonthOrDateString);
+      date = dayjs(yearOrMonthOrDateString);
     } else if (
       yearOrMonthOrDateString !== undefined &&
       monthOrDay !== undefined &&
       day !== undefined
     ) {
-      date = dayjs.utc(`${yearOrMonthOrDateString}-${monthOrDay}-${day}`);
+      date = dayjs(`${yearOrMonthOrDateString}-${monthOrDay}-${day}`);
     } else {
-      date = dayjs.utc();
+      date = dayjs();
     }
     this.year = date.year();
     this.month = date.month() + 1;
@@ -44,8 +44,7 @@ export class DayjsDate {
   }
 
   toDayjs(): dayjs.Dayjs {
-    return dayjs
-      .utc()
+    return dayjs()
       .year(this.year)
       .month(this.month - 1)
       .date(this.day)

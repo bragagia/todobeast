@@ -38,13 +38,13 @@ export function WeeklyCalendarNavItem({
   return (
     <button
       onClick={handleClick}
-      className={classNames("grow opacity-40 hover:opacity-90 border-b", {
-        "!opacity-100 border-gray-600": itemIsActive,
-        "border-gray-300": !itemIsActive,
+      className={classNames("grow  hover:opacity-90", {
+        "opacity-100": itemIsActive,
+        "opacity-40": !itemIsActive,
       })}
     >
       <div
-        className={classNames("flex flex-row justify-center mb-2 button", {
+        className={classNames("flex flex-row justify-center button", {
           "button-active": itemIsActive,
         })}
       >

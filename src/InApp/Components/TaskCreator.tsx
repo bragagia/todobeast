@@ -101,11 +101,7 @@ export function TaskCreator({
       </span>
 
       {editor ? (
-        <EditorContent
-          key="task-creator-editor"
-          className="w-full p-1"
-          editor={editor}
-        />
+        <EditorContent className="w-full p-1" editor={editor} />
       ) : (
         <p className="p-1 text-gray-400">{placeholder}</p>
       )}

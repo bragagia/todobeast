@@ -5,6 +5,7 @@ import { PlannerPage } from "./InApp/Planner/Page";
 import { ProjectsNewPage } from "./InApp/Project/New/Page";
 import { ProjectPage } from "./InApp/Project/Page";
 import { ProjectListPage } from "./InApp/ProjectsList/Page";
+import { SettingsPage } from "./InApp/Settings/Page";
 import { DayjsDate } from "./utils/PlainDate";
 
 export const appRouter = createBrowserRouter([
@@ -31,8 +32,12 @@ export const appRouter = createBrowserRouter([
         element: <ProjectsNewPage />,
       },
       { path: "projects/:id/:name/", element: <ProjectPage /> },
+      {
+        path: "settings/",
+        element: <SettingsPage />,
+      },
     ],
-    errorElement: <p>An error happened</p>,
+    errorElement: <p>The page you're looking for does not exist</p>,
   },
 ]);
 
@@ -63,8 +68,4 @@ export function UrlProject(projectId: string, projectName: string) {
     "/" +
     projectName.replaceAll(" ", "-").toLowerCase()
   );
-}
-
-export function UrlInbox() {
-  return "/projects/0/inbox";
 }

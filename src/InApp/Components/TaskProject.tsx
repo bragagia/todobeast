@@ -55,7 +55,7 @@ export function TaskProject({ task }: { task: TaskType }) {
 
           <CommandEmpty>No project found.</CommandEmpty>
 
-          <CommandGroup>
+          <CommandGroup className="max-h-[40vh] overflow-scroll">
             {allProjects?.map((project) => (
               <CommandItem
                 key={project.id}
