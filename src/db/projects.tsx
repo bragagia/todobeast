@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import { ReadTransaction, WriteTransaction } from "replicache";
+import { getTasksOfProject } from "./tasks";
 
 export const projectIdPrefix = "projects/";
 
@@ -21,8 +22,17 @@ export type ProjectType = {
 };
 
 export const projectsMutators = {
-  projectCreate: async (tx: WriteTransaction, project: ProjectType) => {
-    await tx.put(project.id, project);
+  projectCreate: async (
+    tx: WriteTransaction,
+    project: Omit<ProjectType, "order">
+  ) => {
+    let allProjects = await getAllProjects()(tx);
+
+    let lastProject = allProjects.reduce((prev, current) => {
+      return prev.order > current.order ? prev : current;
+    });
+
+    await tx.put(project.id, { ...project, order: lastProject.order + 1 });
   },
 
   projectUpdate: async (
@@ -36,6 +46,22 @@ export const projectsMutators = {
   },
 
   projectRemove: async (tx: WriteTransaction, projectId: string) => {
+    let inbox = await getProjectInbox()(tx);
+
+    // Shitty condition to prevent typescript from complaining
+    let inboxId = "";
+    if (inbox) {
+      inboxId = inbox.id;
+    } else {
+      return;
+    }
+
+    let allProjectTask = await getTasksOfProject(projectId)(tx);
+
+    allProjectTask.forEach((task) =>
+      tx.put(task.id, { ...task, projectId: inboxId })
+    );
+
     await tx.del(projectId);
   },
 };
@@ -49,12 +75,17 @@ export function getProject(projectId: string) {
 // getAllProjects return all project sorted by their order
 export function getAllProjects() {
   return async function (tx: ReadTransaction) {
-    return (
+    let allProject = (
       (await tx
         .scan({ prefix: projectIdPrefix })
         .values()
         .toArray()) as ProjectType[]
     ).sort((a, b) => a.order - b.order);
+
+    let archive = allProject.shift();
+    if (archive) allProject.push(archive);
+
+    return allProject;
   };
 }
 

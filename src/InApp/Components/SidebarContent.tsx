@@ -1,19 +1,35 @@
 import classNames from "classnames";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import { rep } from "../../Replicache";
-import { UrlNavLinkPlanner, UrlProject, UrlProjectsNew } from "../../Router";
-import { getAllProjects } from "../../db/projects";
+import { UrlNavLinkPlanner, UrlProject } from "../../Router";
+import { getAllProjects, newProjectId } from "../../db/projects";
 import {
   IconCalendar,
-  IconMap,
   IconPlus,
   IconSettings,
+  projectIconMap,
 } from "../../utils/Icons";
 import { SidemenuItem } from "./SidebarItem";
 
 export function SidebarContent() {
+  const navigate = useNavigate();
+
   const allProjects = useSubscribe(rep, getAllProjects(), [], [rep]);
+
+  async function createProject() {
+    let id = newProjectId();
+
+    await rep.mutate.projectCreate({
+      id: id,
+      name: "",
+      icon: "dot",
+      icon_color: "black",
+      special: null,
+    });
+
+    navigate(UrlProject(id, ""));
+  }
 
   return (
     <ul className="flex flex-col p-4">
@@ -50,23 +66,26 @@ export function SidebarContent() {
       <div className="group">
         <div className="flex flex-row items-center justify-between mt-8 mb-2">
           <h3 className="text-sm font-medium text-gray-500 ">Projects</h3>
-          <Link
+          <button
             className="flex w-5 h-5 text-gray-400 no-touch:invisible group-hover:visible hover:text-gray-900"
-            to={UrlProjectsNew()}
+            onClick={createProject}
           >
             <IconPlus />
-          </Link>
+          </button>
         </div>
 
         {allProjects.map((project) => (
           <SidemenuItem
             key={"sidebar/project/" + project.id}
             to={UrlProject(project.id, project.name)}
-            Icon={IconMap[project.icon]}
+            Icon={projectIconMap[project.icon]}
             emoji={project.icon}
             iconColor={project.icon_color}
+            textColor={
+              project.special === "archive" ? project.icon_color : undefined
+            }
           >
-            {project.name}
+            {project.name != "" ? project.name : "New project"}
           </SidemenuItem>
         ))}
       </div>

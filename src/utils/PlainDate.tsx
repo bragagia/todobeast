@@ -51,6 +51,10 @@ export class DayjsDate {
       .startOf("day");
   }
 
+  toDate(): Date {
+    return this.toDayjs().toDate();
+  }
+
   toString(separator: string = "-"): string {
     return this.toDayjs().format(`YYYY${separator}MM${separator}DD`);
   }
@@ -65,7 +69,7 @@ export class DayjsDate {
   }
 
   startOfWeek(): DayjsDate {
-    const date = this.toDayjs().startOf("isoWeek");
+    const date = this.toDayjs().startOf("week");
     return new DayjsDate(date.year(), date.month() + 1, date.date());
   }
 

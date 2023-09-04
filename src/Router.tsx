@@ -2,7 +2,6 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { projectIdRemovePrefix } from "./db/projects";
 import { InAppLayout } from "./InApp/Layout";
 import { PlannerPage } from "./InApp/Planner/Page";
-import { ProjectsNewPage } from "./InApp/Project/New/Page";
 import { ProjectPage } from "./InApp/Project/Page";
 import { ProjectListPage } from "./InApp/ProjectsList/Page";
 import { SettingsPage } from "./InApp/Settings/Page";
@@ -27,11 +26,8 @@ export const appRouter = createBrowserRouter([
         path: "projects/",
         element: <ProjectListPage />,
       },
-      {
-        path: "projects/new",
-        element: <ProjectsNewPage />,
-      },
       { path: "projects/:id/:name/", element: <ProjectPage /> },
+      { path: "projects/:id/", element: <ProjectPage /> },
       {
         path: "settings/",
         element: <SettingsPage />,
@@ -55,10 +51,6 @@ export function UrlPlanner(date?: DayjsDate, today?: DayjsDate) {
 
 export function UrlProjectsList() {
   return "/projects/";
-}
-
-export function UrlProjectsNew() {
-  return "/projects/new";
 }
 
 export function UrlProject(projectId: string, projectName: string) {

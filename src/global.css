@@ -21,6 +21,10 @@
   @apply py-1 px-2 border rounded-lg mt-[1px] ml-[1px];
 }
 
+.button-disabled {
+  @apply button-base border-transparent;
+}
+
 .button {
   @apply button-base border-transparent hover:border-opacity-10 hover:border-gray-700;
 }

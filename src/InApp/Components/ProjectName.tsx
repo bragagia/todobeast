@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { ProjectType } from "../../db/projects";
-import { IconMap } from "../../utils/Icons";
+import { ProjectIcon } from "./ProjectIcon";
 
 export function ProjectName({
   project,
@@ -15,9 +15,6 @@ export function ProjectName({
     return <></>;
   }
 
-  let Icon = IconMap[project.icon];
-  let emoji = !Icon ? project.icon : "";
-
   return (
     <div
       className={classNames(
@@ -25,15 +22,7 @@ export function ProjectName({
         "flex flex-row items-center gap-1 overflow-hidden"
       )}
     >
-      <span
-        className={classNames(
-          iconClassName,
-          "flex items-center overflow-hidden shrink-0",
-          project.icon_color
-        )}
-      >
-        {Icon ? <Icon /> : emoji}
-      </span>
+      <ProjectIcon className={iconClassName} project={project} />
       <span className="overflow-hidden break-words hyphens-auto whitespace-nowrap text-ellipsis">
         {project.name}
       </span>

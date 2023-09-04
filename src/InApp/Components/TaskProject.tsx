@@ -30,7 +30,6 @@ export function TaskProject({ task }: { task: TaskType }) {
   const allProjects = useSubscribe(rep, getAllProjects(), null, [rep]);
 
   async function setTaskProject(taskId: string, projectId: string) {
-    console.log(projectId);
     await rep.mutate.taskUpdate({
       id: taskId,
       projectId: projectId,
@@ -49,13 +48,13 @@ export function TaskProject({ task }: { task: TaskType }) {
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="!p-0 w-48">
+      <PopoverContent className="w-48">
         <Command>
           <CommandInput placeholder="Search project..." />
 
           <CommandEmpty>No project found.</CommandEmpty>
 
-          <CommandGroup className="max-h-[40vh] overflow-scroll">
+          <CommandGroup className="max-h-[16rem] overflow-scroll">
             {allProjects?.map((project) => (
               <CommandItem
                 key={project.id}

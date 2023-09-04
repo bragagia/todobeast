@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 export function SidemenuItem({
   to,
   children,
+  textColor = "text-gray-800",
   Icon,
   iconColor,
   emoji = "",
@@ -14,6 +15,7 @@ export function SidemenuItem({
 }: {
   to: string;
   children: ReactNode;
+  textColor?: string;
   Icon?: any;
   iconColor?: string;
   emoji?: string;
@@ -26,7 +28,7 @@ export function SidemenuItem({
       <NavLink
         to={to}
         className={({ isActive, isPending }) =>
-          classNames("flex items-center button group text-gray-800", {
+          classNames("flex items-center button group", textColor, {
             "button-active": isActive,
           })
         }
