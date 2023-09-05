@@ -28,9 +28,7 @@ export function WeeklyCalendarNav({
 
   useEffect(() => {
     let newSelectedWeekStartDate = urlDate.startOfWeek();
-    if (!newSelectedWeekStartDate.isSame(selectedWeekStartDate)) {
-      setSelectedWeekStartDate(newSelectedWeekStartDate);
-    }
+    setSelectedWeekStartDate(newSelectedWeekStartDate);
   }, [urlDate]);
 
   const weekDates = useMemo(() => {

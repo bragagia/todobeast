@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { Replicache } from "replicache";
+import { useUser } from "./AuthProvider";
 import { AppLoader } from "./Loader";
 import { initDataMutators } from "./db/initData";
 import { projectsMutators } from "./db/projects";
@@ -30,14 +31,10 @@ export function useReplicache() {
   return rep;
 }
 
-export function ReplicacheProvider({
-  children,
-  userId,
-}: {
-  children: ReactNode;
-  userId: string;
-}) {
+export function ReplicacheProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
+
+  const user = useUser();
 
   function createRep(userId: string) {
     if (!userId) return null;
@@ -56,7 +53,7 @@ export function ReplicacheProvider({
   useEffect(() => {
     setLoading(true);
 
-    const rep = createRep(userId);
+    const rep = createRep(user.id);
     setRep(rep);
     if (rep === null) return;
 
@@ -67,9 +64,9 @@ export function ReplicacheProvider({
     setLoading(false);
 
     return () => {
-      window.removeEventListener("beforeunload", () => rep.close());
+      window.addEventListener("beforeunload", () => rep.close());
     };
-  }, [userId]);
+  }, [user.id]);
 
   if (loading || !rep) {
     return <AppLoader />;

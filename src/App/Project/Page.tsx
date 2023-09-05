@@ -79,7 +79,7 @@ export function ProjectPage() {
         });
       };
     },
-    [project]
+    [project, rep]
   );
 
   const setProjectIconColor = useCallback(
@@ -93,7 +93,7 @@ export function ProjectPage() {
         });
       };
     },
-    [project]
+    [project, rep]
   );
 
   const setProjectName = useCallback(
@@ -105,7 +105,7 @@ export function ProjectPage() {
         name: name,
       });
     },
-    [project]
+    [project, rep]
   );
 
   const deleteProject = useCallback(async () => {
@@ -114,7 +114,7 @@ export function ProjectPage() {
     await rep.mutate.projectRemove(project.id);
 
     navigate(UrlPlanner());
-  }, [project]);
+  }, [project, navigate, rep]);
 
   const editor = useEditor(
     {
@@ -171,9 +171,7 @@ export function ProjectPage() {
             >
               <PopoverTrigger asChild>
                 <button
-                  role="combobox"
                   disabled={project.special ? true : false}
-                  aria-expanded={iconPickerOpen}
                   className={classNames(
                     "-mr-2",
                     {

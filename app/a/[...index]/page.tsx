@@ -2,8 +2,8 @@
 
 import dynamic from "next/dynamic";
 
-const SPAApp = dynamic(() => import("../../../spa/App"), { ssr: false });
+const TodobeastApp = dynamic(() => import("../../../src/App"), { ssr: false });
 
-export default function SPAPage() {
-  return <SPAApp />;
+export default function TodobeastPage() {
+  return <TodobeastApp />;
 }

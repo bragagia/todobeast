@@ -51,15 +51,13 @@ export function TaskDate({ task }: { task: TaskType }) {
         date: date ? new DayjsDate(date.toISOString()).toString() : null,
       });
     },
-    [task]
+    [task, rep]
   );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          role="combobox"
-          aria-expanded={open}
           className={classNames(
             "text-xs font-light flex flex-row gap-2 items-center button w-full",
             { "text-gray-400": noDate },

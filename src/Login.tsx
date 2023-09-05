@@ -1,23 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
 import classNames from "classnames";
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { ReplicacheProvider } from "./ReplicacheProvider";
-
+import { useCallback, useRef, useState } from "react";
 import { AppLoader } from "./Loader";
+import { useSupabase } from "./SupabaseProvider";
 
-// TODO: extract supabase in a SupabaseProvider
-// TODO: Provide user id as a context to extract ReplicacheProvider
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<string | undefined>(undefined);
+export function Login() {
+  const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"LOGIN" | "CREATE">("LOGIN");
   const [helperText, setHelperText] = useState<{
     error: boolean;
@@ -28,35 +15,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
-  const supabase = useMemo(
-    () =>
-      createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
-      ),
-    []
-  );
-
-  useEffect(() => {
-    const fn = async () => {
-      const { data, error } = await supabase.auth.refreshSession();
-
-      setUser(data.user?.id);
-      setLoading(false);
-    };
-    fn();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        const currentUser = session?.user;
-        setUser(currentUser?.id);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [user]);
+  const supabase = useSupabase();
 
   const handleLogin = useCallback(async () => {
     const email = emailRef.current?.value;
@@ -71,13 +30,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       setHelperText({ error: true, text: error.message });
-    } else if (!user && !error) {
+    } else if (!data.user && !error) {
       setHelperText({
         error: false,
         text: "An email has been sent to you for verification!",
       });
     }
-  }, [emailRef, passwordRef]);
+  }, [emailRef, passwordRef, supabase]);
 
   const handleCreateAccount = useCallback(async () => {
     const email = emailRef.current?.value;
@@ -108,27 +67,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    setLoading(true);
     const { data, error } = await supabase.auth.signUp({
       email: email ?? "",
       password: password ?? "",
     });
+    setLoading(false);
 
     if (error) {
       setHelperText({ error: true, text: error.message });
-    } else if (!user && !error) {
+    } else if (!data.user && !error) {
       setHelperText({
         error: false,
         text: "An email has been sent to you for verification!",
       });
     }
-  }, [emailRef, passwordRef, passwordConfirmRef]);
+  }, [emailRef, passwordRef, passwordConfirmRef, supabase]);
 
   if (loading) {
     return <AppLoader />;
-  }
-
-  if (user) {
-    return <ReplicacheProvider userId={user}>{children}</ReplicacheProvider>;
   }
 
   return (
