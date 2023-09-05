@@ -5,6 +5,15 @@
 @tailwind components;
 @tailwind utilities;
 
+input,
+textarea,
+button,
+select,
+a {
+  /* Remove blue highlight on tap on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
 .josefin-sans {
   font-family: "Josefin Sans", sans-serif;
 }

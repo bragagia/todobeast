@@ -64,7 +64,7 @@ export function TaskDate({ task }: { task: TaskType }) {
           role="combobox"
           aria-expanded={open}
           className={classNames(
-            "text-xs font-light flex flex-row gap-2 items-center button md:text-sm w-full",
+            "text-xs font-light flex flex-row gap-2 items-center button w-full",
             { "text-gray-400": noDate },
             { "!font-bold text-red-700": taskIsLate }
           )}
@@ -84,7 +84,7 @@ export function TaskDate({ task }: { task: TaskType }) {
       <PopoverContent className="">
         <DayPicker
           mode="single"
-          // TODO: captionLayout="dropdown-buttons" Not working for some reason ???
+          // TODO: captionLayout="dropdown-buttons" is not working for some reason...
           fromDate={today.toDate()}
           selected={taskDate?.toDate()}
           onSelect={setTaskDate}

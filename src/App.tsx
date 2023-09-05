@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import { rep } from "./Replicache";
 import { appRouter } from "./Router";
+import { AuthProvider } from "./InApp/Components/AuthProvider";
 
 export default function App() {
   const cleanup = () => {
@@ -21,5 +22,9 @@ export default function App() {
     };
   }, []);
 
-  return <RouterProvider router={appRouter} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={appRouter} />
+    </AuthProvider>
+  );
 }

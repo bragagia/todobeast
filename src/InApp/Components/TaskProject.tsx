@@ -42,7 +42,7 @@ export function TaskProject({ task }: { task: TaskType }) {
         <button
           role="combobox"
           aria-expanded={open}
-          className="flex items-center w-full text-xs font-light md:text-sm button"
+          className="flex items-center w-full text-xs font-light button"
         >
           <ProjectName project={project} iconClassName="w-4 h-4" />
         </button>
