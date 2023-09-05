@@ -10,6 +10,11 @@ import {
 } from "react";
 import { ReplicacheProvider } from "./ReplicacheProvider";
 
+import { AppLoader } from "./Loader";
+
+// TODO: extract supabase in a SupabaseProvider
+// TODO: Provide user id as a context to extract ReplicacheProvider
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<string | undefined>(undefined);
@@ -57,10 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
+    setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email ?? "",
       password: password ?? "",
     });
+    setLoading(false);
 
     if (error) {
       setHelperText({ error: true, text: error.message });
@@ -117,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [emailRef, passwordRef, passwordConfirmRef]);
 
   if (loading) {
-    return <></>;
+    return <AppLoader />;
   }
 
   if (user) {

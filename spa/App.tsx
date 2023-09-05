@@ -1,3 +1,5 @@
+import "./style.css";
+
 import { StrictMode } from "react";
 import { AppRouter } from "./AppRouter";
 import { AuthProvider } from "./AuthProvider";
