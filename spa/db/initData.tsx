@@ -16,8 +16,6 @@ export const initDataMutators = {
     ) {
       let projectID = projectIdPrefix + nanoid();
 
-      console.log(projectID, { id: projectID, ...project });
-
       await tx.put(projectID, { id: projectID, ...project });
 
       return projectID;

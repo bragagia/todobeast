@@ -195,6 +195,7 @@ export function ProjectPage() {
 
                     return (
                       <button
+                        key={projectIconKey}
                         className={classNames(
                           "flex w-9 h-9 button",
                           project.icon_color,
@@ -213,6 +214,7 @@ export function ProjectPage() {
 
                     return (
                       <button
+                        key={iconColor}
                         className={classNames(
                           "flex w-9 h-9 button",
                           iconColor,

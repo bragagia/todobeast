@@ -1,12 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import classNames from "classnames";
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ReplicacheProvider } from "./ReplicacheProvider";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
-);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
+
+  const supabase = useMemo(
+    () =>
+      createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
+      ),
+    []
+  );
 
   useEffect(() => {
     const fn = async () => {
