@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import { useCallback, useRef, useState } from "react";
-import { AppLoader } from "./Loader";
+import { LoaderPage } from "./Loader";
 import { useSupabase } from "./SupabaseProvider";
 
-export function Login() {
+export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"LOGIN" | "CREATE">("LOGIN");
   const [helperText, setHelperText] = useState<{
@@ -85,7 +85,7 @@ export function Login() {
   }, [emailRef, passwordRef, passwordConfirmRef, supabase]);
 
   if (loading) {
-    return <AppLoader />;
+    return <LoaderPage />;
   }
 
   return (

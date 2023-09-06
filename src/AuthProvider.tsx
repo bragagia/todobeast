@@ -7,9 +7,9 @@ import {
 } from "react";
 
 import { User } from "@supabase/supabase-js";
-import { Login } from "./Login";
+import { LoaderPage } from "./Loader";
+import { LoginPage } from "./Login";
 import { useSupabase } from "./SupabaseProvider";
-import { AppLoader } from "./Loader";
 
 const UserContext = createContext<User | null>(null);
 
@@ -38,6 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     fn();
 
+    // We receive any auth change through this hook, so no need to exchange state with the Login page
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         const currentUser = session?.user;
@@ -51,12 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase]);
 
   if (loading) {
-    return <AppLoader />;
+    return <LoaderPage />;
   }
 
   if (user) {
     return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
   }
 
-  return <Login />;
+  return <LoginPage />;
 }

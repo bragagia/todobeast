@@ -7,7 +7,7 @@ import {
 } from "react";
 import { Replicache } from "replicache";
 import { useUser } from "./AuthProvider";
-import { AppLoader } from "./Loader";
+import { LoaderPage } from "./Loader";
 import { initDataMutators } from "./db/initData";
 import { projectsMutators } from "./db/projects";
 import { tasksMutators } from "./db/tasks";
@@ -69,7 +69,7 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
   }, [user.id]);
 
   if (loading || !rep) {
-    return <AppLoader />;
+    return <LoaderPage />;
   }
 
   return (
