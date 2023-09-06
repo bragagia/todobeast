@@ -1,3 +1,4 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import {
   ReactNode,
   createContext,
@@ -8,15 +9,8 @@ import {
 import { Replicache } from "replicache";
 import { useUser } from "./AuthProvider";
 import { LoaderPage } from "./Loader";
-import { initDataMutators } from "./db/initData";
-import { projectsMutators } from "./db/projects";
-import { tasksMutators } from "./db/tasks";
-
-const ReplicacheMutators = {
-  ...tasksMutators,
-  ...projectsMutators,
-  ...initDataMutators,
-};
+import { useSupabase } from "./SupabaseProvider";
+import { ReplicacheMutators } from "./db/mutators";
 
 const ReplicacheContext = createContext<Replicache<
   typeof ReplicacheMutators
@@ -36,12 +30,16 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
 
   const user = useUser();
 
+  const supabase = useSupabase();
+
   function createRep(userId: string) {
     if (!userId) return null;
 
     return new Replicache({
       licenseKey: "le17c8453f94e462e92cae4e1797cd24b",
-      name: userId,
+      name: userId, // TODO: Add a cookie per-device key
+      pushURL: `/api/replicache/push`,
+      pullURL: `/api/replicache/pull`,
       mutators: ReplicacheMutators,
     });
   }
@@ -59,14 +57,22 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
 
     rep.mutate.createInitData();
 
-    window.addEventListener("beforeunload", () => rep.close());
+    const unlisten = listen(supabase, async () => rep.pull());
+
+    window.addEventListener("beforeunload", () => {
+      unlisten();
+      rep.close();
+    });
 
     setLoading(false);
 
     return () => {
-      window.addEventListener("beforeunload", () => rep.close());
+      window.addEventListener("beforeunload", () => {
+        unlisten();
+        rep.close();
+      });
     };
-  }, [user.id]);
+  }, [user.id, supabase]);
 
   if (loading || !rep) {
     return <LoaderPage />;
@@ -77,4 +83,26 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
       {children}
     </ReplicacheContext.Provider>
   );
+}
+
+// Implements a Replicache poke using Supabase's realtime functionality.
+// See: backend/poke/supabase.ts.
+function listen(supabase: SupabaseClient, onPoke: () => Promise<void>) {
+  const subscriptionChannel = supabase.channel("public:replicache_space");
+  subscriptionChannel
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "replicache_space",
+      },
+      () => {
+        void onPoke();
+      }
+    )
+    .subscribe();
+  return () => {
+    void supabase.removeChannel(subscriptionChannel);
+  };
 }
