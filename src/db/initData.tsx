@@ -1,13 +1,19 @@
 import { Replicache } from "replicache";
 import { ReplicacheMutators } from "./mutators";
-import { ProjectType, newProjectId } from "./projects";
+import { ProjectType, newProjectIdSpecial } from "./projects";
 
-export function createInitData(rep: Replicache<typeof ReplicacheMutators>) {
+export function createInitData(
+  rep: Replicache<typeof ReplicacheMutators>,
+  userId: string
+) {
   // createInitData is called on every new replicache instanciation, so
   // all mutators used here must check for existing entities
 
   initProjects.forEach((project) => {
-    rep.mutate.projectCreateSpecial({ id: newProjectId(), ...project });
+    rep.mutate.projectCreateSpecial({
+      id: newProjectIdSpecial(project.special ?? "", userId),
+      ...project,
+    });
   });
 }
 

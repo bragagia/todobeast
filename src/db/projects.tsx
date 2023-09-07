@@ -8,6 +8,10 @@ export function newProjectId() {
   return projectIdPrefix + nanoid();
 }
 
+export function newProjectIdSpecial(specialName: string, userId: string) {
+  return projectIdPrefix + specialName + "-" + userId;
+}
+
 export function projectIdRemovePrefix(projectId: string) {
   return projectId.replaceAll(projectIdPrefix, "");
 }

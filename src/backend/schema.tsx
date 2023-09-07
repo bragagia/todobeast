@@ -48,8 +48,8 @@ export async function createSchemaVersion1(t: Executor) {
   await t.none(`alter table replicache_client_group enable row level security`);
   await t.none(`alter table replicache_client enable row level security`);
   await t.none(`alter table entry enable row level security`);
-  await t.none(`create policy anon_read_replicache_space on replicache_space
-      for select to anon using (true)`);
+  await t.none(`create policy everyone_can_read on replicache_space
+      as PERMISSIVE for select to public using (true)`);
 
   // Here we enable the supabase realtime api and monitor updates to the
   // replicache_space table.

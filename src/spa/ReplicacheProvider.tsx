@@ -60,7 +60,7 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
     setRep(rep);
     if (rep === null) return;
 
-    createInitData(rep);
+    createInitData(rep, user.id);
 
     const unlisten = listen(supabase, async () => rep.pull());
 
@@ -94,8 +94,8 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
 // Implements a Replicache poke using Supabase's realtime functionality.
 // See: backend/poke/supabase.ts.
 function listen(supabase: SupabaseClient, onPoke: () => Promise<void>) {
-  const subscriptionChannel = supabase.channel("public:replicache_space");
-  subscriptionChannel
+  let channel = supabase
+    .channel("any")
     .on(
       "postgres_changes",
       {
@@ -104,11 +104,11 @@ function listen(supabase: SupabaseClient, onPoke: () => Promise<void>) {
         table: "replicache_space",
       },
       () => {
-        void onPoke();
+        onPoke();
       }
     )
     .subscribe();
   return () => {
-    void supabase.removeChannel(subscriptionChannel);
+    supabase.removeChannel(channel);
   };
 }
