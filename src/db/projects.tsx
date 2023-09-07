@@ -16,6 +16,10 @@ export function projectIdRemovePrefix(projectId: string) {
   return projectId.replaceAll(projectIdPrefix, "");
 }
 
+export function isProjectIdArchive(projectId: string) {
+  return projectId.startsWith(projectIdPrefix + "archive");
+}
+
 export type ProjectType = {
   readonly id: string;
   readonly order: number;

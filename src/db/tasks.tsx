@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { ReadTransaction, WriteTransaction } from "replicache";
 import { DayjsDate } from "../spa/utils/PlainDate";
+import { isProjectIdArchive } from "./projects";
 
 export const taskIdPrefix = "tasks/";
 
@@ -48,16 +49,33 @@ export function getTask(taskId: string) {
 
 export function getAllTasks() {
   return async function (tx: ReadTransaction) {
-    return (await tx
+    let allTasks = (await tx
       .scan({ prefix: taskIdPrefix })
       .values()
       .toArray()) as TaskType[];
+
+    return allTasks;
+  };
+}
+
+export function getAllNonArchivedTasks() {
+  return async function (tx: ReadTransaction) {
+    let allTasks = (await tx
+      .scan({ prefix: taskIdPrefix })
+      .values()
+      .toArray()) as TaskType[];
+
+    allTasks = allTasks.filter(
+      (task) => !(task.projectId ? isProjectIdArchive(task.projectId) : false)
+    );
+
+    return allTasks;
   };
 }
 
 export function getTasksByDays(today: DayjsDate) {
   return async function (tx: ReadTransaction) {
-    let allTasks = await getAllTasks()(tx);
+    let allTasks = await getAllNonArchivedTasks()(tx);
 
     let tasksByDays: { [key: string]: TaskType[] } = {};
 
