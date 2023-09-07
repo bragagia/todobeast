@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { ReadTransaction, WriteTransaction } from "replicache";
-import { DayjsDate } from "../utils/PlainDate";
+import { DayjsDate } from "../spa/utils/PlainDate";
 
 export const taskIdPrefix = "tasks/";
 

@@ -35,6 +35,22 @@ export const projectsMutators = {
     await tx.put(project.id, { ...project, order: lastProject.order + 1 });
   },
 
+  projectCreateSpecial: async (tx: WriteTransaction, project: ProjectType) => {
+    if (!project.special) {
+      throw Error(
+        "Trying to create a non-special project with special mutator"
+      );
+    }
+
+    let allProjects = await getAllProjects()(tx);
+    let projectAlreadyExist = allProjects.some(
+      (p) => p.special === project.special
+    );
+    if (projectAlreadyExist) return;
+
+    await tx.put(project.id, project);
+  },
+
   projectUpdate: async (
     tx: WriteTransaction,
     project: Required<Pick<ProjectType, "id">> & Partial<ProjectType>

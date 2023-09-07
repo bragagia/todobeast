@@ -30,12 +30,12 @@ export async function createSchemaVersion1(t: Executor) {
   );
 
   await t.none(`create table entry (
-    key text not null,
-    value text not null,
+    key text primary key not null,
+    value JSONB not null,
     deleted boolean not null,
     last_modified_version integer not null)`);
 
-  await t.none(`create unique index on entry (key)`);
+  //await t.none(`create unique index on entry (key)`);
   await t.none(`create index on entry (deleted)`);
   await t.none(`create index on entry (last_modified_version)`);
 
@@ -47,7 +47,7 @@ export async function createSchemaVersion1(t: Executor) {
   await t.none(`alter table replicache_space enable row level security`);
   await t.none(`alter table replicache_client_group enable row level security`);
   await t.none(`alter table replicache_client enable row level security`);
-  await t.none(`alter table replicache_client enable row level security`);
+  await t.none(`alter table entry enable row level security`);
   await t.none(`create policy anon_read_replicache_space on replicache_space
       for select to anon using (true)`);
 

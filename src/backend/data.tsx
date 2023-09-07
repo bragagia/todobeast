@@ -101,7 +101,8 @@ export async function getEntry(
   if (!row) {
     return undefined;
   }
-  return JSON.parse(row.value);
+
+  return row.value;
 }
 
 export async function putEntry(
@@ -142,7 +143,7 @@ export async function* getEntries(
     [fromKey]
   );
   for (const row of rows) {
-    yield [row.key as string, JSON.parse(row.value) as JSONValue] as const;
+    yield [row.key as string, row.value as JSONValue] as const;
   }
 }
 
@@ -154,7 +155,7 @@ export async function getChangedEntries(
     `select key, value, deleted from entry where last_modified_version > $1`,
     [prevVersion]
   );
-  return rows.map((row: any) => [row.key, JSON.parse(row.value), row.deleted]);
+  return rows.map((row) => [row.key, row.value, row.deleted]);
 }
 
 export async function getGlobalVersion(executor: Executor): Promise<number> {
