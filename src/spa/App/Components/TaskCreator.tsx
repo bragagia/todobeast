@@ -73,6 +73,7 @@ export function TaskCreator({
                   date: creationDate,
                   projectId: projectId,
                   done_at: null,
+                  priority: null,
                 });
 
                 return this.editor.commands.setContent(null);

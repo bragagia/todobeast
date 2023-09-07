@@ -37,7 +37,7 @@ export function TaskProject({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex items-center w-full text-xs font-light button">
+        <button className="flex items-center w-full text-xs font-light button max-w-[8rem] md:max-w-[7rem] md:w-[7rem] overflow-hidden">
           <ProjectName project={project} iconClassName="w-4 h-4" />
         </button>
       </PopoverTrigger>

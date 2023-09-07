@@ -8,6 +8,8 @@ export function newTaskId() {
   return taskIdPrefix + nanoid();
 }
 
+export type PriorityType = "urgent" | "high" | "medium" | "low" | null;
+
 export type TaskType = {
   readonly id: string;
   readonly created_at: string;
@@ -15,6 +17,7 @@ export type TaskType = {
   readonly projectId: string;
   readonly title: string;
   readonly done_at: string | null;
+  readonly priority: PriorityType;
 };
 
 export const tasksMutators = {

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { TaskType } from "../../../db/tasks";
+import { PriorityType, TaskType } from "../../../db/tasks";
 import { DayjsDate } from "../../utils/PlainDate";
 import { Task } from "./Task";
 
@@ -18,6 +18,25 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
         .sort((a, b) => {
           if (!a.done_at && b.done_at) return -1;
           if (a.done_at && !b.done_at) return 1;
+
+          const priorityOrder: PriorityType[] = [
+            null,
+            "low",
+            "medium",
+            "high",
+            "urgent",
+          ];
+
+          if (
+            priorityOrder.indexOf(a.priority) <
+            priorityOrder.indexOf(b.priority)
+          )
+            return 1;
+          if (
+            priorityOrder.indexOf(a.priority) >
+            priorityOrder.indexOf(b.priority)
+          )
+            return -1;
 
           if (a.projectId < b.projectId) return -1;
           if (a.projectId > b.projectId) return 1;
