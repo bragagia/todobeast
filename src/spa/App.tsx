@@ -1,4 +1,8 @@
-import "./style.css";
+import "./styles/global-reset.css";
+
+import "react-day-picker/dist/style.css";
+
+import "./styles/global.css";
 
 import { StrictMode } from "react";
 import { AppRouter } from "./AppRouter";

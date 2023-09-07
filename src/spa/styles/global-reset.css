@@ -2,64 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.without-ring {
-  @apply focus:ring-0 focus:ring-offset-0  focus-visible:outline-none;
-}
-
-.button-base {
-  @apply py-1 px-2 border rounded-lg mt-[1px] ml-[1px];
-}
-
-.button-disabled {
-  @apply button-base border-transparent;
-}
-
-.button {
-  @apply button-base border-transparent hover:border-opacity-10 hover:border-gray-700;
-}
-
-.button-active {
-  @apply button-base border-gray-700 !border-opacity-20;
-}
-
-.button-visible {
-  @apply button-base border-gray-700 border-opacity-10 hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40;
-}
-
-.page-padding-no-mobile {
-  @apply sm:px-4 lg:px-0;
-}
-
-.page-padding {
-  @apply px-2 page-padding-no-mobile;
-}
-
-.animated {
-  @apply transition-all duration-150 ease-in-out;
-}
-
-.tiptap {
-  @apply without-ring;
-}
-
-.tiptap p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-  @apply text-gray-400;
-}
-
-.rdp {
-  --rdp-cell-size: 35px;
-  --rdp-accent-color: rgb(239 68 68);
-  --rdp-background-color: rgb(239, 68, 68, 50%);
-  /* Outline border for focused elements */
-  --rdp-outline: 2px solid var(--rdp-accent-color);
-  /* Outline border for focused and selected elements */
-  --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0.75);
-}
-
 /* Shadcn shit */
 @layer base {
   :root {

@@ -9,8 +9,6 @@ import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
-import "react-day-picker/dist/style.css";
-
 export function TaskDate({ task }: { task: TaskType }) {
   const rep = useReplicache();
 
