@@ -154,11 +154,11 @@ export async function* getEntries(
 export async function getChangedEntries(
   executor: Executor,
   prevVersion: number,
-  userId: string
+  spaceId: string
 ): Promise<[key: string, value: JSONValue, deleted: boolean][]> {
   const rows = await executor.manyOrNone(
-    `select key, value, deleted from entry where last_modified_version > $1`,
-    [prevVersion]
+    `select key, value, deleted from entry where last_modified_version > $1 and space_id = $2`,
+    [prevVersion, spaceId]
   );
   return rows.map((row) => [row.key, row.value, row.deleted]);
 }
