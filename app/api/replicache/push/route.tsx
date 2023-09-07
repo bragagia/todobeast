@@ -7,10 +7,11 @@ import {
   Client,
   createClient,
   createClientGroup,
+  createSpaceVersion,
   getClient,
   getClientGroup,
-  getGlobalVersion,
-  setGlobalVersion,
+  getSpaceVersion,
+  setSpaceVersion,
   updateClient,
 } from "../../../../src/backend/data";
 import { Executor, tx } from "../../../../src/backend/pg";
@@ -81,11 +82,16 @@ async function processPush(push: PushRequest, userID: string) {
 
     // Since all mutations within one transaction, we can just increment the
     // global version once.
-    const prevVersion = await getGlobalVersion(executor);
+    let prevVersion = await getSpaceVersion(executor, userID);
+    if (!prevVersion) {
+      await createSpaceVersion(executor, userID, 0);
+      prevVersion = 0;
+    }
     const nextVersion = prevVersion + 1;
+
     console.log("nextVersion: ", nextVersion);
 
-    const storage = new PostgresStorage(nextVersion, executor);
+    const storage = new PostgresStorage(nextVersion, executor, userID);
     const tx = new ReplicacheTransaction(storage);
     const clients = new Map<string, Client>();
 
@@ -143,7 +149,7 @@ async function processPush(push: PushRequest, userID: string) {
 
     await Promise.all([
       Array.from(clients.values()).map((c) => updateClient(executor, c)),
-      setGlobalVersion(executor, nextVersion),
+      setSpaceVersion(executor, userID, nextVersion),
       tx.flush(),
     ]);
 

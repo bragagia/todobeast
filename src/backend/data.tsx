@@ -92,11 +92,12 @@ export async function updateClient(executor: Executor, client: Client) {
 
 export async function getEntry(
   executor: Executor,
-  key: string
+  key: string,
+  spaceId: string
 ): Promise<JSONValue | undefined> {
   const row = await executor.one(
-    "select value from entry where key = $1 and deleted = false",
-    [key]
+    "select value from entry where key = $1 and space_id = $2 and deleted = false",
+    [key, spaceId]
   );
   if (!row) {
     return undefined;
@@ -109,38 +110,41 @@ export async function putEntry(
   executor: Executor,
   key: string,
   value: JSONValue,
-  version: number
+  version: number,
+  spaceId: string
 ): Promise<void> {
   await executor.none(
     `
-    insert into entry (key, value, deleted, last_modified_version)
-    values ($1, $2, false, $3)
+    insert into entry (key, space_id, value, deleted, last_modified_version)
+    values ($1, $4, $2, false, $3)
       on conflict (key) do update set
         value = $2, deleted = false, last_modified_version = $3
     `,
-    [key, JSON.stringify(value), version]
+    [key, JSON.stringify(value), version, spaceId]
   );
 }
 
 export async function delEntry(
   executor: Executor,
   key: string,
-  version: number
+  version: number,
+  spaceId: string
 ): Promise<void> {
   await executor.none(
     `update entry set deleted = true, last_modified_version = $2
-      where key = $1`,
-    [key, version]
+      where key = $1 and space_id = $3`,
+    [key, version, spaceId]
   );
 }
 
 export async function* getEntries(
   executor: Executor,
-  fromKey: string
+  fromKey: string,
+  spaceId: string
 ): AsyncIterable<readonly [string, JSONValue]> {
   const rows = await executor.manyOrNone(
-    `select key, value from entry where key >= $1 and deleted = false order by key`,
-    [fromKey]
+    `select key, value from entry where key >= $1 and space_id = $2 and deleted = false order by key`,
+    [fromKey, spaceId]
   );
   for (const row of rows) {
     yield [row.key as string, row.value as JSONValue] as const;
@@ -149,7 +153,8 @@ export async function* getEntries(
 
 export async function getChangedEntries(
   executor: Executor,
-  prevVersion: number
+  prevVersion: number,
+  userId: string
 ): Promise<[key: string, value: JSONValue, deleted: boolean][]> {
   const rows = await executor.manyOrNone(
     `select key, value, deleted from entry where last_modified_version > $1`,
@@ -158,17 +163,40 @@ export async function getChangedEntries(
   return rows.map((row) => [row.key, row.value, row.deleted]);
 }
 
-export async function getGlobalVersion(executor: Executor): Promise<number> {
-  const row = await executor.one(`select version from replicache_space`);
+export async function createSpaceVersion(
+  executor: Executor,
+  spaceId: string,
+  version: number
+): Promise<void> {
+  await executor.none(
+    `insert into replicache_space (id, version) values ($1, $2)`,
+    [spaceId, version]
+  );
+}
+
+export async function getSpaceVersion(
+  executor: Executor,
+  spaceId: string
+): Promise<number | null> {
+  const row = await executor.oneOrNone(
+    `select version from replicache_space where id = $1`,
+    [spaceId]
+  );
+  if (!row) return null;
+
   const { version } = row;
   return version;
 }
 
-export async function setGlobalVersion(
+export async function setSpaceVersion(
   executor: Executor,
+  spaceId: string,
   version: number
 ): Promise<void> {
-  await executor.none(`update replicache_space set version = $1`, [version]);
+  await executor.none(
+    `update replicache_space set version = $1 where id = $2`,
+    [version, spaceId]
+  );
 }
 
 export async function getChangedLastMutationIDs(

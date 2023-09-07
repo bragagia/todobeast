@@ -8,14 +8,16 @@ import type { Executor } from "./pg";
 export class PostgresStorage implements Storage {
   private _version: number;
   private _executor: Executor;
+  private _spaceId: string;
 
-  constructor(version: number, executor: Executor) {
+  constructor(version: number, executor: Executor, spaceId: string) {
     this._version = version;
     this._executor = executor;
+    this._spaceId = spaceId;
   }
 
   putEntry(key: string, value: JSONValue): Promise<void> {
-    return putEntry(this._executor, key, value, this._version);
+    return putEntry(this._executor, key, value, this._version, this._spaceId);
   }
 
   async hasEntry(key: string): Promise<boolean> {
@@ -24,14 +26,14 @@ export class PostgresStorage implements Storage {
   }
 
   getEntry(key: string): Promise<JSONValue | undefined> {
-    return getEntry(this._executor, key);
+    return getEntry(this._executor, key, this._spaceId);
   }
 
   getEntries(fromKey: string): AsyncIterable<readonly [string, JSONValue]> {
-    return getEntries(this._executor, fromKey);
+    return getEntries(this._executor, fromKey, this._spaceId);
   }
 
   delEntry(key: string): Promise<void> {
-    return delEntry(this._executor, key, this._version);
+    return delEntry(this._executor, key, this._version, this._spaceId);
   }
 }

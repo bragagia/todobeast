@@ -7,7 +7,7 @@ import {
   getChangedEntries,
   getChangedLastMutationIDs,
   getClientGroup,
-  getGlobalVersion,
+  getSpaceVersion,
 } from "../../../../src/backend/data";
 import { tx } from "../../../../src/backend/pg";
 
@@ -60,9 +60,9 @@ async function processPull(req: PullRequest, userID: string) {
       }
 
       return Promise.all([
-        getChangedEntries(executor, requestCookie ?? 0),
+        getChangedEntries(executor, requestCookie ?? 0, userID),
         getChangedLastMutationIDs(executor, clientGroupID, requestCookie ?? 0),
-        getGlobalVersion(executor),
+        getSpaceVersion(executor, userID), // Use userId as spaceID for now
       ]);
     }
   );

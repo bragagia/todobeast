@@ -10,11 +10,11 @@ export async function createDatabase(t: Executor) {
 
 export async function createSchemaVersion1(t: Executor) {
   await t.none(`create table replicache_space (
-    id text primary key not null,
+    id UUID primary key not null,
     version integer not null)`);
-  await t.none(
-    `insert into replicache_space (id, version) values ('global', 0)`
-  );
+  //   await t.none(
+  //     `insert into replicache_space (id, version) values ('global', 0)`
+  //   );
 
   await t.none(`create table replicache_client_group (
     id text primary key not null,
@@ -31,6 +31,7 @@ export async function createSchemaVersion1(t: Executor) {
 
   await t.none(`create table entry (
     key text primary key not null,
+    space_id UUID not null,
     value JSONB not null,
     deleted boolean not null,
     last_modified_version integer not null)`);
@@ -38,6 +39,7 @@ export async function createSchemaVersion1(t: Executor) {
   //await t.none(`create unique index on entry (key)`);
   await t.none(`create index on entry (deleted)`);
   await t.none(`create index on entry (last_modified_version)`);
+  await t.none(`create index on entry (space_id)`);
 
   // We are going to be using the supabase realtime api from the client to
   // receive pokes. This requires js access to db. We use RLS to restrict this
@@ -48,8 +50,8 @@ export async function createSchemaVersion1(t: Executor) {
   await t.none(`alter table replicache_client_group enable row level security`);
   await t.none(`alter table replicache_client enable row level security`);
   await t.none(`alter table entry enable row level security`);
-  await t.none(`create policy everyone_can_read on replicache_space
-      as PERMISSIVE for select to public using (true)`);
+  await t.none(`create policy read_access_to_space_owner on replicache_space
+      as PERMISSIVE for select to authenticated using (auth.uid() = id)`);
 
   // Here we enable the supabase realtime api and monitor updates to the
   // replicache_space table.
