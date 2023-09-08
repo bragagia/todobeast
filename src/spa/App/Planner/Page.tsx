@@ -33,9 +33,7 @@ export function PlannerPage() {
         <WeeklyCalendarNav tasksByDays={tasksByDays} />
       </PageTitle>
 
-      <div className="page-padding">
-        <TaskCreator date={urlDate} />
-      </div>
+      <TaskCreator date={urlDate} />
 
       <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
         <TaskList tasks={tasksByDays[urlDate.toString()]} />

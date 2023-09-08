@@ -12,7 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="nightwind">
+      <head />
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

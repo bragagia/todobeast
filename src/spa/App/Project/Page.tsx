@@ -257,9 +257,9 @@ export function ProjectPage() {
         </div>
       </PageTitle>
 
-      <div className="page-padding">
-        <TaskCreator projectId={projectId} />
+      <TaskCreator projectId={projectId} />
 
+      <div className="task-padding">
         {project.special === "archive" ? (
           <p className="mt-4 italic text-gray-500 text-sm">
             Tasks assigned to this project will be hidden from every other

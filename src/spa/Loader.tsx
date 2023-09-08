@@ -1,5 +1,5 @@
 import Image from "next/image";
-import beastHappy from "../../public/beast-happy.png";
+import beastHappy from "../../public/the-beast.png";
 
 export function LoaderPage() {
   return (
@@ -7,7 +7,7 @@ export function LoaderPage() {
       <Image
         priority
         src={beastHappy}
-        className="w-12 h-12 animate-spin"
+        className="w-32 h-32 animate-spin"
         alt="spinner"
       />
     </div>

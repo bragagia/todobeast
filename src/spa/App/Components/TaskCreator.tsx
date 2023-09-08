@@ -74,6 +74,7 @@ export function TaskCreator({
                   projectId: projectId,
                   done_at: null,
                   priority: null,
+                  //duration: null,
                 });
 
                 return this.editor.commands.setContent(null);
@@ -98,16 +99,18 @@ export function TaskCreator({
   );
 
   return (
-    <div className="flex flex-row items-center w-full button-visible ">
-      <span className="text-gray-500">
-        <IconPlus />
-      </span>
+    <div className="task-padding">
+      <div className="flex flex-row items-center w-full button-visible">
+        <span className="text-gray-500">
+          <IconPlus />
+        </span>
 
-      {editor ? (
-        <EditorContent className="w-full p-1" editor={editor} />
-      ) : (
-        <p className="p-1 text-gray-400">{placeholder}</p>
-      )}
+        {editor ? (
+          <EditorContent className="w-full p-1" editor={editor} />
+        ) : (
+          <p className="p-1 text-gray-400">{placeholder}</p>
+        )}
+      </div>
     </div>
   );
 }

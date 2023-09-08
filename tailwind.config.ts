@@ -1,12 +1,30 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
+
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+
   theme: {
+    nightwind: {
+      transitionDuration: false,
+      //   //typography: true,
+      //   colorClasses: [
+      //     "gradient",
+      //     "ring",
+      //     "ring-offset",
+      //     "divide",
+      //     "placeholder",
+      //   ],
+      //   colorScale: {
+      //     600: 500,
+      //     500: 500,
+      //   },
+    },
     screens: {
       sm: "640px",
       // => @media (min-width: 640px) { ... }
@@ -72,11 +90,17 @@ module.exports = {
       },
     },
   },
+
   // End of shadcn shit
+
+  // variants: {
+  //   nightwind: ["group-hover", "active", "focus"],
+  // },
 
   plugins: [
     require("tailwindcss-crossbrowser-touch")(),
     require("tailwindcss-animate"),
+    require("nightwind"),
   ],
 
   modules: {

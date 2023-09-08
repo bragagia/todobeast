@@ -11,13 +11,13 @@ export function Task({ task }: { task: TaskType }) {
     <div className="hover:bg-gray-50">
       <div
         className={classNames(
-          "flex flex-row justify-normal py-1 page-padding border-b border-gray-200",
+          "flex flex-row justify-normal py-1 task-padding border-b border-gray-200",
           {
             "opacity-40 hover:opacity-70": task?.done_at,
           }
         )}
       >
-        <div className="flex flex-row-reverse items-center w-full gap-1 sm:px-1 sm:flex-row">
+        <div className="flex flex-row-reverse items-center w-full gap-1 sm:flex-row">
           <div className="flex items-center self-stretch justify-center">
             <TaskCheckbox task={task} />
           </div>
@@ -28,11 +28,15 @@ export function Task({ task }: { task: TaskType }) {
                 <TaskPriority task={task} />
               </div>
 
+              {/* <div className="shrink-0 grow-0">
+                <TaskPriority task={task} />
+              </div> */}
+
               <div className="">
                 <TaskProject task={task} />
               </div>
 
-              <div className="md:basis-36">
+              <div className="">
                 <TaskDate task={task} />
               </div>
             </div>

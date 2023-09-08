@@ -14,7 +14,7 @@ export function InAppLayout() {
       </div>
 
       <div className="w-full h-screen overflow-scroll">
-        <div className="container max-w-3xl mx-auto">
+        <div className="mx-auto">
           <Outlet />
         </div>
       </div>
