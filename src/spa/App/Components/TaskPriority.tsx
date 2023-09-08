@@ -8,7 +8,6 @@ import {
   IconChartLow,
   IconChartMid,
   IconFire,
-  IconMinus,
 } from "../../utils/Icons";
 import { Command, CommandGroup, CommandItem } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -53,7 +52,7 @@ export function TaskPriority({ task }: { task: TaskType }) {
     {
       value: null as PriorityType,
       text: "No priority",
-      icon: <IconMinus />,
+      icon: <span className="text-lg">-</span>,
       icon_color: "text-gray-500",
     },
   ];

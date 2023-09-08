@@ -74,7 +74,7 @@ export function TaskCreator({
                   projectId: projectId,
                   done_at: null,
                   priority: null,
-                  //duration: null,
+                  duration: null,
                 });
 
                 return this.editor.commands.setContent(null);

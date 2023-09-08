@@ -1,7 +1,5 @@
 import "./styles/global.css";
 
-//import "./styles/global.css";
-
 import { ThemeProvider } from "next-themes";
 import { StrictMode } from "react";
 import { AppRouter } from "./AppRouter";

@@ -5,6 +5,7 @@ import { TaskDate } from "./TaskDate";
 import { TaskPriority } from "./TaskPriority";
 import { TaskProject } from "./TaskProject";
 import { TaskTitle } from "./TaskTitle";
+import { TaskDuration } from "./TaskDuration";
 
 export function Task({ task }: { task: TaskType }) {
   return (
@@ -28,9 +29,9 @@ export function Task({ task }: { task: TaskType }) {
                 <TaskPriority task={task} />
               </div>
 
-              {/* <div className="shrink-0 grow-0">
-                <TaskPriority task={task} />
-              </div> */}
+              <div className="shrink-0 grow-0">
+                <TaskDuration task={task} />
+              </div>
 
               <div className="">
                 <TaskProject task={task} />

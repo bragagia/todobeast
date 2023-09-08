@@ -11,6 +11,18 @@ export function newTaskId() {
 
 export type PriorityType = "urgent" | "high" | "medium" | "low" | null;
 
+export type DurationType =
+  | "zero"
+  | "sixteenth"
+  | "eighth"
+  | "quarter"
+  | "half"
+  | "full"
+  | "double"
+  | "quadruple"
+  | "longer"
+  | null;
+
 export type TaskType = {
   readonly id: string;
   readonly created_at: string;
@@ -19,6 +31,7 @@ export type TaskType = {
   readonly title: string;
   readonly done_at: string | null;
   readonly priority: PriorityType;
+  readonly duration: DurationType;
 };
 
 export const tasksMutators = {

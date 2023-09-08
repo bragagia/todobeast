@@ -6,13 +6,7 @@ import { getAllProjects, getProject } from "../../../db/projects";
 import { TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
 import { ProjectName } from "./ProjectName";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "./ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandItem } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export function TaskProject({ task }: { task: TaskType }) {
@@ -44,7 +38,7 @@ export function TaskProject({ task }: { task: TaskType }) {
 
       <PopoverContent className="w-48">
         <Command>
-          <CommandInput placeholder="Search project..." />
+          {/* <CommandInput placeholder="Search project..." /> */}
 
           <CommandEmpty>No project found.</CommandEmpty>
 
