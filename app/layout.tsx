@@ -14,8 +14,35 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning className="nightwind">
-      <head />
-      <body suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+
+        <link rel="icon" href="/favicon.ico" />
+
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+
+        <link rel="manifest" href="/site.webmanifest" />
+
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+
         <Script id="disable-splash-screen-android">
           {`
           document.addEventListener("DOMContentLoaded", () => {
@@ -30,8 +57,9 @@ export default function RootLayout({
           });
           `}
         </Script>
-        {children}
-      </body>
+      </head>
+
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
