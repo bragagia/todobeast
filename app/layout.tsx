@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="nightwind">
       <head>
-        <link rel="manifest" href="/manifest.json" />
-
         <link rel="icon" href="/favicon.ico" />
+
+        <link rel="manifest" href="/site.webmanifest" />
 
         <link
           rel="apple-touch-icon"
@@ -39,9 +39,9 @@ export default function RootLayout({
           href="/favicon-16x16.png"
         />
 
-        <link rel="manifest" href="/site.webmanifest" />
-
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+
+        <meta name="msapplication-TileColor" content="#b91d47" />
 
         <Script id="disable-splash-screen-android">
           {`
