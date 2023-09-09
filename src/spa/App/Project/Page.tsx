@@ -249,7 +249,7 @@ export function ProjectPage() {
             className={classNames(
               "button text-gray-500",
               { invisible: project.special },
-              { "no-touch:invisible group-hover:visible": !project.special }
+              { "pointer-fine:invisible group-hover:visible": !project.special }
             )}
           >
             <IconTrash />

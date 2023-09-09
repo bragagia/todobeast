@@ -57,6 +57,6 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.3.3",
-    "tailwindcss-crossbrowser-touch": "^1.1.2"
+    "tailwindcss-touch": "^1.0.1"
   }
 }

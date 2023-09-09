@@ -24,7 +24,7 @@ export function TaskCheckbox({ task }: { task: TaskType }) {
           "w-5 h-5 self-strech border rounded-full p-1 flex items-center mr-2 sm:mr-0",
           { "bg-gray-800 text-white border-gray-800": task?.done_at },
           {
-            "border-gray-800 text-white no-touch:hover:text-gray-500":
+            "border-gray-800 text-opacity-0 hover:text-opacity-100 text-gray-500":
               !task?.done_at,
           }
         )}

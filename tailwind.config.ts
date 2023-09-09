@@ -97,20 +97,17 @@ module.exports = {
   //   nightwind: ["group-hover", "active", "focus"],
   // },
 
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+
   plugins: [
-    require("tailwindcss-crossbrowser-touch")(),
     require("tailwindcss-animate"),
     require("nightwind"),
+    require("tailwindcss-touch")(),
   ],
 
   modules: {
-    opacity: [
-      "responsive",
-      "hover",
-      "focus",
-      "no-touch",
-      "no-touch-hover",
-      "no-touch-group-hover",
-    ],
+    visibility: ["responsive", "pointer-fine"],
   },
 };
