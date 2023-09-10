@@ -8,6 +8,7 @@ import {
   IconChartLow,
   IconChartMid,
   IconFire,
+  IconFlag,
 } from "../../utils/Icons";
 import { Command, CommandGroup, CommandItem } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -77,8 +78,14 @@ export function TaskPriority({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex items-center w-full text-xs font-light button">
-          {getPriorityIcon(TaskPriority)}
+        <button className="flex items-center justify-center text-xs font-light button">
+          {TaskPriority.value ? (
+            getPriorityIcon(TaskPriority)
+          ) : (
+            <div className="flex items-center justify-center w-4 h-4 text-gray-300">
+              <IconFlag />
+            </div>
+          )}
         </button>
       </PopoverTrigger>
 

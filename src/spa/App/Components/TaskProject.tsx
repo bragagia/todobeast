@@ -31,8 +31,22 @@ export function TaskProject({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex items-center w-full text-xs font-light button max-w-[8rem] md:max-w-[7rem] md:w-[7rem] overflow-hidden md:justify-center">
-          <ProjectName project={project} iconClassName="w-4 h-4" />
+        <button
+          className={classNames(
+            "flex items-center w-full text-xs font-light button max-w-[8rem] lg:max-w-[7rem] lg:w-[7rem] overflow-hidden xl:max-w-[10rem] xl:w-[10rem]",
+            { "text-gray-300": project?.special === "inbox" }
+          )}
+        >
+          {project?.special === "inbox" ? (
+            <ProjectName
+              project={project}
+              iconClassName="w-4 h-4"
+              overrideColor="text-gray-300"
+              overrideName="Set project"
+            />
+          ) : (
+            <ProjectName project={project} iconClassName="w-4 h-4" />
+          )}
         </button>
       </PopoverTrigger>
 
@@ -60,7 +74,17 @@ export function TaskProject({ task }: { task: TaskType }) {
                     task.projectId === project.id ? "visible" : "invisible"
                   )}
                 />
-                <ProjectName project={project} iconClassName="w-4 h-4" />
+                {project?.special === "inbox" ? (
+                  <ProjectName
+                    project={project}
+                    className="text-gray-400"
+                    iconClassName="w-4 h-4"
+                    overrideColor="text-gray-400"
+                    overrideName="No project"
+                  />
+                ) : (
+                  <ProjectName project={project} iconClassName="w-4 h-4" />
+                )}
               </CommandItem>
             ))}
           </CommandGroup>

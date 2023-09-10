@@ -42,7 +42,7 @@ export function TaskDate({ task }: { task: TaskType }) {
       // Task in less than a week
       dateFormatted = taskDate.format("dddd");
     } else {
-      dateFormatted = taskDate.format("dddd\nD MMM");
+      dateFormatted = taskDate.format("ddd D MMM");
 
       if (taskDate.Year() !== dayjs().year()) {
         dateFormatted += taskDate.format("\nYYYY");
@@ -67,8 +67,8 @@ export function TaskDate({ task }: { task: TaskType }) {
       <PopoverTrigger asChild>
         <button
           className={classNames(
-            "text-xs font-light flex flex-row gap-2 items-center button md:w-28 md:justify-center",
-            { "text-gray-400": noDate },
+            "text-xs font-light flex flex-row gap-2 items-center button lg:w-28",
+            { "text-gray-300": noDate },
             { "!font-bold text-red-700": taskIsLate }
           )}
         >
@@ -76,7 +76,7 @@ export function TaskDate({ task }: { task: TaskType }) {
             <IconCalendar />
           </div>
 
-          <div className="flex flex-row items-start gap-1 md:flex-col md:gap-0">
+          <div className="flex flex-row items-start gap-1 lg:flex-col lg:gap-0">
             {dateFormatted.split("\n").map((dateLine, i) => {
               return (
                 <div key={"date-line/" + i} className="text-left">

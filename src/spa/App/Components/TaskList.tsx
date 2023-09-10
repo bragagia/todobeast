@@ -19,6 +19,10 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
           if (!a.done_at && b.done_at) return -1;
           if (a.done_at && !b.done_at) return 1;
 
+          // TODO : use project order
+          if (a.projectId < b.projectId) return -1;
+          if (a.projectId > b.projectId) return 1;
+
           const priorityOrder: PriorityType[] = [
             null,
             "low",
@@ -37,9 +41,6 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
             priorityOrder.indexOf(b.priority)
           )
             return -1;
-
-          if (a.projectId < b.projectId) return -1;
-          if (a.projectId > b.projectId) return 1;
 
           if (a.date && !b.date) return -1;
           if (!a.date && b.date) return 1;

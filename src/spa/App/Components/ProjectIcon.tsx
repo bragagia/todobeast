@@ -5,9 +5,11 @@ import { projectIconMap } from "../../utils/Icons";
 export function ProjectIcon({
   className,
   project,
+  overrideColor,
 }: {
   className?: string;
   project: ProjectType;
+  overrideColor?: string;
 }) {
   let Icon = projectIconMap[project.icon];
   let emoji = !Icon ? project.icon : "";
@@ -15,9 +17,9 @@ export function ProjectIcon({
   return (
     <span
       className={classNames(
-        className,
         "flex items-center overflow-hidden shrink-0",
-        project.icon_color
+        overrideColor ?? project.icon_color,
+        className
       )}
     >
       {Icon ? <Icon /> : emoji}

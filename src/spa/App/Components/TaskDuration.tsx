@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import { useState } from "react";
 import { DurationType, TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
+import { IconHourglass } from "../../utils/Icons";
 import { Command, CommandGroup, CommandItem } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
@@ -113,13 +114,21 @@ export function TaskDuration({ task }: { task: TaskType }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button className="flex items-center w-full text-lg font-light button">
-          {getDurationIcon(TaskDuration)}
+          {TaskDuration.value ? (
+            getDurationIcon(TaskDuration)
+          ) : (
+            <div className="flex items-center justify-center w-5 h-5">
+              <div className="flex items-center justify-center w-4 h-4 text-gray-300">
+                <IconHourglass />
+              </div>
+            </div>
+          )}
         </button>
       </PopoverTrigger>
 
       <PopoverContent className="">
         <Command>
-          <CommandGroup className="max-h-[16rem] overflow-scroll">
+          <CommandGroup className="max-h-[80vh] overflow-scroll">
             {durations.map((duration) => (
               <CommandItem
                 key={duration.value}

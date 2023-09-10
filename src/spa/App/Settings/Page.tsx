@@ -1,13 +1,16 @@
 import { useTheme } from "next-themes";
+import { useNavigate } from "react-router-dom";
 import { useSupabase } from "../../SupabaseProvider";
 import { IconSettings } from "../../utils/Icons";
 import { PageTitle } from "../Components/PageTitle";
 
 export function SettingsPage() {
   const supabase = useSupabase();
+  const navigate = useNavigate();
 
   async function signout() {
     await supabase.auth.signOut();
+    navigate("/");
   }
 
   const { theme, setTheme } = useTheme();
