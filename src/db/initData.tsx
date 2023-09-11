@@ -15,6 +15,10 @@ export function createInitData(
       ...project,
     });
   });
+
+  // Migrations
+
+  rep.mutate.migrationAddTasksOrder();
 }
 
 export var initProjects: Omit<ProjectType, "id">[] = [

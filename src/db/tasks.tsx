@@ -32,11 +32,18 @@ export type TaskType = {
   readonly done_at: string | null;
   readonly priority: PriorityType;
   readonly duration: DurationType;
+  readonly order: number;
 };
 
 export const tasksMutators = {
-  taskCreate: async (tx: WriteTransaction, task: TaskType) => {
-    await tx.put(task.id, task);
+  taskCreate: async (tx: WriteTransaction, task: Omit<TaskType, "order">) => {
+    let allTasks = await getAllTasks()(tx);
+
+    let lastTask = allTasks.reduce((prev, current) => {
+      return prev.order > current.order ? prev : current;
+    });
+
+    await tx.put(task.id, { ...task, order: lastTask.order + 1000 });
   },
 
   taskUpdate: async (
@@ -51,6 +58,20 @@ export const tasksMutators = {
 
   taskRemove: async (tx: WriteTransaction, taskId: string) => {
     await tx.del(taskId);
+  },
+
+  migrationAddTasksOrder: async (tx: WriteTransaction) => {
+    let allTasks = await getAllTasks()(tx);
+
+    if (allTasks && allTasks.length > 0 && !allTasks[0].order) {
+      console.log("migrate -> AddTasksOrder");
+      allTasks.forEach((task) => {
+        tx.put(task.id, {
+          ...task,
+          order: Math.floor(Math.random() * 1000000),
+        });
+      });
+    }
   },
 };
 

@@ -40,7 +40,7 @@ export const projectsMutators = {
       return prev.order > current.order ? prev : current;
     });
 
-    await tx.put(project.id, { ...project, order: lastProject.order + 1 });
+    await tx.put(project.id, { ...project, order: lastProject.order + 1000 });
   },
 
   projectCreateSpecial: async (tx: WriteTransaction, project: ProjectType) => {

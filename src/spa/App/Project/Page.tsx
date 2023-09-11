@@ -163,7 +163,7 @@ export function ProjectPage() {
   );
 
   if (!projectId || !project) {
-    return <p>Error: Missing project id</p>;
+    return null;
   }
 
   return (

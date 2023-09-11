@@ -1,9 +1,31 @@
-import dayjs from "dayjs";
+import { useMemo } from "react";
+import { useSubscribe } from "replicache-react";
+import { ProjectType, getAllProjects } from "../../../db/projects";
 import { PriorityType, TaskType } from "../../../db/tasks";
-import { DayjsDate } from "../../utils/PlainDate";
+import { useReplicache } from "../../ReplicacheProvider";
 import { Task } from "./Task";
 
 export function TaskList({ tasks }: { tasks: TaskType[] }) {
+  const rep = useReplicache();
+
+  const allProjects = useSubscribe(rep, getAllProjects(), null, [rep]);
+
+  const allProjectsById = useMemo(() => {
+    if (!allProjects) return null;
+
+    let allProjectsById: { [key: string]: ProjectType } = {};
+
+    for (let i = 0; i < allProjects.length; i++) {
+      allProjectsById[allProjects[i].id] = allProjects[i];
+    }
+
+    return allProjectsById;
+  }, [allProjects]);
+
+  if (!allProjectsById) {
+    return null;
+  }
+
   if (!tasks || tasks.length === 0) {
     return (
       <p className="pt-10 font-bold text-center text-gray-400">
@@ -19,9 +41,16 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
           if (!a.done_at && b.done_at) return -1;
           if (a.done_at && !b.done_at) return 1;
 
-          // TODO : use project order
-          if (a.projectId < b.projectId) return -1;
-          if (a.projectId > b.projectId) return 1;
+          if (
+            allProjectsById[a.projectId].order <
+            allProjectsById[b.projectId].order
+          )
+            return -1;
+          if (
+            allProjectsById[a.projectId].order >
+            allProjectsById[b.projectId].order
+          )
+            return 1;
 
           const priorityOrder: PriorityType[] = [
             null,
@@ -42,24 +71,26 @@ export function TaskList({ tasks }: { tasks: TaskType[] }) {
           )
             return -1;
 
-          if (a.date && !b.date) return -1;
-          if (!a.date && b.date) return 1;
+          return a.order - b.order;
 
-          if (
-            a.date &&
-            b.date &&
-            new DayjsDate(a.date).isBefore(new DayjsDate(b.date))
-          )
-            return -1;
-          if (
-            a.date &&
-            b.date &&
-            new DayjsDate(b.date).isBefore(new DayjsDate(a.date))
-          )
-            return 1;
+          // if (a.date && !b.date) return -1;
+          // if (!a.date && b.date) return 1;
 
-          if (dayjs(a.created_at).isBefore(dayjs(b.created_at))) return -1;
-          if (dayjs(b.created_at).isBefore(dayjs(a.created_at))) return 1;
+          // if (
+          //   a.date &&
+          //   b.date &&
+          //   new DayjsDate(a.date).isBefore(new DayjsDate(b.date))
+          // )
+          //   return -1;
+          // if (
+          //   a.date &&
+          //   b.date &&
+          //   new DayjsDate(b.date).isBefore(new DayjsDate(a.date))
+          // )
+          //   return 1;
+
+          // if (dayjs(a.created_at).isBefore(dayjs(b.created_at))) return -1;
+          // if (dayjs(b.created_at).isBefore(dayjs(a.created_at))) return 1;
 
           return 0;
         })
