@@ -6,7 +6,7 @@ import {
   ResponderProvided,
 } from "@hello-pangea/dnd";
 import classNames from "classnames";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import {
@@ -35,6 +35,14 @@ export function SidebarContent() {
   const allNonSpecialProjects = useMemo(
     () => allProjects.filter((project) => project.special == null),
     [allProjects]
+  );
+
+  const [cachedAllNonSpecialProjects, setCachedAllNonSpecialProjects] =
+    useState(allNonSpecialProjects);
+
+  useEffect(
+    () => setCachedAllNonSpecialProjects(allNonSpecialProjects),
+    [allNonSpecialProjects]
   );
 
   const projectInbox = useMemo(
@@ -85,18 +93,33 @@ export function SidebarContent() {
       }
 
       let draggedId = result.source.index;
+      let draggedProject = cachedAllNonSpecialProjects[result.source.index];
+
       let destinationId = result.destination.index;
-      let orders = allNonSpecialProjects.map((project) => project.order);
-      let newOrder = calcNewOrder(draggedId, destinationId, orders);
+      let orders = cachedAllNonSpecialProjects.map((project) => project.order);
+      let newOrder = calcNewOrder(
+        draggedId < destinationId,
+        destinationId,
+        orders
+      );
 
-      let draggedProjectId = allNonSpecialProjects[draggedId].id;
-
-      rep.mutate.projectUpdate({
-        id: draggedProjectId,
+      const projectUpdate = {
+        id: draggedProject.id,
         order: newOrder,
-      });
+      };
+
+      // We update the task in cache in order to prevent blinking during the time when replicache update its state
+      setCachedAllNonSpecialProjects(
+        cachedAllNonSpecialProjects.map((project) =>
+          project.id === draggedProject.id
+            ? { ...draggedProject, ...projectUpdate }
+            : project
+        )
+      );
+
+      rep.mutate.projectUpdate(projectUpdate);
     },
-    [allNonSpecialProjects, rep]
+    [cachedAllNonSpecialProjects, rep]
   );
 
   return (
@@ -148,7 +171,7 @@ export function SidebarContent() {
           <Droppable droppableId="project-list-orderable">
             {(provided) => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
-                {allNonSpecialProjects.map((project, id) => (
+                {cachedAllNonSpecialProjects.map((project, id) => (
                   <Draggable
                     key={"sidebar/project/" + project.id}
                     draggableId={"sidebar/project/" + project.id}

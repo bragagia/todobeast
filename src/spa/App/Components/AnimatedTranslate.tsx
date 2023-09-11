@@ -27,6 +27,7 @@ export function AnimatedTranslate({
   const [direction, setDirection] = useState<"next" | "prev" | null>(null);
 
   const childRef = useRef<HTMLDivElement>(null);
+  const [incomingChildHeight, setIncomingChildHeight] = useState(0);
   const [parentHeight, setParentHeight] = useState(0);
 
   const transitions = useTransition([currentChild], {
@@ -60,9 +61,7 @@ export function AnimatedTranslate({
         setAnimating(false);
 
         // Reset the height to the current child after the transition ends.
-        if (childRef.current) {
-          setParentHeight(childRef.current.offsetHeight);
-        }
+        setParentHeight(incomingChildHeight);
       }
       return;
     },
@@ -75,6 +74,9 @@ export function AnimatedTranslate({
       // Set parent height to max of both child during transition
       const maxChildHeight = Math.max(parentHeight, incomingChild.offsetHeight);
       setParentHeight(maxChildHeight);
+
+      // Set incoming child height so we can reset parent height to its height when animation ends
+      setIncomingChildHeight(incomingChild.offsetHeight);
     }
   }, [childRef, parentHeight]);
 
@@ -93,7 +95,7 @@ export function AnimatedTranslate({
     }, 0);
   }, [childKey, children, calculateHeight, currentChild]);
 
-  // Used to recalculate height on every frame
+  // Used to recalculate height on every frame when animating
   useEffect(() => {
     let rafId: number;
 
@@ -132,7 +134,7 @@ export function AnimatedTranslate({
           key={item.key}
           id={item.key}
           ref={childRef}
-          style={props}
+          style={animating ? props : { transform: "none" }}
           className={classNames("w-full", { absolute: animating })}
         >
           {item.key === childKey ? children : item.elem}

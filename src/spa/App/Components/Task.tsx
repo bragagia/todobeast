@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { TaskType } from "../../../db/tasks";
+import { IconDrag } from "../../utils/Icons";
 import { TaskCheckbox } from "./TaskCheckbox";
 import { TaskDate } from "./TaskDate";
 import { TaskDuration } from "./TaskDuration";
@@ -9,15 +10,19 @@ import { TaskTitle } from "./TaskTitle";
 
 export function Task({ task }: { task: TaskType }) {
   return (
-    <div className="hover:bg-gray-50">
-      <div
-        className={classNames(
-          "flex flex-row justify-normal py-1 task-padding border-b border-gray-200",
-          {
-            "opacity-40 hover:opacity-70": task?.done_at,
-          }
-        )}
-      >
+    <div
+      className={classNames(
+        "flex flex-row justify-normal py-1 task-padding border-b border-gray-200 bg-white hover:bg-gray-50",
+        {
+          "opacity-40 hover:opacity-70": task?.done_at,
+        }
+      )}
+    >
+      <div className="flex flex-row items-center w-full gap-2">
+        <div className="flex items-center justify-center w-3 h-3 text-gray-300">
+          <IconDrag />
+        </div>
+
         <div className="flex flex-row-reverse items-center w-full gap-1 sm:flex-row">
           <div className="flex items-center self-stretch justify-center">
             <TaskCheckbox task={task} />
