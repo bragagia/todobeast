@@ -5,7 +5,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import { EditorContent, Extension, useEditor } from "@tiptap/react";
 import classNames from "classnames";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import { getProject, projectIdPrefix } from "../../../db/projects";
@@ -54,6 +54,8 @@ export function ProjectPage() {
 
   let projectId = useMemo(() => (id ? projectIdPrefix + id : ""), [id]);
 
+  const editingProjectIdRef = useRef<string | null>(projectId);
+
   const project = useSubscribe(rep, getProject(projectId), null, [
     rep,
     projectId,
@@ -98,14 +100,19 @@ export function ProjectPage() {
 
   const setProjectName = useCallback(
     async (name: string) => {
-      if (!project) return;
+      if (!editingProjectIdRef.current) {
+        return;
+      }
 
       await rep.mutate.projectUpdate({
-        id: project.id,
+        id: editingProjectIdRef.current,
         name: name,
       });
+
+      // clear the ref once the editing is done
+      editingProjectIdRef.current = null;
     },
-    [project, rep]
+    [rep]
   );
 
   const deleteProject = useCallback(async () => {
@@ -144,6 +151,10 @@ export function ProjectPage() {
 
       content: project?.name,
 
+      onFocus({ editor, event }) {
+        editingProjectIdRef.current = projectId;
+      },
+
       onBlur({ editor, event }) {
         setProjectName(editor.getText());
       },
@@ -158,12 +169,7 @@ export function ProjectPage() {
   return (
     <>
       <PageTitle>
-        <div className="flex flex-row items-center self-stretch justify-between w-full h-full">
-          {/*  Flex alignement correction div */}
-          <div className="invisible">
-            <IconTrash />
-          </div>
-
+        <div className="flex flex-row items-center self-stretch justify-normal w-full h-full">
           <div className="flex flex-row items-center">
             <Popover
               open={iconPickerOpen}
@@ -247,7 +253,7 @@ export function ProjectPage() {
           <button
             onClick={deleteProject}
             className={classNames(
-              "button text-gray-500",
+              "button text-gray-400",
               { invisible: project.special },
               { "pointer-fine:invisible group-hover:visible": !project.special }
             )}

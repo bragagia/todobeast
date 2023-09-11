@@ -3,24 +3,36 @@ import History from "@tiptap/extension-history";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import { EditorContent, Extension, useEditor } from "@tiptap/react";
+import { useCallback, useRef } from "react";
 import { TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
 
 export function TaskTitle({ task }: { task: TaskType }) {
   const rep = useReplicache();
 
-  function updateTaskTitle(id: string, title: string) {
-    let newTitle = title.trim();
+  const editingTaskIdRef = useRef<string | null>(task.id);
 
-    if (newTitle === "") {
-      rep.mutate.taskRemove(task.id);
-    } else {
-      rep.mutate.taskUpdate({
-        id: task.id,
-        title: newTitle,
-      });
-    }
-  }
+  const updateTaskTitle = useCallback(
+    (title: string) => {
+      if (!editingTaskIdRef.current) {
+        return;
+      }
+
+      let newTitle = title.trim();
+
+      if (newTitle === "") {
+        rep.mutate.taskRemove(editingTaskIdRef.current);
+      } else {
+        rep.mutate.taskUpdate({
+          id: editingTaskIdRef.current,
+          title: newTitle,
+        });
+      }
+
+      editingTaskIdRef.current = null;
+    },
+    [rep]
+  );
 
   const editor = useEditor(
     {
@@ -33,7 +45,7 @@ export function TaskTitle({ task }: { task: TaskType }) {
           addKeyboardShortcuts(this) {
             return {
               Enter: () => {
-                updateTaskTitle(task.id, this.editor.getText());
+                updateTaskTitle(this.editor.getText());
                 return true;
               },
             };
@@ -42,8 +54,13 @@ export function TaskTitle({ task }: { task: TaskType }) {
       ],
       autofocus: false,
       content: task.title,
+
+      onFocus({ editor, event }) {
+        editingTaskIdRef.current = task.id;
+      },
+
       onBlur({ editor, event }) {
-        updateTaskTitle(task.id, editor.getText());
+        updateTaskTitle(editor.getText());
       },
     },
     [task]

@@ -1,7 +1,19 @@
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+  ResponderProvided,
+} from "@hello-pangea/dnd";
 import classNames from "classnames";
+import { useCallback, useMemo } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
-import { getAllProjects, newProjectId } from "../../../db/projects";
+import {
+  ProjectType,
+  getAllProjects,
+  newProjectId,
+} from "../../../db/projects";
 import { UrlNavLinkPlanner, UrlProject } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import {
@@ -10,6 +22,7 @@ import {
   IconSettings,
   projectIconMap,
 } from "../../utils/Icons";
+import { calcNewOrder } from "../../utils/Orderring";
 import { SidemenuItem } from "./SidebarItem";
 
 export function SidebarContent() {
@@ -18,6 +31,21 @@ export function SidebarContent() {
   const navigate = useNavigate();
 
   const allProjects = useSubscribe(rep, getAllProjects(), [], [rep]);
+
+  const allNonSpecialProjects = useMemo(
+    () => allProjects.filter((project) => project.special == null),
+    [allProjects]
+  );
+
+  const projectInbox = useMemo(
+    () => allProjects.find((project) => project.special == "inbox"),
+    [allProjects]
+  );
+
+  const projectArchive = useMemo(
+    () => allProjects.find((project) => project.special == "archive"),
+    [allProjects]
+  );
 
   async function createProject() {
     let id = newProjectId();
@@ -33,8 +61,46 @@ export function SidebarContent() {
     navigate(UrlProject(id, ""));
   }
 
+  function getProjectItem(project: ProjectType) {
+    return (
+      <SidemenuItem
+        to={UrlProject(project.id, project.name)}
+        Icon={projectIconMap[project.icon]}
+        emoji={project.icon}
+        iconColor={project.icon_color}
+        textColor={
+          project.special === "archive" ? project.icon_color : undefined
+        }
+      >
+        {project.name != "" ? project.name : "New project"}
+      </SidemenuItem>
+    );
+  }
+
+  const onDragProject = useCallback(
+    (result: DropResult, provided: ResponderProvided) => {
+      // dropped outside the list
+      if (!result.destination) {
+        return;
+      }
+
+      let draggedId = result.source.index;
+      let destinationId = result.destination.index;
+      let orders = allNonSpecialProjects.map((project) => project.order);
+      let newOrder = calcNewOrder(draggedId, destinationId, orders);
+
+      let draggedProjectId = allNonSpecialProjects[draggedId].id;
+
+      rep.mutate.projectUpdate({
+        id: draggedProjectId,
+        order: newOrder,
+      });
+    },
+    [allNonSpecialProjects, rep]
+  );
+
   return (
-    <ul className="flex flex-col p-4">
+    <div className="flex flex-col p-4">
       <div className="flex flex-row items-center justify-between my-4">
         <h1
           className="text-5xl text-center text-red-500 align-middle sm:text-2xl md:text-3xl josefin-sans"
@@ -54,7 +120,7 @@ export function SidebarContent() {
         </NavLink>
       </div>
 
-      <div className="hidden mt-6 sm:list-item">
+      <div className="hidden mt-6 sm:block">
         <SidemenuItem
           to={UrlNavLinkPlanner()}
           Icon={IconCalendar}
@@ -76,21 +142,37 @@ export function SidebarContent() {
           </button>
         </div>
 
-        {allProjects.map((project) => (
-          <SidemenuItem
-            key={"sidebar/project/" + project.id}
-            to={UrlProject(project.id, project.name)}
-            Icon={projectIconMap[project.icon]}
-            emoji={project.icon}
-            iconColor={project.icon_color}
-            textColor={
-              project.special === "archive" ? project.icon_color : undefined
-            }
-          >
-            {project.name != "" ? project.name : "New project"}
-          </SidemenuItem>
-        ))}
+        {projectInbox ? getProjectItem(projectInbox) : null}
+
+        <DragDropContext onDragEnd={onDragProject}>
+          <Droppable droppableId="project-list-orderable">
+            {(provided) => (
+              <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {allNonSpecialProjects.map((project, id) => (
+                  <Draggable
+                    key={"sidebar/project/" + project.id}
+                    draggableId={"sidebar/project/" + project.id}
+                    index={id}
+                  >
+                    {(provided) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        {getProjectItem(project)}
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
+
+        {projectArchive ? getProjectItem(projectArchive) : null}
       </div>
-    </ul>
+    </div>
   );
 }

@@ -17,7 +17,7 @@ export function SettingsPage() {
 
   return (
     <>
-      <PageTitle>
+      <PageTitle className="page-container">
         <div className="flex flex-row justify-between w-full">
           <button className="button-visible invisible">Sign out</button>
           <div className="flex flex-row items-center gap-2">

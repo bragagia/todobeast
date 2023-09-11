@@ -29,7 +29,7 @@ export function PlannerPage() {
 
   return (
     <>
-      <PageTitle>
+      <PageTitle className="page-container">
         <WeeklyCalendarNav tasksByDays={tasksByDays} />
       </PageTitle>
 

@@ -898,7 +898,7 @@ export function IconHourglass() {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth={1.5}
       viewBox="0 0 256 256"
       className="w-6 h-6"
       xmlns="http://www.w3.org/2000/svg"

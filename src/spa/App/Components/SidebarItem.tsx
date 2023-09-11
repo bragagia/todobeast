@@ -24,7 +24,7 @@ export function SidemenuItem({
   active?: boolean;
 }) {
   return (
-    <li className={className}>
+    <div className={className}>
       <NavLink
         to={to}
         className={({ isActive, isPending }) =>
@@ -59,6 +59,6 @@ export function SidemenuItem({
           ""
         )}
       </NavLink>
-    </li>
+    </div>
   );
 }
