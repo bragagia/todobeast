@@ -1,9 +1,9 @@
 export function calcNewOrder(
-  sourceIdBeforeDestinationId: boolean,
+  sourceIsBeforeDestination: boolean,
   destinationId: number,
   orders: number[]
 ) {
-  if (sourceIdBeforeDestinationId) destinationId += 1;
+  if (sourceIsBeforeDestination) destinationId += 1;
 
   let prevItemOrder = destinationId == 0 ? 0 : orders[destinationId - 1];
 

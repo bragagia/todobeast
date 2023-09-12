@@ -67,7 +67,7 @@ export function TaskTitle({ task }: { task: TaskType }) {
   );
 
   return (
-    <div className="button">
+    <div className="button cursor-text">
       {editor ? <EditorContent editor={editor} /> : <p>{task.title}</p>}
     </div>
   );
