@@ -1,20 +1,34 @@
 import { DraggableLocation } from "@hello-pangea/dnd";
 
-export function calcNewOrder(
+export const OrderIncrement = 1000;
+
+export type Orderable = { order: number };
+
+export function calcNewOrder<T extends Orderable>(
   sourceIsMovingDestinationDown: boolean,
   destinationId: number,
-  orders: number[]
+  bucket: T[]
 ) {
   if (sourceIsMovingDestinationDown) destinationId += 1;
 
-  let prevItemOrder = destinationId == 0 ? 0 : orders[destinationId - 1];
+  // If destination is first item, we simulate a fake order of destination / 4 instead of zero to reduce the tendency of orders toward zero
+  let prevItemOrder =
+    destinationId == 0
+      ? bucket[destinationId].order / 4
+      : bucket[destinationId - 1].order;
 
+  // If destination is last item, we generate a fake order of 2 times the increment for the same reason
   let nextItemOrder =
-    destinationId == orders.length
-      ? orders[orders.length - 1] + 2000 // Create a new order 2000 after the max if moving item at the end
-      : orders[destinationId];
+    destinationId == bucket.length
+      ? bucket[bucket.length - 1].order + 2 * OrderIncrement
+      : bucket[destinationId].order;
 
   let newOrder = (prevItemOrder + nextItemOrder) / 2;
+
+  // Failover just in case to get back on a usable state
+  if (!newOrder || newOrder == 0) {
+    newOrder = OrderIncrement + Math.random();
+  }
 
   return newOrder;
 }
@@ -23,7 +37,7 @@ export function calcNewOrder(
 // The use case is for when you have multiple list (for ex.: categories) of the same type of items, and that
 // inside a single list, those items are themselves sorted by some criteria (subvalues), then by an order number
 // dragAndDropGeneric will do the all the hard calculations and call an itemUpdater with the new order and subvalues
-export function dragAndDropGeneric<T extends { order: number }>(
+export function dragAndDropGeneric<T extends Orderable>(
   {
     source,
     destination,
@@ -49,18 +63,18 @@ export function dragAndDropGeneric<T extends { order: number }>(
     return;
   }
 
+  // Shortcuts
   let sourceItem = droppablesData[source.droppableId][source.index];
+  let droppablesDataDestination = droppablesData[destination.droppableId];
 
   // If we move a task to the last position of a perProjectAndDone, the destination task will not exist, so we use the last task as a reference
   let destinationIsEndOfDroppable =
-    destination.index >= droppablesData[destination.droppableId].length;
+    destination.index >= droppablesDataDestination.length;
 
   // We get destination item reference for subvalues infos, we use last item of dropablesData as reference is the new position is after the end
   let destinationItem = destinationIsEndOfDroppable
-    ? droppablesData[destination.droppableId][
-        droppablesData[destination.droppableId].length - 1
-      ]
-    : droppablesData[destination.droppableId][destination.index];
+    ? droppablesDataDestination[droppablesDataDestination.length - 1]
+    : droppablesDataDestination[destination.index];
 
   // If source item is in same bucket as destination, and if source if before destination, then the destination item will move up in the list after the reorder, we have to take it into account
   let sourceIsMovingDestinationDown =
@@ -68,23 +82,25 @@ export function dragAndDropGeneric<T extends { order: number }>(
     source.index < destination.index;
 
   // We get the taskId surrounding or "englobing" the destination position, so we can ensure later that we only update source sub-values if they are different from both
-  let itemEnglobingDestinationIndex = destinationIsEndOfDroppable
-    ? droppablesData[destination.droppableId].length - 1
-    : sourceIsMovingDestinationDown
+  let itemEnglobingDestinationIndex = sourceIsMovingDestinationDown
     ? destination.index + 1
     : destination.index - 1;
 
   // If this is the first or last item of dropableData, we consider englobing task to be = destination task
+  let itemEnglobingDestination: T;
   if (
     itemEnglobingDestinationIndex <= 0 ||
-    itemEnglobingDestinationIndex >=
-      droppablesData[destination.droppableId].length
+    itemEnglobingDestinationIndex >= droppablesDataDestination.length
   ) {
-    itemEnglobingDestinationIndex = destination.index;
+    itemEnglobingDestination = destinationItem;
+  } else {
+    itemEnglobingDestination =
+      droppablesDataDestination[itemEnglobingDestinationIndex];
   }
 
-  let itemEnglobingDestination =
-    droppablesData[destination.droppableId][itemEnglobingDestinationIndex];
+  console.log(droppablesDataDestination);
+
+  console.log(sourceItem, destinationItem, itemEnglobingDestination);
 
   // Calculating new subvalues
   let newSubValues: { [key: string]: any } = {};
@@ -132,15 +148,14 @@ export function dragAndDropGeneric<T extends { order: number }>(
 
   let inBucketDestinationIndex = destination.index - destinationBucketIdStart;
 
-  let destinationBucket = droppablesData[destination.droppableId].filter(
-    (item) => areSubValuesEquals(item, newSubValues)
+  let destinationBucket = droppablesDataDestination.filter((item) =>
+    areSubValuesEquals(item, newSubValues)
   );
 
-  let bucketCurrentOrders = destinationBucket.map((item) => item.order);
   let newOrder = calcNewOrder(
     sourceIsMovingDestinationDown,
     inBucketDestinationIndex,
-    bucketCurrentOrders
+    destinationBucket
   );
 
   itemUpdater(source, destination, sourceItem, newOrder, newSubValues);

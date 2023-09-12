@@ -27,7 +27,7 @@ export function TaskCreator({
 
   const today = useDate();
 
-  const creationDate = useMemo(() => {
+  const selectedDate = useMemo(() => {
     if (!date) {
       return null;
     }
@@ -70,7 +70,7 @@ export function TaskCreator({
                   id: newTaskId(),
                   created_at: dayjs().toISOString(),
                   title: title,
-                  date: creationDate,
+                  date: selectedDate,
                   projectId: projectId,
                   done_at: null,
                   priority: null,
@@ -95,7 +95,7 @@ export function TaskCreator({
       content: content,
       autofocus: false,
     },
-    [creationDate, projectId, projectInbox]
+    [selectedDate, projectId, projectInbox]
   );
 
   return (

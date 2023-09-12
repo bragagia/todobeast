@@ -19,9 +19,14 @@ export function TaskPriority({ task }: { task: TaskType }) {
   const [open, setOpen] = useState(false);
 
   async function setTaskPriority(taskId: string, priority: PriorityType) {
-    await rep.mutate.taskUpdate({
-      id: taskId,
-      priority: priority,
+    setOpen(false);
+
+    await rep.mutate.taskUpdatePriorityAndReorder({
+      projectId: task.projectId,
+      task: {
+        id: taskId,
+        priority: priority,
+      },
     });
   }
 

@@ -29,8 +29,6 @@ export function TaskList({
 
   const rep = useReplicache();
 
-  const [doneCollapsed, setDoneCollapsed] = useState(true);
-
   const allProjects = useSubscribe(rep, getAllProjects(), null, [rep]);
 
   const allProjectsById = useMemo(() => {
@@ -95,6 +93,20 @@ export function TaskList({
       return prev;
     }, {} as { [key: string]: TaskType[] });
   }, [sortedTasks]);
+
+  const [doneCollapsed, setDoneCollapsed] = useState(true);
+
+  useEffect(() => {
+    if (!sortedTasksPerProjectAndDone) return;
+
+    if (
+      Object.keys(sortedTasksPerProjectAndDone).length == 1 &&
+      sortedTasksPerProjectAndDone[doneProjectKey]
+    ) {
+      // There is only done tasks
+      setDoneCollapsed(false);
+    }
+  }, [sortedTasksPerProjectAndDone]);
 
   const onDragTask = useCallback(
     ({ source, destination }: DropResult, provided: ResponderProvided) => {
@@ -175,7 +187,7 @@ export function TaskList({
 
   return (
     <div
-      className={classNames("pt-4", {
+      className={classNames({
         "border-b border-gray-200 mb-32": tasks.length > 0,
       })}
     >

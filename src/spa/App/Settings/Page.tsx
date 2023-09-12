@@ -2,7 +2,7 @@ import { useTheme } from "next-themes";
 import { useNavigate } from "react-router-dom";
 import { useSupabase } from "../../SupabaseProvider";
 import { IconSettings } from "../../utils/Icons";
-import { PageTitle } from "../Components/PageTitle";
+import { PageHeader } from "../Components/PageTitle";
 
 export function SettingsPage() {
   const supabase = useSupabase();
@@ -17,20 +17,21 @@ export function SettingsPage() {
 
   return (
     <>
-      <PageTitle className="page-container">
+      <PageHeader className="page-container py-4 task-padding">
         <div className="flex flex-row justify-between w-full">
           <button className="button-visible invisible">Sign out</button>
+
           <div className="flex flex-row items-center gap-2">
             <IconSettings />
             <p className="text-xl">Settings</p>
           </div>
+
           <button className="button-visible bg-gray-100" onClick={signout}>
             Sign out
           </button>
         </div>
-      </PageTitle>
+      </PageHeader>
 
-      {/* TODO: */}
       <div className="page-padding page-container">
         <div>
           <label className="font-bold">Theme</label>

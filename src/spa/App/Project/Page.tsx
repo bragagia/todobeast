@@ -13,7 +13,7 @@ import { getTasksOfProject } from "../../../db/tasks";
 import { UrlPlanner } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import { IconTrash, projectIconMap } from "../../utils/Icons";
-import { PageTitle } from "../Components/PageTitle";
+import { PageHeader } from "../Components/PageTitle";
 import { ProjectIcon } from "../Components/ProjectIcon";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
@@ -168,8 +168,8 @@ export function ProjectPage() {
 
   return (
     <>
-      <PageTitle>
-        <div className="flex flex-row items-center self-stretch justify-normal w-full h-full">
+      <PageHeader>
+        <div className="flex flex-row items-center self-stretch justify-normal w-full h-full py-3 task-padding">
           <div className="flex flex-row items-center">
             <Popover
               open={iconPickerOpen}
@@ -261,9 +261,9 @@ export function ProjectPage() {
             <IconTrash />
           </button>
         </div>
-      </PageTitle>
 
-      <TaskCreator projectId={projectId} />
+        <TaskCreator projectId={projectId} />
+      </PageHeader>
 
       <div className="task-padding">
         {project.special === "archive" ? (

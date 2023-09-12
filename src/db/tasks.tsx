@@ -1,5 +1,7 @@
+import { Partial } from "@react-spring/web";
 import { nanoid } from "nanoid";
 import { ReadTransaction, WriteTransaction } from "replicache";
+import { OrderIncrement } from "../spa/utils/Orderring";
 import { DayjsDate } from "../spa/utils/PlainDate";
 import { isProjectIdArchive } from "./projects";
 
@@ -43,7 +45,7 @@ export const tasksMutators = {
       return prev.order > current.order ? prev : current;
     });
 
-    await tx.put(task.id, { ...task, order: lastTask.order + 1000 });
+    await tx.put(task.id, { ...task, order: lastTask.order + OrderIncrement });
   },
 
   taskUpdate: async (
@@ -54,6 +56,27 @@ export const tasksMutators = {
     const next = { ...prev, ...task };
 
     await tx.put(task.id, next);
+  },
+
+  taskUpdatePriorityAndReorder: async (
+    tx: WriteTransaction,
+    args: {
+      task: Required<Pick<TaskType, "id" | "priority">>;
+      projectId: string;
+    }
+  ) => {
+    let allTasks = await getTasksOfProject(args.projectId)(tx);
+    let maxOrder = allTasks.reduce(
+      (prev, current) => (current.order > prev ? current.order : prev),
+      1
+    );
+
+    let newOrder = maxOrder + OrderIncrement;
+
+    const prev = (await tx.get(args.task.id)) as TaskType;
+    const next = { ...prev, ...args.task, order: newOrder };
+
+    await tx.put(args.task.id, next);
   },
 
   taskRemove: async (tx: WriteTransaction, taskId: string) => {

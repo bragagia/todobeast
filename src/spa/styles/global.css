@@ -114,10 +114,6 @@ body {
   @apply max-w-3xl mx-auto;
 }
 
-.animated {
-  @apply transition-all duration-150 ease-in-out;
-}
-
 .tiptap {
   @apply without-ring;
 }

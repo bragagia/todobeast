@@ -1,4 +1,6 @@
 import classNames from "classnames";
+import dayjs from "dayjs";
+import { useEffect, useRef, useState } from "react";
 import { TaskType } from "../../../db/tasks";
 import { IconDrag } from "../../utils/Icons";
 import { TaskCheckbox } from "./TaskCheckbox";
@@ -9,10 +11,34 @@ import { TaskProject } from "./TaskProject";
 import { TaskTitle } from "./TaskTitle";
 
 export function Task({ task }: { task: TaskType }) {
+  const taskRef = useRef<HTMLDivElement>(null);
+  const [blinking, setBlinking] = useState(false);
+
+  useEffect(() => {
+    if (!task || !taskRef || !taskRef.current) {
+      return;
+    }
+
+    if (dayjs(task.created_at).isAfter(dayjs().add(-2, "second"))) {
+      taskRef.current.scrollIntoView({ block: "center", behavior: "instant" });
+      setBlinking(true);
+
+      let timeoutId = setTimeout(() => {
+        setBlinking(false);
+      }, 750);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [task, taskRef]);
+
   return (
     <div
+      ref={taskRef}
       className={classNames(
-        "flex flex-row justify-normal py-1 task-padding border-t border-gray-200 bg-white hover:bg-gray-50"
+        "flex flex-row justify-normal py-1 task-padding border-t border-gray-200 bg-white hover:bg-gray-50",
+        { "animate-pulse-fast !bg-gray-100": blinking }
       )}
     >
       <div className="flex flex-row items-center w-full gap-2">

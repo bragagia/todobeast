@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { ReadTransaction, WriteTransaction } from "replicache";
 import { getTasksOfProject } from "./tasks";
+import { OrderIncrement } from "../spa/utils/Orderring";
 
 export const projectIdPrefix = "projects/";
 
@@ -40,7 +41,10 @@ export const projectsMutators = {
       return prev.order > current.order ? prev : current;
     });
 
-    await tx.put(project.id, { ...project, order: lastProject.order + 1000 });
+    await tx.put(project.id, {
+      ...project,
+      order: lastProject.order + OrderIncrement,
+    });
   },
 
   projectCreateSpecial: async (tx: WriteTransaction, project: ProjectType) => {

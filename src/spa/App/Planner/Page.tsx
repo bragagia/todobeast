@@ -6,7 +6,7 @@ import { useReplicache } from "../../ReplicacheProvider";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
 import { AnimatedTranslate } from "../Components/AnimatedTranslate";
-import { PageTitle } from "../Components/PageTitle";
+import { PageHeader } from "../Components/PageTitle";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
 import { WeeklyCalendarNav } from "./Components/WeeklyCalendarNav";
@@ -29,11 +29,13 @@ export function PlannerPage() {
 
   return (
     <>
-      <PageTitle className="page-container">
-        <WeeklyCalendarNav tasksByDays={tasksByDays} />
-      </PageTitle>
+      <PageHeader>
+        <div className="py-4 page-container">
+          <WeeklyCalendarNav tasksByDays={tasksByDays} />
+        </div>
 
-      <TaskCreator date={urlDate} />
+        <TaskCreator date={urlDate} />
+      </PageHeader>
 
       <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
         <TaskList tasks={tasksByDays[urlDate.toString()]} />

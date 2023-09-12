@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { ReactNode } from "react";
 
-export function PageTitle({
+export function PageHeader({
   children,
   className,
 }: {
@@ -9,13 +9,12 @@ export function PageTitle({
   className?: string;
 }) {
   return (
-    <div
-      className={classNames(
-        "flex flex-row items-center justify-center py-6 page-padding group",
-        className
-      )}
-    >
-      {children}
+    <div className={classNames("sticky top-0 z-30", className)}>
+      <div className="w-full bg-white pb-[1px] overflow-x-hidden">
+        {children}
+      </div>
+
+      <div className="h-4 from-white bg-gradient-to-b"></div>
     </div>
   );
 }

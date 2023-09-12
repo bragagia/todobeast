@@ -13,8 +13,7 @@ module.exports = {
     nightwind: {
       transitionDuration: false,
       //   //typography: true,
-      //   colorClasses: [
-      //     "gradient",
+      colorClasses: ["gradient"],
       //     "ring",
       //     "ring-offset",
       //     "divide",
@@ -87,11 +86,17 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        // End of shadcn shit
+
+        "pulse-fast": "pulseFast 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
+      keyframes: {
+        pulseFast: {
+          "50%": { opacity: 0.5 },
+        },
       },
     },
   },
-
-  // End of shadcn shit
 
   // variants: {
   //   nightwind: ["group-hover", "active", "focus"],
