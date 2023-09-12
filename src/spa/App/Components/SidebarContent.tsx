@@ -102,12 +102,11 @@ export function SidebarContent() {
       let draggedProject = allNonSpecialProjects[result.source.index];
 
       let destinationId = result.destination.index;
-      let orders = allNonSpecialProjects.map((project) => project.order);
 
       let newOrder = calcNewOrder(
         draggedId < destinationId,
         destinationId,
-        orders
+        allNonSpecialProjects
       );
 
       const projectUpdate = {
