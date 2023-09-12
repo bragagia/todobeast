@@ -98,10 +98,6 @@ export function dragAndDropGeneric<T extends Orderable>(
       droppablesDataDestination[itemEnglobingDestinationIndex];
   }
 
-  console.log(droppablesDataDestination);
-
-  console.log(sourceItem, destinationItem, itemEnglobingDestination);
-
   // Calculating new subvalues
   let newSubValues: { [key: string]: any } = {};
 
