@@ -6,6 +6,7 @@ import {
 import { projectIdRemovePrefix } from "../db/projects";
 import { InAppLayout } from "./App/Layout";
 import { PlannerPage } from "./App/Planner/Page";
+import { PriorityPeekPage } from "./App/PriorityPeek/Page";
 import { ProjectPage } from "./App/Project/Page";
 import { ProjectListPage } from "./App/ProjectsList/Page";
 import { SettingsPage } from "./App/Settings/Page";
@@ -28,6 +29,7 @@ export function AppRouter() {
             element: <PlannerPage />,
           },
           { path: "planner/:year/:month/:day", element: <PlannerPage /> },
+          { path: "priority-peek/", element: <PriorityPeekPage /> },
           {
             path: "projects/",
             element: <ProjectListPage />,
@@ -49,6 +51,10 @@ export function AppRouter() {
 }
 export function UrlNavLinkPlanner() {
   return "/planner";
+}
+
+export function UrlPriorityPeek() {
+  return "/priority-peek";
 }
 
 export function UrlPlanner(date?: DayjsDate, today?: DayjsDate) {

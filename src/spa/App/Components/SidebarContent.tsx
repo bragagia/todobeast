@@ -14,9 +14,14 @@ import {
   getAllProjects,
   newProjectId,
 } from "../../../db/projects";
-import { UrlNavLinkPlanner, UrlProject } from "../../AppRouter";
+import {
+  UrlNavLinkPlanner,
+  UrlPriorityPeek,
+  UrlProject,
+} from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import {
+  IconBolt,
   IconCalendar,
   IconPlus,
   IconSettings,
@@ -32,17 +37,18 @@ export function SidebarContent() {
 
   const allProjects = useSubscribe(rep, getAllProjects(), [], [rep]);
 
-  const allNonSpecialProjects = useMemo(
+  const uncachedAllNonSpecialProjects = useMemo(
     () => allProjects.filter((project) => project.special == null),
     [allProjects]
   );
 
-  const [cachedAllNonSpecialProjects, setCachedAllNonSpecialProjects] =
-    useState(allNonSpecialProjects);
+  const [allNonSpecialProjects, setAllNonSpecialProjects] = useState(
+    uncachedAllNonSpecialProjects
+  );
 
   useEffect(
-    () => setCachedAllNonSpecialProjects(allNonSpecialProjects),
-    [allNonSpecialProjects]
+    () => setAllNonSpecialProjects(uncachedAllNonSpecialProjects),
+    [uncachedAllNonSpecialProjects]
   );
 
   const projectInbox = useMemo(
@@ -93,10 +99,11 @@ export function SidebarContent() {
       }
 
       let draggedId = result.source.index;
-      let draggedProject = cachedAllNonSpecialProjects[result.source.index];
+      let draggedProject = allNonSpecialProjects[result.source.index];
 
       let destinationId = result.destination.index;
-      let orders = cachedAllNonSpecialProjects.map((project) => project.order);
+      let orders = allNonSpecialProjects.map((project) => project.order);
+
       let newOrder = calcNewOrder(
         draggedId < destinationId,
         destinationId,
@@ -109,8 +116,8 @@ export function SidebarContent() {
       };
 
       // We update the task in cache in order to prevent blinking during the time when replicache update its state
-      setCachedAllNonSpecialProjects(
-        cachedAllNonSpecialProjects.map((project) =>
+      setAllNonSpecialProjects(
+        allNonSpecialProjects.map((project) =>
           project.id === draggedProject.id
             ? { ...draggedProject, ...projectUpdate }
             : project
@@ -119,7 +126,7 @@ export function SidebarContent() {
 
       rep.mutate.projectUpdate(projectUpdate);
     },
-    [cachedAllNonSpecialProjects, rep]
+    [allNonSpecialProjects, rep]
   );
 
   return (
@@ -152,6 +159,15 @@ export function SidebarContent() {
         >
           Today
         </SidemenuItem>
+
+        <SidemenuItem
+          to={UrlPriorityPeek()}
+          Icon={IconBolt}
+          iconColor="text-purple-600"
+          active
+        >
+          Priority Peek
+        </SidemenuItem>
       </div>
 
       <div className="group">
@@ -171,7 +187,7 @@ export function SidebarContent() {
           <Droppable droppableId="project-list-orderable">
             {(provided) => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
-                {cachedAllNonSpecialProjects.map((project, id) => (
+                {allNonSpecialProjects.map((project, id) => (
                   <Draggable
                     key={"sidebar/project/" + project.id}
                     draggableId={"sidebar/project/" + project.id}

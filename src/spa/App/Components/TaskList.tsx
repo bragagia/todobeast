@@ -12,15 +12,24 @@ import { useSubscribe } from "replicache-react";
 import { ProjectType, getAllProjects } from "../../../db/projects";
 import { PriorityType, TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
+import { IconCollapsed, IconCollapsible } from "../../utils/Icons";
 import { dragAndDropGeneric as dragAndDropMultidropableGeneric } from "../../utils/Orderring";
 import { ProjectName } from "./ProjectName";
 import { Task } from "./Task";
 
-export function TaskList({ tasks: uncachedTasks }: { tasks: TaskType[] }) {
+export function TaskList({
+  tasks: uncachedTasks,
+  hideProjectBar = false,
+}: {
+  tasks: TaskType[];
+  hideProjectBar?: boolean;
+}) {
   const [tasks, setTasks] = useState(uncachedTasks);
   useEffect(() => setTasks(uncachedTasks ?? []), [uncachedTasks]);
 
   const rep = useReplicache();
+
+  const [doneCollapsed, setDoneCollapsed] = useState(true);
 
   const allProjects = useSubscribe(rep, getAllProjects(), null, [rep]);
 
@@ -69,12 +78,13 @@ export function TaskList({ tasks: uncachedTasks }: { tasks: TaskType[] }) {
     });
   }, [allProjectsById, tasks]);
 
-  // tasksPerProject also include done tasks under a virtual project ""
+  // tasksPerProject also include done tasks under a virtual project "done"
+  const doneProjectKey = "done";
   const sortedTasksPerProjectAndDone = useMemo(() => {
     if (!sortedTasks) return null;
 
     return sortedTasks.reduce((prev, current, i, arr) => {
-      let projectId = current.done_at ? "done" : current.projectId;
+      let projectId = current.done_at ? doneProjectKey : current.projectId;
 
       if (!prev[projectId]) {
         prev[projectId] = [];
@@ -109,19 +119,19 @@ export function TaskList({ tasks: uncachedTasks }: { tasks: TaskType[] }) {
 
           // If task is moving from not done to the done bucket, we don't update project and priority (but we do if moving from done to done)
           if (
-            source.droppableId !== "done" &&
-            destination.droppableId === "done"
+            source.droppableId !== doneProjectKey &&
+            destination.droppableId === doneProjectKey
           ) {
             taskUpdate = { ...taskUpdate, done_at: dayjs().toString() };
           } else if (
-            source.droppableId === "done" &&
-            destination.droppableId !== "done"
+            source.droppableId === doneProjectKey &&
+            destination.droppableId !== doneProjectKey
           ) {
             taskUpdate = { ...taskUpdate, done_at: null };
           }
 
           // We do not want to change projectId and priority if moving inside the done category
-          if (destination.droppableId !== "done") {
+          if (destination.droppableId !== doneProjectKey) {
             if (newSubvalues["projectId"] !== sourceItem.projectId) {
               taskUpdate = {
                 ...taskUpdate,
@@ -170,47 +180,82 @@ export function TaskList({ tasks: uncachedTasks }: { tasks: TaskType[] }) {
       })}
     >
       <DragDropContext onDragEnd={onDragTask}>
-        {Object.keys(sortedTasksPerProjectAndDone).map((projectId) => {
+        {Object.keys(sortedTasksPerProjectAndDone).map((projectAndDoneId) => {
           return (
-            <div key={"project-container/" + projectId}>
-              <div className="py-2 task-padding bg-gray-100 border-t border-gray-300 flex flex-row items-center">
-                <span>
-                  {projectId !== "done" ? (
+            <div key={"project-container/" + projectAndDoneId}>
+              {!hideProjectBar && projectAndDoneId !== doneProjectKey ? (
+                <div className="py-2 task-padding bg-gray-100 border-t border-gray-300 flex flex-row items-center">
+                  <span>
                     <ProjectName
-                      project={allProjectsById[projectId]}
-                      className="text-sm ml-1"
+                      project={allProjectsById[projectAndDoneId]}
+                      className="text-sm ml-1 gap-2"
                       iconClassName="w-4 h-4"
                     />
-                  ) : (
-                    "Done"
-                  )}
-                </span>
-                <span className="ml-2 text-sm font-light text-gray-400">
-                  {sortedTasksPerProjectAndDone[projectId].length}
-                </span>
-              </div>
+                  </span>
+                  <span className="ml-2 text-sm font-light text-gray-400">
+                    {sortedTasksPerProjectAndDone[projectAndDoneId].length}
+                  </span>
+                </div>
+              ) : null}
 
-              <Droppable key={projectId} droppableId={projectId}>
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {sortedTasksPerProjectAndDone[projectId].map((task, id) => (
-                      <Draggable key={task.id} draggableId={task.id} index={id}>
-                        {(provided, snapshot) => (
-                          <div
+              {projectAndDoneId === doneProjectKey ? (
+                <>
+                  <div className="border-t border-gray-200"></div>
+                  <button
+                    className="py-2 mt-4 task-padding flex flex-row items-center text-gray-500 text-sm hover:bg-gray-50 w-full border-t border-transparent hover:border-gray-200"
+                    onClick={() => setDoneCollapsed(!doneCollapsed)}
+                  >
+                    <span>
+                      <div className="flex flex-row items-center gap-2">
+                        <span className="flex items-center justify-center w-4 h-4">
+                          {doneCollapsed ? (
+                            <IconCollapsed />
+                          ) : (
+                            <IconCollapsible />
+                          )}
+                        </span>
+                        Done
+                      </div>
+                    </span>
+                    <span className="ml-2 text-sm font-light text-gray-400">
+                      {sortedTasksPerProjectAndDone[projectAndDoneId].length}
+                    </span>
+                  </button>
+                </>
+              ) : null}
+
+              {projectAndDoneId !== doneProjectKey || !doneCollapsed ? (
+                <Droppable
+                  key={projectAndDoneId}
+                  droppableId={projectAndDoneId}
+                >
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {sortedTasksPerProjectAndDone[projectAndDoneId].map(
+                        (task, id) => (
+                          <Draggable
                             key={task.id}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
+                            draggableId={task.id}
+                            index={id}
                           >
-                            <Task task={task} />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
+                            {(provided, snapshot) => (
+                              <div
+                                key={task.id}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                <Task task={task} />
+                              </div>
+                            )}
+                          </Draggable>
+                        )
+                      )}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              ) : null}
             </div>
           );
         })}

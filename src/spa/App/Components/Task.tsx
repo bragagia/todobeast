@@ -12,10 +12,7 @@ export function Task({ task }: { task: TaskType }) {
   return (
     <div
       className={classNames(
-        "flex flex-row justify-normal py-1 task-padding border-t border-gray-200 bg-white hover:bg-gray-50",
-        {
-          "opacity-40 hover:opacity-70": task?.done_at,
-        }
+        "flex flex-row justify-normal py-1 task-padding border-t border-gray-200 bg-white hover:bg-gray-50"
       )}
     >
       <div className="flex flex-row items-center w-full gap-2">

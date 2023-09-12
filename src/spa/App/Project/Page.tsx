@@ -274,7 +274,11 @@ export function ProjectPage() {
         ) : null}
       </div>
 
-      <TaskList tasks={tasksofProject} />
+      <TaskList
+        key={"list/" + projectId}
+        tasks={tasksofProject}
+        hideProjectBar
+      />
     </>
   );
 }

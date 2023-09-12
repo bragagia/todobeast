@@ -2,11 +2,11 @@ import { useSubscribe } from "replicache-react";
 import { getProjectInbox } from "../../../db/projects";
 import {
   UrlNavLinkPlanner,
-  UrlProject,
+  UrlPriorityPeek,
   UrlProjectsList,
 } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
-import { IconBurger, IconCalendar, IconInbox } from "../../utils/Icons";
+import { IconBolt, IconBurger, IconCalendar } from "../../utils/Icons";
 import { MobileNavItem } from "./MobileNavItem";
 
 export function MobileNavContent() {
@@ -24,12 +24,8 @@ export function MobileNavContent() {
         <IconCalendar />
       </MobileNavItem>
 
-      <MobileNavItem
-        to={
-          projectInbox ? UrlProject(projectInbox?.id, projectInbox?.name) : ""
-        }
-      >
-        <IconInbox />
+      <MobileNavItem to={UrlPriorityPeek()}>
+        <IconBolt />
       </MobileNavItem>
     </div>
   );
