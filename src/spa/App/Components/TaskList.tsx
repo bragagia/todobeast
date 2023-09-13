@@ -196,7 +196,7 @@ export function TaskList({
           return (
             <div key={"project-container/" + projectAndDoneId}>
               {!hideProjectBar && projectAndDoneId !== doneProjectKey ? (
-                <div className="py-2 task-padding bg-gray-100 border-t border-gray-300 flex flex-row items-center">
+                <div className="py-1 task-padding bg-gray-100 border-t border-gray-300 flex flex-row items-center">
                   <span>
                     <ProjectName
                       project={allProjectsById[projectAndDoneId]}
@@ -214,7 +214,7 @@ export function TaskList({
                 <>
                   <div className="border-t border-gray-200"></div>
                   <button
-                    className="py-2 mt-4 task-padding flex flex-row items-center text-gray-500 text-sm hover:bg-gray-50 w-full border-t border-transparent hover:border-gray-200"
+                    className="py-1 mt-6 task-padding flex flex-row items-center text-gray-500 text-sm hover:bg-gray-50 w-full border-t border-transparent hover:border-gray-200"
                     onClick={() => setDoneCollapsed(!doneCollapsed)}
                   >
                     <span>

@@ -68,6 +68,12 @@ export function ProjectPage() {
     [rep, projectId]
   );
 
+  const tasksTodoCount = useMemo(() => {
+    return tasksofProject
+      ? tasksofProject.filter((task) => !task.done_at).length
+      : 0;
+  }, [tasksofProject]);
+
   const [iconPickerOpen, setIconPickerOpen] = useState(false);
 
   const setProjectIcon = useCallback(
@@ -249,6 +255,12 @@ export function ProjectPage() {
               <EditorContent className="text-xl" editor={editor} />
             </div>
           </div>
+
+          {tasksTodoCount > 0 ? (
+            <div className="text-xl font-light text-gray-400">
+              {tasksTodoCount}
+            </div>
+          ) : null}
 
           <button
             onClick={deleteProject}
