@@ -38,7 +38,7 @@ export function PlannerPage() {
       </PageHeader>
 
       <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
-        <TaskList tasks={tasksByDays[urlDate.toString()]} />
+        <TaskList tasks={tasksByDays[urlDate.toString()]} className="mb-32" />
       </AnimatedTranslate>
     </>
   );

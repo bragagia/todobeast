@@ -175,7 +175,7 @@ export function ProjectPage() {
   return (
     <>
       <PageHeader>
-        <div className="flex flex-row items-center self-stretch justify-normal w-full h-full py-3 task-padding">
+        <div className="flex flex-row items-center justify-normal w-full py-3 task-padding">
           <div className="flex flex-row items-center">
             <Popover
               open={iconPickerOpen}
@@ -290,6 +290,7 @@ export function ProjectPage() {
         key={"list/" + projectId}
         tasks={tasksofProject}
         hideProjectBar
+        className="mb-32"
       />
     </>
   );

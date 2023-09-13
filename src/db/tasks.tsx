@@ -39,7 +39,7 @@ export type TaskType = {
 
 export const tasksMutators = {
   taskCreate: async (tx: WriteTransaction, task: Omit<TaskType, "order">) => {
-    let allTasks = await getAllTasks()(tx);
+    let allTasks = await getAllTasksAndArchive()(tx);
 
     let lastTask = allTasks.reduce((prev, current) => {
       return prev.order > current.order ? prev : current;
@@ -84,7 +84,7 @@ export const tasksMutators = {
   },
 
   migrationAddTasksOrder: async (tx: WriteTransaction) => {
-    let allTasks = await getAllTasks()(tx);
+    let allTasks = await getAllTasksAndArchive()(tx);
 
     if (allTasks && allTasks.length > 0 && !allTasks[0].order) {
       console.log("migrate -> AddTasksOrder");
@@ -104,7 +104,7 @@ export function getTask(taskId: string) {
   };
 }
 
-export function getAllTasks() {
+export function getAllTasksAndArchive() {
   return async function (tx: ReadTransaction) {
     let allTasks = (await tx
       .scan({ prefix: taskIdPrefix })
@@ -115,7 +115,7 @@ export function getAllTasks() {
   };
 }
 
-export function getAllNonArchivedTasks() {
+export function getAllTasks() {
   return async function (tx: ReadTransaction) {
     let allTasks = (await tx
       .scan({ prefix: taskIdPrefix })
@@ -130,9 +130,22 @@ export function getAllNonArchivedTasks() {
   };
 }
 
+// Return only tasks with priorities, does not return planned and done tasks
+export function getPriorityPeekTasks() {
+  return async function (tx: ReadTransaction) {
+    let allTasks = await getAllTasks()(tx);
+
+    allTasks = allTasks.filter(
+      (task) => !task.done_at && !task.date && task.priority
+    );
+
+    return allTasks;
+  };
+}
+
 export function getTasksByDays(today: DayjsDate) {
   return async function (tx: ReadTransaction) {
-    let allTasks = await getAllNonArchivedTasks()(tx);
+    let allTasks = await getAllTasks()(tx);
 
     let tasksByDays: { [key: string]: TaskType[] } = {};
 
@@ -165,7 +178,7 @@ export function getTasksByDays(today: DayjsDate) {
 
 export function getTasksOfProject(projectId: string) {
   return async function (tx: ReadTransaction) {
-    let allTasks = await getAllTasks()(tx);
+    let allTasks = await getAllTasksAndArchive()(tx);
 
     if (!allTasks) return [];
     return allTasks.filter((task) => task.projectId == projectId);

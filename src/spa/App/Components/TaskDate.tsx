@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
-import { IconCalendar } from "../../utils/Icons";
+import { IconCalendar, IconCircleArrowUp } from "../../utils/Icons";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -13,7 +13,13 @@ import "react-day-picker/dist/style.css";
 
 import "./TaskDate.css";
 
-export function TaskDate({ task }: { task: TaskType }) {
+export function TaskDate({
+  task,
+  mode = "default",
+}: {
+  task: TaskType;
+  mode?: "default" | "priority-peek";
+}) {
   const rep = useReplicache();
 
   const [open, setOpen] = useState(false);
@@ -30,24 +36,29 @@ export function TaskDate({ task }: { task: TaskType }) {
   let dateFormatted = "Set date";
   let noDate = true;
 
-  if (taskDate) {
-    noDate = false;
+  if (mode == "default") {
+    if (taskDate) {
+      noDate = false;
 
-    if (taskDate.isSame(today)) {
-      dateFormatted = "Today";
-    } else if (
-      taskDate.isAfter(today) &&
-      taskDate.addDays(-7).isBefore(today)
-    ) {
-      // Task in less than a week
-      dateFormatted = taskDate.format("dddd");
-    } else {
-      dateFormatted = taskDate.format("ddd D MMM");
+      if (taskDate.isSame(today)) {
+        dateFormatted = "Today";
+      } else if (
+        taskDate.isAfter(today) &&
+        taskDate.addDays(-7).isBefore(today)
+      ) {
+        // Task in less than a week
+        dateFormatted = taskDate.format("dddd");
+      } else {
+        dateFormatted = taskDate.format("ddd D MMM");
 
-      if (taskDate.Year() !== dayjs().year()) {
-        dateFormatted += taskDate.format("\nYYYY");
+        if (taskDate.Year() !== dayjs().year()) {
+          dateFormatted += taskDate.format("\nYYYY");
+        }
       }
     }
+  } else {
+    noDate = false;
+    dateFormatted = "Set today";
   }
 
   const setTaskDate = useCallback(
@@ -62,8 +73,16 @@ export function TaskDate({ task }: { task: TaskType }) {
     [task, rep]
   );
 
+  const handleButtonClick = useCallback(() => {
+    if (mode == "default") {
+      setOpen(!open);
+    } else {
+      setTaskDate(today.toDate());
+    }
+  }, [open, mode, today, setTaskDate]);
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleButtonClick}>
       <PopoverTrigger asChild>
         <button
           className={classNames(
@@ -73,7 +92,7 @@ export function TaskDate({ task }: { task: TaskType }) {
           )}
         >
           <div className="flex items-center justify-center w-4 h-4">
-            <IconCalendar />
+            {mode == "default" ? <IconCalendar /> : <IconCircleArrowUp />}
           </div>
 
           <div className="flex flex-row items-start gap-1 lg:flex-col lg:gap-0">

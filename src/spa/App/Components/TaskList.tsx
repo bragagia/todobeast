@@ -20,9 +20,13 @@ import { Task } from "./Task";
 export function TaskList({
   tasks: uncachedTasks,
   hideProjectBar = false,
+  mode = "default",
+  className = "",
 }: {
   tasks: TaskType[];
   hideProjectBar?: boolean;
+  mode?: "default" | "priority-peek";
+  className?: string;
 }) {
   const [tasks, setTasks] = useState(uncachedTasks);
   useEffect(() => setTasks(uncachedTasks ?? []), [uncachedTasks]);
@@ -84,40 +88,56 @@ export function TaskList({
     return sortedTasks.reduce((prev, current, i, arr) => {
       let projectId = current.done_at ? doneProjectKey : current.projectId;
 
-      if (!prev[projectId]) {
-        prev[projectId] = [];
-      }
-
-      prev[projectId].push(current);
+      (prev[projectId] ??= []).push(current);
 
       return prev;
     }, {} as { [key: string]: TaskType[] });
   }, [sortedTasks]);
 
+  const displayedTasksList = useMemo(() => {
+    if (!sortedTasksPerProjectAndDone) return null;
+
+    if (mode === "default") return sortedTasksPerProjectAndDone;
+
+    // mode = "priority-peek"
+
+    let displayedList: { [key: string]: TaskType[] } = {};
+    Object.keys(sortedTasksPerProjectAndDone)
+      .filter((key) => key !== doneProjectKey)
+      .forEach((key) => {
+        displayedList[key] = sortedTasksPerProjectAndDone[key].slice(0, 4);
+      });
+
+    console.log(displayedList);
+
+    return displayedList;
+  }, [mode, sortedTasksPerProjectAndDone]);
+
   const [doneCollapsed, setDoneCollapsed] = useState(true);
 
+  // Auto uncollapse done tasks if only done tasks in list
   useEffect(() => {
-    if (!sortedTasksPerProjectAndDone) return;
+    if (!displayedTasksList) return;
 
     if (
-      Object.keys(sortedTasksPerProjectAndDone).length == 1 &&
-      sortedTasksPerProjectAndDone[doneProjectKey]
+      Object.keys(displayedTasksList).length == 1 &&
+      displayedTasksList[doneProjectKey]
     ) {
       // There is only done tasks
       setDoneCollapsed(false);
     }
-  }, [sortedTasksPerProjectAndDone]);
+  }, [displayedTasksList]);
 
   const onDragTask = useCallback(
     ({ source, destination }: DropResult, provided: ResponderProvided) => {
       // dropped outside the list or at the same position
-      if (!sortedTasksPerProjectAndDone) {
+      if (!displayedTasksList) {
         return;
       }
 
       dragAndDropMultidropableGeneric(
         { source, destination },
-        sortedTasksPerProjectAndDone,
+        displayedTasksList,
         {
           projectId: (task) => task.projectId,
           priority: (task) => task.priority,
@@ -170,10 +190,10 @@ export function TaskList({
         }
       );
     },
-    [sortedTasksPerProjectAndDone, tasks, rep]
+    [displayedTasksList, tasks, rep]
   );
 
-  if (!allProjectsById || !sortedTasksPerProjectAndDone) {
+  if (!allProjectsById || !displayedTasksList) {
     return null;
   }
 
@@ -187,12 +207,15 @@ export function TaskList({
 
   return (
     <div
-      className={classNames({
-        "border-b border-gray-200 mb-32": tasks.length > 0,
-      })}
+      className={classNames(
+        {
+          "border-b border-gray-200": tasks.length > 0,
+        },
+        className
+      )}
     >
       <DragDropContext onDragEnd={onDragTask}>
-        {Object.keys(sortedTasksPerProjectAndDone).map((projectAndDoneId) => {
+        {Object.keys(displayedTasksList).map((projectAndDoneId) => {
           return (
             <div key={"project-container/" + projectAndDoneId}>
               {!hideProjectBar && projectAndDoneId !== doneProjectKey ? (
@@ -205,7 +228,7 @@ export function TaskList({
                     />
                   </span>
                   <span className="ml-2 text-sm font-light text-gray-400">
-                    {sortedTasksPerProjectAndDone[projectAndDoneId].length}
+                    {displayedTasksList[projectAndDoneId].length}
                   </span>
                 </div>
               ) : null}
@@ -230,7 +253,7 @@ export function TaskList({
                       </div>
                     </span>
                     <span className="ml-2 text-sm font-light text-gray-400">
-                      {sortedTasksPerProjectAndDone[projectAndDoneId].length}
+                      {displayedTasksList[projectAndDoneId].length}
                     </span>
                   </button>
                 </>
@@ -243,26 +266,24 @@ export function TaskList({
                 >
                   {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef}>
-                      {sortedTasksPerProjectAndDone[projectAndDoneId].map(
-                        (task, id) => (
-                          <Draggable
-                            key={task.id}
-                            draggableId={task.id}
-                            index={id}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                key={task.id}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <Task task={task} />
-                              </div>
-                            )}
-                          </Draggable>
-                        )
-                      )}
+                      {displayedTasksList[projectAndDoneId].map((task, id) => (
+                        <Draggable
+                          key={task.id}
+                          draggableId={task.id}
+                          index={id}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              key={task.id}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <Task task={task} mode={mode} />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
                       {provided.placeholder}
                     </div>
                   )}

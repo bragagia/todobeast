@@ -9,21 +9,21 @@ import { SupabaseProvider } from "./SupabaseProvider";
 
 export default function TodobeastApp() {
   return (
-    <SupabaseProvider>
-      <AuthProvider>
-        <ReplicacheProvider>
-          <StrictMode>
-            <ThemeProvider
-              attribute="class"
-              storageKey="nightwind-mode"
-              defaultTheme="system"
-              disableTransitionOnChange
-            >
+    <ThemeProvider
+      attribute="class"
+      storageKey="nightwind-mode"
+      defaultTheme="system"
+      disableTransitionOnChange
+    >
+      <SupabaseProvider>
+        <AuthProvider>
+          <ReplicacheProvider>
+            <StrictMode>
               <AppRouter />
-            </ThemeProvider>
-          </StrictMode>
-        </ReplicacheProvider>
-      </AuthProvider>
-    </SupabaseProvider>
+            </StrictMode>
+          </ReplicacheProvider>
+        </AuthProvider>
+      </SupabaseProvider>
+    </ThemeProvider>
   );
 }

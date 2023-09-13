@@ -140,7 +140,7 @@ export function SidebarContent() {
         <NavLink
           to="/settings"
           className={({ isActive, isPending }) =>
-            classNames("text-gray-800 button", {
+            classNames("text-gray-600 button", {
               "button-active": isActive,
             })
           }

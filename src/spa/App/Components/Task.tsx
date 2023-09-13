@@ -10,7 +10,13 @@ import { TaskPriority } from "./TaskPriority";
 import { TaskProject } from "./TaskProject";
 import { TaskTitle } from "./TaskTitle";
 
-export function Task({ task }: { task: TaskType }) {
+export function Task({
+  task,
+  mode = "default",
+}: {
+  task: TaskType;
+  mode?: "default" | "priority-peek";
+}) {
   const taskRef = useRef<HTMLDivElement>(null);
   const [blinking, setBlinking] = useState(false);
 
@@ -66,7 +72,7 @@ export function Task({ task }: { task: TaskType }) {
               </div>
 
               <div className="">
-                <TaskDate task={task} />
+                <TaskDate task={task} mode={mode} />
               </div>
             </div>
 

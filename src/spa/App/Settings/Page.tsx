@@ -19,8 +19,6 @@ export function SettingsPage() {
     <>
       <PageHeader className="page-container py-4 task-padding">
         <div className="flex flex-row justify-between w-full">
-          <button className="button-visible invisible">Sign out</button>
-
           <div className="flex flex-row items-center gap-2">
             <IconSettings />
             <p className="text-xl">Settings</p>
