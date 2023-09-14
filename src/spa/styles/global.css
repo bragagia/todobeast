@@ -176,7 +176,7 @@ body {
 }
 
 .popover-button {
-  @apply px-6 py-3 text-sm flex flex-row items-center justify-between border-b border-gray-200 hover:bg-gray-100 w-full;
+  @apply px-6 py-2 text-sm flex flex-row items-center justify-between border-b border-gray-200 hover:bg-gray-100 w-full;
 }
 
 .popover-button-active {
