@@ -230,7 +230,7 @@ export function TaskList({
                   <button
                     className={classNames(
                       "py-1 task-padding flex flex-row mt-3 items-center text-gray-500 text-sm hover:bg-gray-50 w-full border-y border-transparent hover:border-gray-200",
-                      { "border-b-gray-200": !doneCollapsed }
+                      { "bg-gray-50 border-gray-200": !doneCollapsed }
                     )}
                     onClick={() => setDoneCollapsed(!doneCollapsed)}
                   >
