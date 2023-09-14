@@ -80,16 +80,19 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
     rep.onOnlineChange = (online) => {
       setIsOnline(online);
     };
-    rep.getAuth = () => {
-      supabase.auth.refreshSession();
+    rep.getAuth = async () => {
+      const { error } = await supabase.auth.refreshSession();
+
+      // Not sure it's sufficient, what to do on error?
+
       return null; // ?? Not sure what I should return
     };
-
     setRep(rep);
 
     const firstPull = async () => {
       // TODO: rep.onSync
       // TODO: rep.onUpdateNeeded
+      // TODO: rep.onClientStateNotFound
 
       await rep.pull();
 

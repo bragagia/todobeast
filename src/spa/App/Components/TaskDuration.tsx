@@ -19,65 +19,97 @@ export function TaskDuration({ task }: { task: TaskType }) {
     });
   }
 
-  // | "zero"
-  // | "sixteenth"
-  // | "eighth"
-  // | "quarter"
-  // | "half"
-  // | "full"
-  // | "double"
-  // | "quadruple"
-  // | "longer"
-  // | null;
-
   const durations = [
     {
       value: "zero" as DurationType,
       text: "zero",
       icon: <span>0</span>,
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "sixteenth" as DurationType,
       text: "30 min",
-      icon: <span>¹⁄₁₆</span>,
+      icon: (
+        <span className="flex flex-col items-center text-[0.6rem] leading-tight">
+          <span>30</span>
+          <span>min</span>
+        </span>
+      ),
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "eighth" as DurationType,
       text: "1 hour",
-      icon: <span>⅛</span>,
+      icon: (
+        <span className="flex flex-col items-center text-[0.6rem] leading-tight">
+          <span>1</span>
+          <span>hour</span>
+        </span>
+      ),
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "quarter" as DurationType,
       text: "2 hours",
-      icon: <span>¼</span>,
+      icon: (
+        <span className="flex flex-col items-center text-[0.6rem] leading-tight">
+          <span>2</span>
+          <span>hours</span>
+        </span>
+      ),
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "half" as DurationType,
       text: "4 hours",
-      icon: <span>½</span>,
+      icon: (
+        <span className="flex flex-col items-center text-[0.6rem] leading-tight">
+          <span>4</span>
+          <span>hours</span>
+        </span>
+      ),
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "full" as DurationType,
-      text: "Full day",
-      icon: <span>1</span>,
+      text: "1 day",
+      icon: (
+        <span className="flex flex-col items-center text-[0.6rem] leading-tight">
+          <span>1</span>
+          <span>day</span>
+        </span>
+      ),
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "double" as DurationType,
-      text: "Two days",
-      icon: <span>2</span>,
+      text: "2 days",
+      icon: (
+        <span className="flex flex-col items-center text-[0.6rem] leading-tight">
+          <span>2</span>
+          <span>days</span>
+        </span>
+      ),
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "quadruple" as DurationType,
-      text: "Four days",
-      icon: <span>4</span>,
+      text: "4 days",
+      icon: (
+        <span className="flex flex-col items-center text-[0.6rem] leading-tight">
+          <span>4</span>
+          <span>days</span>
+        </span>
+      ),
       icon_color: "text-black",
+      hide_selector_icon: true,
     },
     {
       value: "longer" as DurationType,
@@ -147,7 +179,10 @@ export function TaskDuration({ task }: { task: TaskType }) {
                   )}
                 />
                 <div className="flex flex-row items-center">
-                  <span className="text-sm">{getDurationIcon(duration)}</span>
+                  <div className="text-sm w-5">
+                    {!duration.hide_selector_icon && getDurationIcon(duration)}
+                  </div>
+
                   <span className="ml-1">{duration.text}</span>
                 </div>
               </CommandItem>
