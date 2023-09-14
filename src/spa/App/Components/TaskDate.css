@@ -1,9 +1,38 @@
 .rdp {
-  --rdp-cell-size: 35px;
-  --rdp-accent-color: rgb(239 68 68);
-  --rdp-background-color: rgb(239, 68, 68, 50%);
+  --rdp-cell-size: 40px;
+
+  --rdp-accent-color: rgb(243 244 246);
+  --rdp-background-color: rgb(243 244 246);
+  --rdp-accent-color-dark: rgba(31, 41, 55);
+  --rdp-background-color-dark: rgba(31, 41, 55);
+
   /* Outline border for focused elements */
   --rdp-outline: 2px solid var(--rdp-accent-color);
   /* Outline border for focused and selected elements */
   --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0.75);
+}
+
+.rdp-my-today {
+  /* Disable default style */
+}
+
+.rdp-button:not([disabled]) {
+  @apply rounded-lg border;
+}
+
+.rdp-button:hover:not([disabled]) {
+  @apply border border-gray-300;
+}
+
+.rdp-head_cell {
+  text-transform: none;
+  @apply font-light text-gray-700;
+}
+
+.rdp-my-selected:not([disabled]) {
+  @apply border font-bold border-black rounded-lg bg-gray-100;
+}
+
+.rdp-my-selected:hover:not([disabled]) {
+  @apply bg-white; /* Not working for some reason but make the result okayish because whatever */
 }

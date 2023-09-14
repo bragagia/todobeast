@@ -164,3 +164,11 @@ body {
 .animate-bounce-h-fast-out {
   animation: bounce-h-out 0.5s 1;
 }
+
+.popover-button {
+  @apply px-6 py-3 text-sm flex flex-row items-center justify-between border-b border-gray-200 hover:bg-gray-100 w-full;
+}
+
+.popover-button-active {
+  @apply bg-gray-100 font-bold;
+}

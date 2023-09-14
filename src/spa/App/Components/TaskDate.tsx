@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
@@ -27,6 +27,8 @@ export function TaskDate({
   let taskDate = task.date ? new DayjsDate(task.date) : null;
 
   let today = useDate();
+  let tomorrow = useMemo(() => today.addDays(1), [today]);
+  let nextWeek = useMemo(() => today.addDays(7).startOfWeek(), [today]);
 
   let taskIsLate =
     taskDate &&
@@ -107,13 +109,62 @@ export function TaskDate({
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="">
+      <PopoverContent className="flex flex-col items-start">
+        <button
+          className={classNames("popover-button", {
+            "popover-button-active": taskDate?.isSame(today),
+          })}
+          onClick={() => setTaskDate(today.toDate())}
+        >
+          <span>Today</span>
+          <span className="text-gray-500">{today.format("ddd")}</span>
+        </button>
+
+        <button
+          className={classNames("popover-button", {
+            "popover-button-active": taskDate?.isSame(tomorrow),
+          })}
+          onClick={() => setTaskDate(tomorrow.toDate())}
+        >
+          <span>Tomorrow</span>
+          <span className="text-gray-500">{tomorrow.format("ddd")}</span>
+        </button>
+
+        <button
+          className={classNames("popover-button", {
+            "popover-button-active": taskDate?.isSame(nextWeek),
+          })}
+          onClick={() => setTaskDate(nextWeek.toDate())}
+        >
+          <span>Next week</span>
+          <span className="text-gray-500">{nextWeek.format("ddd")}</span>
+        </button>
+
+        <button
+          className={classNames("popover-button", {
+            "popover-button-active": !taskDate,
+          })}
+          onClick={() => setTaskDate(undefined)}
+        >
+          <span>No date</span>
+        </button>
+
         <DayPicker
           mode="single"
-          // TODO: captionLayout="dropdown-buttons" is not working for some reason...
+          captionLayout="dropdown-buttons"
           fromDate={today.toDate()}
+          toYear={today.addDays(365 * 100).Year()}
           selected={taskDate?.toDate()}
+          defaultMonth={taskDate?.toDate()}
           onSelect={setTaskDate}
+          modifiersClassNames={{
+            selected: "rdp-my-selected",
+            today: "rdp-my-today",
+          }}
+          formatters={{
+            formatWeekdayName: (date) =>
+              new DayjsDate(date.toISOString()).format("ddd"),
+          }}
         />
       </PopoverContent>
     </Popover>
