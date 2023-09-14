@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UrlSettings } from "../../../AppRouter";
 import { useSupabase } from "../../../SupabaseProvider";
 import { IconChevronLeft } from "../../../utils/Icons";
-import { PageHeader } from "../../Components/PageTitle";
+import { PageHeader } from "../../Components/PageHeader";
 
 export function SettingsUpdatePasswordPage() {
   const passwordRef = useRef<HTMLInputElement>(null);

@@ -28,7 +28,7 @@ export function SidemenuItem({
       <NavLink
         to={to}
         className={({ isActive, isPending }) =>
-          classNames("flex items-center button group", textColor, {
+          classNames("flex items-center button mt-[1px] group", textColor, {
             "button-active": isActive,
           })
         }

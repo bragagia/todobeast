@@ -10,7 +10,7 @@ import {
   IconFire,
 } from "../../utils/Icons";
 import useDate from "../../utils/UseDate";
-import { PageHeader } from "../Components/PageTitle";
+import { PageHeader } from "../Components/PageHeader";
 import { TaskList } from "../Components/TaskList";
 
 export function PriorityPeekPage() {

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UrlSettingsUpdatePassword } from "../../AppRouter";
 import { useSupabase } from "../../SupabaseProvider";
 import { IconSettings } from "../../utils/Icons";
-import { PageHeader } from "../Components/PageTitle";
+import { PageHeader } from "../Components/PageHeader";
 
 export function SettingsPage() {
   const supabase = useSupabase();

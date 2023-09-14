@@ -83,7 +83,7 @@ export function TaskPriority({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex items-center justify-center text-xs font-light button">
+        <button className="flex h-full items-center justify-center text-xs font-light button">
           {TaskPriority.value ? (
             getPriorityIcon(TaskPriority)
           ) : (

@@ -33,7 +33,7 @@ export function TaskProject({ task }: { task: TaskType }) {
       <PopoverTrigger asChild>
         <button
           className={classNames(
-            "flex items-center w-full text-xs font-light button max-w-[8rem] lg:max-w-[7rem] lg:w-[7rem] overflow-hidden xl:max-w-[10rem] xl:w-[10rem]",
+            "flex h-full justify-normal items-center w-full text-xs font-light button max-w-[8rem] lg:max-w-[7rem] lg:w-[7rem] overflow-hidden xl:max-w-[10rem] xl:w-[10rem]",
             { "text-gray-300": project?.special === "inbox" }
           )}
         >

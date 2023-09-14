@@ -67,7 +67,7 @@ export function TaskTitle({ task }: { task: TaskType }) {
   );
 
   return (
-    <div className="button cursor-text">
+    <div className="button-thin lg:!py-1 cursor-text w-full">
       {editor ? <EditorContent editor={editor} /> : <p>{task.title}</p>}
     </div>
   );

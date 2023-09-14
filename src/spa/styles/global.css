@@ -82,9 +82,15 @@ body {
   @apply focus:ring-0 focus:ring-offset-0  focus-visible:outline-none;
 }
 
+/* internal class */
 .button-base {
-  @apply py-1 px-2 border rounded-lg mt-[1px] ml-[1px];
+  @apply py-1 px-2 border rounded-lg;
 }
+
+.button-base-thin {
+  @apply py-[1px] px-2 border rounded-lg;
+}
+/* end */
 
 .button-disabled {
   @apply button-base border-transparent;
@@ -92,6 +98,10 @@ body {
 
 .button {
   @apply button-base border-transparent hover:border-opacity-20 hover:border-gray-700;
+}
+
+.button-thin {
+  @apply button-base-thin border-transparent hover:border-opacity-20 hover:border-gray-700;
 }
 
 .button-active {

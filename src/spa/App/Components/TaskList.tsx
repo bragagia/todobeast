@@ -204,20 +204,14 @@ export function TaskList({
   }
 
   return (
-    <div
-      className={classNames(
-        {
-          "border-b border-gray-200": tasks.length > 0,
-        },
-        className
-      )}
-    >
+    <div className={classNames(className)}>
       <DragDropContext onDragEnd={onDragTask}>
         {Object.keys(displayedTasksList).map((projectAndDoneId) => {
           return (
             <div key={"project-container/" + projectAndDoneId}>
               {!hideProjectBar && projectAndDoneId !== doneProjectKey ? (
-                <div className="py-1 task-padding bg-gray-100 border-t border-gray-300 flex flex-row items-center">
+                <div className="py-1 task-padding bg-gray-50 border-y border-gray-200 flex flex-row items-center sticky top-0">
+                  {/* TODO: Sticky doesn't work because of page header */}
                   <span>
                     <ProjectName
                       project={allProjectsById[projectAndDoneId]}
@@ -233,9 +227,11 @@ export function TaskList({
 
               {projectAndDoneId === doneProjectKey ? (
                 <>
-                  <div className="border-t border-gray-200"></div>
                   <button
-                    className="py-1 mt-6 task-padding flex flex-row items-center text-gray-500 text-sm hover:bg-gray-50 w-full border-t border-transparent hover:border-gray-200"
+                    className={classNames(
+                      "py-1 task-padding flex flex-row mt-3 items-center text-gray-500 text-sm hover:bg-gray-50 w-full border-y border-transparent hover:border-gray-200",
+                      { "border-b-gray-200": !doneCollapsed }
+                    )}
                     onClick={() => setDoneCollapsed(!doneCollapsed)}
                   >
                     <span>
@@ -263,7 +259,11 @@ export function TaskList({
                   droppableId={projectAndDoneId}
                 >
                   {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="pb-6"
+                    >
                       {displayedTasksList[projectAndDoneId].map((task, id) => (
                         <Draggable
                           key={task.id}

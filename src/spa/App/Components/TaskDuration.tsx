@@ -145,11 +145,13 @@ export function TaskDuration({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex items-center w-full text-lg font-light button">
+        <button className="flex h-full items-center w-full text-lg font-light button">
           {TaskDuration.value ? (
-            getDurationIcon(TaskDuration)
+            <div className="w-4 h-4 flex items-center justify-center">
+              {getDurationIcon(TaskDuration)}
+            </div>
           ) : (
-            <div className="flex items-center justify-center w-5 h-5">
+            <div className="flex items-center justify-center w-4 h-4">
               <div className="flex items-center justify-center w-4 h-4 text-gray-300">
                 <IconHourglass />
               </div>

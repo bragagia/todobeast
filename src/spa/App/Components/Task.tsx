@@ -35,7 +35,7 @@ export function Task({
     <div
       ref={taskRef}
       className={classNames(
-        "flex flex-row justify-normal py-1 task-padding border-t border-gray-200 bg-white hover:bg-gray-50",
+        "flex flex-row justify-normal py-1 task-padding border-b border-gray-200 bg-white hover:bg-gray-50",
         { "animate-pulse-fast": blinking }
       )}
     >
@@ -44,31 +44,33 @@ export function Task({
           <IconDrag />
         </div>
 
-        <div className="flex flex-row-reverse items-center w-full gap-1 sm:flex-row">
+        <div className="flex flex-row-reverse items-center w-full gap-2 sm:flex-row">
           <div className="flex items-center self-stretch justify-center">
             <TaskCheckbox task={task} />
           </div>
 
-          <div className="flex flex-col justify-start overflow-auto lg:items-center grow lg:flex-row">
-            <div className="flex flex-row items-center flex-shrink-0 text-gray-600 md:text-black lg:basis-60">
-              <div className="">
+          <div className="flex flex-col justify-start overflow-visible lg:items-center grow lg:flex-row lg:self-stretch">
+            <div className="lg:h-10"></div>
+
+            <div className="flex flex-row items-center flex-shrink-0 text-gray-600 md:text-black lg:basis-60 lg:self-stretch">
+              <div className="lg:self-stretch">
                 <TaskProject task={task} />
               </div>
 
-              <div className="shrink-0 grow-0">
+              <div className="lg:self-stretch">
                 <TaskPriority task={task} />
               </div>
 
-              <div className="shrink-0 grow-0">
+              <div className="lg:self-stretch">
                 <TaskDuration task={task} />
               </div>
 
-              <div className="">
+              <div className="lg:self-stretch">
                 <TaskDate task={task} mode={mode} />
               </div>
             </div>
 
-            <div className="overflow-auto grow">
+            <div className="overflow-auto grow lg:self-stretch flex flex-row items-center w-full">
               <TaskTitle task={task} />
             </div>
           </div>

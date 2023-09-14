@@ -88,7 +88,7 @@ export function TaskDate({
       <PopoverTrigger asChild>
         <button
           className={classNames(
-            "text-xs font-light flex flex-row gap-2 items-center button lg:w-28",
+            "h-full text-xs font-light flex flex-row gap-2 items-center button lg:w-28",
             { "text-gray-300": noDate },
             { "!font-bold text-red-700": taskIsLate }
           )}

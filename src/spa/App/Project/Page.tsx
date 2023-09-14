@@ -13,7 +13,7 @@ import { getTasksOfProject } from "../../../db/tasks";
 import { UrlPlanner } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import { IconTrash, projectIconMap } from "../../utils/Icons";
-import { PageHeader } from "../Components/PageTitle";
+import { PageHeader } from "../Components/PageHeader";
 import { ProjectIcon } from "../Components/ProjectIcon";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
