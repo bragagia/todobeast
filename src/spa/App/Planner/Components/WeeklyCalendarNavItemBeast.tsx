@@ -11,6 +11,7 @@ export function WeeklyCalendarNavItemBeast({ date }: { date: DayjsDate }) {
       >
         Streak 2
       </span>
+
       <Image src={beastHappy} className="w-12 h-12" alt="" />
     </div>
   );

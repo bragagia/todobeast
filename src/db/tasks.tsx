@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { ReadTransaction, WriteTransaction } from "replicache";
 import { OrderIncrement } from "../spa/utils/Orderring";
 import { DayjsDate } from "../spa/utils/PlainDate";
-import { isProjectIdArchive } from "./projects";
+import { projectArchiveId } from "./projects";
 
 export const taskIdPrefix = "tasks/";
 
@@ -85,20 +85,6 @@ export const tasksMutators = {
   taskRemove: async (tx: WriteTransaction, taskId: string) => {
     await tx.del(taskId);
   },
-
-  migrationAddTasksOrder: async (tx: WriteTransaction) => {
-    let allTasks = await getAllTasksAndArchive()(tx);
-
-    if (allTasks && allTasks.length > 0 && !allTasks[0].order) {
-      console.log("migrate -> AddTasksOrder");
-      allTasks.forEach((task) => {
-        tx.put(task.id, {
-          ...task,
-          order: Math.floor(Math.random() * 1000000),
-        });
-      });
-    }
-  },
 };
 
 export function getTask(taskId: string) {
@@ -126,7 +112,7 @@ export function getAllTasks() {
       .toArray()) as TaskType[];
 
     allTasks = allTasks.filter(
-      (task) => !(task.projectId ? isProjectIdArchive(task.projectId) : false)
+      (task) => task.projectId && task.projectId !== projectArchiveId
     );
 
     return allTasks;

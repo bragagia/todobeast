@@ -9,34 +9,51 @@ export async function createDatabase(t: Executor) {
 }
 
 export async function createSchemaVersion1(t: Executor) {
+  // Replicache space
   await t.none(`create table replicache_space (
-    id UUID primary key not null,
-    version integer not null)`);
-  //   await t.none(
-  //     `insert into replicache_space (id, version) values ('global', 0)`
-  //   );
+    id uuid not null,
+    version integer not null,
 
+    constraint replicache_space_pkey primary key (id),
+    constraint replicache_space_id_fkey foreign key (id) references auth.users (id) on delete cascade
+  )`);
+
+  // Replicache client group
   await t.none(`create table replicache_client_group (
-    id text primary key not null,
-    user_id text not null)`);
+    id text not null,
+    user_id uuid not null,
 
+    constraint replicache_client_group_pkey primary key (id),
+    constraint replicache_client_group_user_id_fkey foreign key (user_id) references auth.users (id) on delete cascade
+  )`);
+
+  // Replicache client
   await t.none(`create table replicache_client (
-    id text primary key not null,
-    client_group_id text not null references replicache_client_group(id),
+    id text not null,
+    client_group_id text not null,
     last_mutation_id integer not null,
-    last_modified_version integer not null)`);
+    last_modified_version integer not null,
+
+    constraint replicache_client_pkey primary key (id),
+    constraint replicache_client_client_group_id_fkey foreign key (client_group_id) references replicache_client_group (id) on delete cascade
+  )`);
   await t.none(
     `create index on replicache_client (client_group_id, last_modified_version)`
   );
 
+  // Replicache entry
   await t.none(`create table entry (
-    key text primary key not null,
-    space_id UUID not null,
-    value JSONB not null,
+    key text not null,
+    space_id uuid not null,
+    value jsonb not null,
     deleted boolean not null,
-    last_modified_version integer not null)`);
+    last_modified_version integer not null,
 
-  //await t.none(`create unique index on entry (key)`);
+    constraint entry_pkey primary key (key),
+    constraint entry_space_id_fkey foreign key (space_id) references replicache_space (id) on delete cascade
+  )`);
+
+  await t.none(`create unique index key_space on entry (key, space_id)`);
   await t.none(`create index on entry (deleted)`);
   await t.none(`create index on entry (last_modified_version)`);
   await t.none(`create index on entry (space_id)`);

@@ -1,4 +1,5 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import dayjs from "dayjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { ReplicacheTransaction } from "replicache-transaction";
@@ -17,7 +18,6 @@ import {
 import { Executor, tx } from "../../../../src/backend/pg";
 import { PostgresStorage } from "../../../../src/backend/postgres-storage";
 import { ReplicacheMutators } from "../../../../src/db/mutators";
-import dayjs from "dayjs";
 
 const mutationSchema = z.object({
   id: z.number(),
@@ -38,8 +38,8 @@ type PushRequest = z.infer<typeof pushRequestSchema>;
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
-  const { data, error } = await supabase.auth.getUser();
-  const user = data.user;
+  const { data, error } = await supabase.auth.getSession();
+  const user = data.session?.user;
 
   if (error || !user || user.id === "") {
     if (error) {

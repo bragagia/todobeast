@@ -1,24 +1,18 @@
 import { nanoid } from "nanoid";
 import { ReadTransaction, WriteTransaction } from "replicache";
-import { getTasksOfProject } from "./tasks";
 import { OrderIncrement } from "../spa/utils/Orderring";
+import { getTasksOfProject } from "./tasks";
 
 export const projectIdPrefix = "projects/";
+export const projectInboxId = projectIdPrefix + "inbox";
+export const projectArchiveId = projectIdPrefix + "archive";
 
 export function newProjectId() {
   return projectIdPrefix + nanoid();
 }
 
-export function newProjectIdSpecial(specialName: string, userId: string) {
-  return projectIdPrefix + specialName + "-" + userId;
-}
-
 export function projectIdRemovePrefix(projectId: string) {
   return projectId.replaceAll(projectIdPrefix, "");
-}
-
-export function isProjectIdArchive(projectId: string) {
-  return projectId.startsWith(projectIdPrefix + "archive");
 }
 
 export type ProjectType = {
@@ -29,6 +23,26 @@ export type ProjectType = {
   readonly name: string;
   readonly special: "inbox" | "archive" | null;
 };
+
+export const projectInbox: ProjectType = {
+  id: projectInboxId,
+  order: 1,
+  icon: "inbox",
+  icon_color: "text-blue-500",
+  name: "Inbox",
+  special: "inbox",
+};
+
+export const projectArchive: ProjectType = {
+  id: projectArchiveId,
+  order: 0,
+  icon: "trash",
+  icon_color: "text-gray-500",
+  name: "Archive",
+  special: "archive",
+};
+
+const staticProjects: ProjectType[] = [projectInbox, projectArchive];
 
 export const projectsMutators = {
   projectCreate: async (
@@ -47,22 +61,6 @@ export const projectsMutators = {
     });
   },
 
-  projectCreateSpecial: async (tx: WriteTransaction, project: ProjectType) => {
-    if (!project.special) {
-      throw Error(
-        "Trying to create a non-special project with special mutator"
-      );
-    }
-
-    let allProjects = await getAllProjects()(tx);
-    let projectAlreadyExist = allProjects.some(
-      (p) => p.special === project.special
-    );
-    if (projectAlreadyExist) return;
-
-    await tx.put(project.id, project);
-  },
-
   projectUpdate: async (
     tx: WriteTransaction,
     project: Required<Pick<ProjectType, "id">> & Partial<ProjectType>
@@ -74,20 +72,10 @@ export const projectsMutators = {
   },
 
   projectRemove: async (tx: WriteTransaction, projectId: string) => {
-    let inbox = await getProjectInbox()(tx);
+    let allProjectTasks = await getTasksOfProject(projectId)(tx);
 
-    // Shitty condition to prevent typescript from complaining
-    let inboxId = "";
-    if (inbox) {
-      inboxId = inbox.id;
-    } else {
-      return;
-    }
-
-    let allProjectTask = await getTasksOfProject(projectId)(tx);
-
-    allProjectTask.forEach((task) =>
-      tx.put(task.id, { ...task, projectId: inboxId })
+    allProjectTasks.forEach((task) =>
+      tx.put(task.id, { ...task, projectId: projectInboxId })
     );
 
     await tx.del(projectId);
@@ -96,31 +84,46 @@ export const projectsMutators = {
 
 export function getProject(projectId: string) {
   return async function (tx: ReadTransaction) {
+    let staticProject = staticProjects.find(
+      (project) => project.id === projectId
+    );
+
+    if (staticProject) {
+      return staticProject;
+    }
+
     return (await tx.get(projectId)) as ProjectType;
+  };
+}
+
+export function getAllNonSpecialProjects() {
+  return async function (tx: ReadTransaction) {
+    let dbProjects = (await tx
+      .scan({ prefix: projectIdPrefix })
+      .values()
+      .toArray()) as ProjectType[];
+
+    let sortedProjects = dbProjects.sort((a, b) => a.order - b.order);
+
+    return sortedProjects;
   };
 }
 
 // getAllProjects return all project sorted by their order
 export function getAllProjects() {
   return async function (tx: ReadTransaction) {
-    let allProject = (
-      (await tx
-        .scan({ prefix: projectIdPrefix })
-        .values()
-        .toArray()) as ProjectType[]
-    ).sort((a, b) => a.order - b.order);
+    let dbProjects = (await tx
+      .scan({ prefix: projectIdPrefix })
+      .values()
+      .toArray()) as ProjectType[];
 
-    let archive = allProject.shift();
-    if (archive) allProject.push(archive);
+    let allProjects = staticProjects
+      .concat(dbProjects)
+      .sort((a, b) => a.order - b.order);
 
-    return allProject;
-  };
-}
+    let archive = allProjects.shift();
+    if (archive) allProjects.push(archive);
 
-export function getProjectInbox() {
-  return async function (tx: ReadTransaction) {
-    let allProjects = await getAllProjects()(tx);
-
-    return allProjects.find((project) => project.special === "inbox");
+    return allProjects;
   };
 }

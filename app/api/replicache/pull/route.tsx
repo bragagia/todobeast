@@ -23,8 +23,8 @@ const authError = {};
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
-  const { data, error } = await supabase.auth.getUser();
-  const user = data.user;
+  const { data, error } = await supabase.auth.getSession();
+  const user = data.session?.user;
 
   if (error || !user || user.id === "") {
     if (error) {

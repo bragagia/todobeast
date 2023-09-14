@@ -6,13 +6,15 @@ import {
   ResponderProvided,
 } from "@hello-pangea/dnd";
 import classNames from "classnames";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import {
   ProjectType,
-  getAllProjects,
+  getAllNonSpecialProjects,
   newProjectId,
+  projectArchive,
+  projectInbox,
 } from "../../../db/projects";
 import {
   UrlNavLinkPlanner,
@@ -36,30 +38,19 @@ export function SidebarContent() {
 
   const navigate = useNavigate();
 
-  const allProjects = useSubscribe(rep, getAllProjects(), [], [rep]);
-
-  const uncachedAllNonSpecialProjects = useMemo(
-    () => allProjects.filter((project) => project.special == null),
-    [allProjects]
+  const uncachedAllNonSpecialProjects = useSubscribe(
+    rep,
+    getAllNonSpecialProjects(),
+    [],
+    [rep]
   );
 
   const [allNonSpecialProjects, setAllNonSpecialProjects] = useState(
     uncachedAllNonSpecialProjects
   );
-
   useEffect(
     () => setAllNonSpecialProjects(uncachedAllNonSpecialProjects),
     [uncachedAllNonSpecialProjects]
-  );
-
-  const projectInbox = useMemo(
-    () => allProjects.find((project) => project.special == "inbox"),
-    [allProjects]
-  );
-
-  const projectArchive = useMemo(
-    () => allProjects.find((project) => project.special == "archive"),
-    [allProjects]
   );
 
   async function createProject() {
@@ -181,7 +172,7 @@ export function SidebarContent() {
           </button>
         </div>
 
-        {projectInbox ? getProjectItem(projectInbox) : null}
+        {getProjectItem(projectInbox)}
 
         <DragDropContext onDragEnd={onDragProject}>
           <Droppable droppableId="project-list-orderable">
@@ -210,7 +201,7 @@ export function SidebarContent() {
           </Droppable>
         </DragDropContext>
 
-        {projectArchive ? getProjectItem(projectArchive) : null}
+        {getProjectItem(projectArchive)}
       </div>
     </div>
   );

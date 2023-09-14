@@ -8,7 +8,6 @@ import {
 } from "react";
 import { Replicache } from "replicache";
 import { useSubscribe } from "replicache-react";
-import { createInitData } from "../db/initData";
 import { ReplicacheMutators } from "../db/mutators";
 import { getAllProjects } from "../db/projects";
 import { useUser } from "./AuthProvider";
@@ -28,25 +27,35 @@ export function useReplicache() {
   return rep;
 }
 
+export type ReplicacheStatus = {
+  isOnline: boolean;
+};
+
+const ReplicacheStatusContext = createContext<ReplicacheStatus | null>(null);
+
+export function useReplicacheStatus() {
+  const repStatus = useContext(ReplicacheStatusContext);
+
+  if (!repStatus) {
+    throw new Error("Missing replicache status context");
+  }
+  return repStatus;
+}
+
 export function ReplicacheProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
+
+  const [isOnline, setIsOnline] = useState(true);
+  const [status, setStatus] = useState<ReplicacheStatus>({
+    isOnline: isOnline,
+  });
+  useEffect(() => {
+    setStatus({ isOnline: isOnline });
+  }, [isOnline]);
 
   const user = useUser();
 
   const supabase = useSupabase();
-
-  function createRep(userId: string) {
-    if (!userId) return null;
-
-    return new Replicache({
-      licenseKey: process.env.NEXT_PUBLIC_REPLICACHE_LICENSE!,
-      name: userId,
-      pushURL: `/api/replicache/push`,
-      pullURL: `/api/replicache/pull`,
-      mutators: ReplicacheMutators,
-    });
-  }
-
   const [rep, setRep] = useState<Replicache<typeof ReplicacheMutators> | null>(
     null
   );
@@ -58,11 +67,35 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
 
     if (!user.id || user.id == "") return;
 
-    const rep = createRep(user.id);
-    setRep(rep);
-    if (rep === null) return;
+    let rep = new Replicache({
+      licenseKey: process.env.NEXT_PUBLIC_REPLICACHE_LICENSE!,
+      name: user.id,
+      pushURL: `/api/replicache/push`,
+      pullURL: `/api/replicache/pull`,
+      // TODO: schemaVersion: "1",
+      mutators: ReplicacheMutators,
+      pullInterval: 60000,
+      pushDelay: 1000,
+    });
+    rep.onOnlineChange = (online) => {
+      setIsOnline(online);
+    };
+    rep.getAuth = () => {
+      supabase.auth.refreshSession();
+      return null; // ?? Not sure what I should return
+    };
 
-    createInitData(rep, user.id);
+    setRep(rep);
+
+    const firstPull = async () => {
+      // TODO: rep.onSync
+      // TODO: rep.onUpdateNeeded
+
+      await rep.pull();
+
+      setLoading(false);
+    };
+    firstPull();
 
     const unlisten = listen(supabase, async () => rep.pull());
 
@@ -70,8 +103,6 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
       unlisten();
       rep.close();
     });
-
-    setLoading(false);
 
     return () => {
       unlisten();
@@ -86,7 +117,9 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
 
   return (
     <ReplicacheContext.Provider value={rep}>
-      {children}
+      <ReplicacheStatusContext.Provider value={status}>
+        {children}
+      </ReplicacheStatusContext.Provider>
     </ReplicacheContext.Provider>
   );
 }

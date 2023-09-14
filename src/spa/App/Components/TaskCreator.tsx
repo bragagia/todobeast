@@ -6,8 +6,7 @@ import Text from "@tiptap/extension-text";
 import { EditorContent, Extension, useEditor } from "@tiptap/react";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { useSubscribe } from "replicache-react";
-import { getProjectInbox } from "../../../db/projects";
+import { projectInboxId } from "../../../db/projects";
 import { newTaskId } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
 import { IconPlus } from "../../utils/Icons";
@@ -41,8 +40,6 @@ export function TaskCreator({
 
   const [content, setContent] = useState("");
 
-  const projectInbox = useSubscribe(rep, getProjectInbox(), null, [rep]);
-
   const editor = useEditor(
     {
       extensions: [
@@ -55,10 +52,7 @@ export function TaskCreator({
             return {
               Enter: () => {
                 if (!projectId) {
-                  if (!projectInbox) {
-                    return true;
-                  }
-                  projectId = projectInbox.id;
+                  projectId = projectInboxId;
                 }
 
                 let title = this.editor.getText();
@@ -95,7 +89,7 @@ export function TaskCreator({
       content: content,
       autofocus: false,
     },
-    [selectedDate, projectId, projectInbox]
+    [selectedDate, projectId]
   );
 
   return (
