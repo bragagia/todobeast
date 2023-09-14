@@ -38,7 +38,11 @@ export function PlannerPage() {
       </PageHeader>
 
       <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
-        <TaskList tasks={tasksByDays[urlDate.toString()]} className="mb-32" />
+        <TaskList
+          tasks={tasksByDays[urlDate.toString()]}
+          autoUncollapseDone={urlDate.isBefore(todayDate)}
+          className="mb-32"
+        />
       </AnimatedTranslate>
     </>
   );

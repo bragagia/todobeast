@@ -22,11 +22,13 @@ export function TaskList({
   hideProjectBar = false,
   mode = "default",
   className = "",
+  autoUncollapseDone = false,
 }: {
   tasks: TaskType[];
   hideProjectBar?: boolean;
   mode?: "default" | "priority-peek";
   className?: string;
+  autoUncollapseDone?: boolean;
 }) {
   const [tasks, setTasks] = useState(uncachedTasks);
   useEffect(() => setTasks(uncachedTasks ?? []), [uncachedTasks]);
@@ -115,7 +117,7 @@ export function TaskList({
 
   // Auto uncollapse done tasks if only done tasks in list
   useEffect(() => {
-    if (!displayedTasksList) return;
+    if (!displayedTasksList || !autoUncollapseDone) return;
 
     if (
       Object.keys(displayedTasksList).length == 1 &&
@@ -124,7 +126,7 @@ export function TaskList({
       // There is only done tasks
       setDoneCollapsed(false);
     }
-  }, [displayedTasksList]);
+  }, [displayedTasksList, autoUncollapseDone]);
 
   const onDragTask = useCallback(
     ({ source, destination }: DropResult, provided: ResponderProvided) => {
