@@ -10,6 +10,7 @@ import { PriorityPeekPage } from "./App/PriorityPeek/Page";
 import { ProjectPage } from "./App/Project/Page";
 import { ProjectListPage } from "./App/ProjectsList/Page";
 import { SettingsPage } from "./App/Settings/Page";
+import { SettingsUpdatePasswordPage } from "./App/Settings/UpdatePassword/Page";
 import { DayjsDate } from "./utils/PlainDate";
 
 export function AppRouter() {
@@ -39,6 +40,10 @@ export function AppRouter() {
           {
             path: "settings/",
             element: <SettingsPage />,
+          },
+          {
+            path: "/settings/update-password",
+            element: <SettingsUpdatePasswordPage />,
           },
         ],
         errorElement: <p>The page you're looking for does not exist</p>,
@@ -76,4 +81,12 @@ export function UrlProject(projectId: string, projectName: string) {
     "/" +
     projectName.replaceAll(" ", "-").toLowerCase()
   );
+}
+
+export function UrlSettings() {
+  return "/settings";
+}
+
+export function UrlSettingsUpdatePassword() {
+  return "/settings/update-password";
 }

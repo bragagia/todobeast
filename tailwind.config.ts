@@ -88,11 +88,12 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         // End of shadcn shit
 
-        "pulse-fast": "pulseFast 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "pulse-fast": "pulseFast 0.3s linear 3",
       },
       keyframes: {
         pulseFast: {
-          "50%": { opacity: 0.5 },
+          "0%": { filter: "invert(0%)" },
+          "100%": { filter: "invert(5%)" },
         },
       },
     },

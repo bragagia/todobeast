@@ -31,9 +31,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const fn = async () => {
-      const { data, error } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getSession();
 
-      setUser(data.user);
+      if (error || !data.session) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      setUser(data.session.user);
       setLoading(false);
     };
     fn();

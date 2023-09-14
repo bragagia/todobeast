@@ -1,11 +1,15 @@
 import classNames from "classnames";
 import { useCallback, useRef, useState } from "react";
+import { UrlSettingsUpdatePassword } from "./AppRouter";
 import { LoaderPage } from "./Loader";
 import { useSupabase } from "./SupabaseProvider";
 
+type modeType = "LOGIN" | "CREATE" | "RESET";
+
 export function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<"LOGIN" | "CREATE">("LOGIN");
+  const [smallLoading, setSmallLoading] = useState(false);
+  const [mode, setMode] = useState<modeType>("LOGIN");
   const [helperText, setHelperText] = useState<{
     error: boolean;
     text: string;
@@ -20,6 +24,14 @@ export function LoginPage() {
   const handleLogin = useCallback(async () => {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
+
+    if (!email || !password || email === "" || password === "") {
+      setHelperText({
+        error: true,
+        text: "Please fill all the required fields.",
+      });
+      return;
+    }
 
     setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -36,6 +48,8 @@ export function LoginPage() {
         text: "An email has been sent to you for verification!",
       });
     }
+
+    // AuthProvider will automatically be informed on the updated login state by supabase
   }, [emailRef, passwordRef, supabase]);
 
   const handleCreateAccount = useCallback(async () => {
@@ -43,7 +57,14 @@ export function LoginPage() {
     const password = passwordRef.current?.value;
     const passwordConfirm = passwordConfirmRef.current?.value;
 
-    if (!email || !password || !passwordConfirm) {
+    if (
+      !email ||
+      !password ||
+      !passwordConfirm ||
+      email === "" ||
+      password === "" ||
+      passwordConfirm === ""
+    ) {
       setHelperText({
         error: true,
         text: "Please fill all the required fields.",
@@ -67,22 +88,64 @@ export function LoginPage() {
       return;
     }
 
-    setLoading(true);
+    setSmallLoading(true);
     const { data, error } = await supabase.auth.signUp({
       email: email ?? "",
       password: password ?? "",
     });
-    setLoading(false);
+    setSmallLoading(false);
 
     if (error) {
       setHelperText({ error: true, text: error.message });
-    } else if (!data.user && !error) {
-      setHelperText({
-        error: false,
-        text: "An email has been sent to you for verification!",
-      });
+      return;
     }
+
+    setHelperText({
+      error: false,
+      text: "We've sent you an email for verification ;) Welcome aboard!",
+    });
+
+    setMode("LOGIN");
   }, [emailRef, passwordRef, passwordConfirmRef, supabase]);
+
+  const handleResetPassword = useCallback(async () => {
+    const email = emailRef.current?.value;
+
+    if (!email || email === "") {
+      setHelperText({
+        error: true,
+        text: "Please fill all the required fields.",
+      });
+      return;
+    }
+
+    setSmallLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo:
+        window.location.protocol +
+        "//" +
+        window.location.hostname +
+        (window.location.port ? ":" + window.location.port : "") +
+        "/a" +
+        UrlSettingsUpdatePassword(),
+    });
+    setSmallLoading(false);
+
+    if (error) {
+      setHelperText({ error: true, text: error.message });
+      return;
+    }
+
+    setHelperText({
+      error: false,
+      text: "We've sent you an email for verification ;)",
+    });
+  }, [supabase]);
+
+  function setModeAndResetHelper(mode: modeType) {
+    setMode(mode);
+    setHelperText(null);
+  }
 
   if (loading) {
     return <LoaderPage />;
@@ -111,30 +174,30 @@ export function LoginPage() {
             id="email"
             ref={emailRef}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
-            placeholder="john.doe@company.com"
             required
           />
         </div>
 
-        <div className="self-stretch">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            Password
-          </label>
+        {(mode === "LOGIN" || mode === "CREATE") && (
+          <div className="self-stretch">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm font-medium text-gray-900 "
+            >
+              Password
+            </label>
 
-          <input
-            type="password"
-            id="password"
-            ref={passwordRef}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
-            placeholder="••••"
-            required
-          />
-        </div>
+            <input
+              type="password"
+              id="password"
+              ref={passwordRef}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
+              required
+            />
+          </div>
+        )}
 
-        {mode === "CREATE" ? (
+        {mode === "CREATE" && (
           <div className="self-stretch">
             <label
               htmlFor="confirm_password"
@@ -148,13 +211,12 @@ export function LoginPage() {
               id="confirm_password"
               ref={passwordConfirmRef}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
-              placeholder="••••"
               required
             />
           </div>
-        ) : null}
+        )}
 
-        {helperText ? (
+        {helperText && (
           <p
             className={classNames("font-bold text-sm", {
               "text-red-600": helperText.error,
@@ -162,42 +224,70 @@ export function LoginPage() {
           >
             {helperText.text}
           </p>
-        ) : null}
+        )}
 
-        {mode === "LOGIN" ? (
-          <>
+        {mode === "LOGIN" && (
+          <div className="flex flex-col gap-2 self-stretch">
             <button
               type="submit"
-              className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center"
+              className="button-full-red"
               onClick={handleLogin}
             >
               Login
             </button>
 
             <button
-              className="text-sm font-bold underline"
-              onClick={() => setMode("CREATE")}
-            >
-              Or create an account
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              type="submit"
-              className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center"
-              onClick={handleCreateAccount}
+              className="button-full-gray"
+              onClick={() => setModeAndResetHelper("CREATE")}
             >
               Create account
             </button>
 
             <button
               className="text-sm font-bold underline"
-              onClick={() => setMode("LOGIN")}
+              onClick={() => setModeAndResetHelper("RESET")}
+            >
+              Reset password
+            </button>
+          </div>
+        )}
+
+        {mode === "CREATE" && (
+          <div className="flex flex-col gap-2 self-stretch">
+            <button
+              type="submit"
+              className="button-full-red"
+              onClick={smallLoading ? undefined : handleCreateAccount}
+            >
+              {smallLoading ? "Loading..." : "Create account"}
+            </button>
+
+            <button
+              className="text-sm font-bold underline"
+              onClick={() => setModeAndResetHelper("LOGIN")}
             >
               Or login to your account
             </button>
-          </>
+          </div>
+        )}
+
+        {mode === "RESET" && (
+          <div className="flex flex-col gap-2 self-stretch">
+            <button
+              type="submit"
+              className="button-full-red"
+              onClick={smallLoading ? undefined : handleResetPassword}
+            >
+              {smallLoading ? "Loading..." : "Reset password"}
+            </button>
+
+            <button
+              className="text-sm font-bold underline"
+              onClick={() => setModeAndResetHelper("LOGIN")}
+            >
+              Or login to your account
+            </button>
+          </div>
         )}
       </div>
     </div>

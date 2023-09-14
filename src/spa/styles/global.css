@@ -102,6 +102,14 @@ body {
   @apply button-base border-gray-700 border-opacity-10 hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40;
 }
 
+.button-full-red {
+  @apply text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center;
+}
+
+.button-full-gray {
+  @apply text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center;
+}
+
 .page-padding {
   @apply px-2 sm:px-4;
 }
@@ -124,4 +132,35 @@ body {
   height: 0;
   pointer-events: none;
   @apply text-gray-400;
+}
+
+@keyframes bounce-h {
+  0%,
+  100% {
+    transform: translateX(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateX(25%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes bounce-h-out {
+  0% {
+    transform: translateX(0%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  100% {
+    transform: translateX(1000%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.animate-bounce-h-fast {
+  animation: bounce-h 0.4s infinite;
+}
+
+.animate-bounce-h-fast-out {
+  animation: bounce-h-out 0.5s 1;
 }

@@ -6,6 +6,7 @@ import { AppRouter } from "./AppRouter";
 import { AuthProvider } from "./AuthProvider";
 import { ReplicacheProvider } from "./ReplicacheProvider";
 import { SupabaseProvider } from "./SupabaseProvider";
+import { LoaderPage } from "./Loader";
 
 export default function TodobeastApp() {
   return (
@@ -19,7 +20,9 @@ export default function TodobeastApp() {
         <AuthProvider>
           <ReplicacheProvider>
             <StrictMode>
-              <AppRouter />
+              <LoaderPage>
+                <AppRouter />
+              </LoaderPage>
             </StrictMode>
           </ReplicacheProvider>
         </AuthProvider>

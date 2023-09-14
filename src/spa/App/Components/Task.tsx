@@ -28,14 +28,6 @@ export function Task({
     if (dayjs(task.created_at).isAfter(dayjs().add(-2, "second"))) {
       taskRef.current.scrollIntoView({ block: "center", behavior: "instant" });
       setBlinking(true);
-
-      let timeoutId = setTimeout(() => {
-        setBlinking(false);
-      }, 750);
-
-      return () => {
-        clearTimeout(timeoutId);
-      };
     }
   }, [task, taskRef]);
 
@@ -44,7 +36,7 @@ export function Task({
       ref={taskRef}
       className={classNames(
         "flex flex-row justify-normal py-1 task-padding border-t border-gray-200 bg-white hover:bg-gray-50",
-        { "animate-pulse-fast !bg-gray-100": blinking }
+        { "animate-pulse-fast": blinking }
       )}
     >
       <div className="flex flex-row items-center w-full gap-2">

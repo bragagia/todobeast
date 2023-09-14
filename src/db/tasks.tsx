@@ -41,11 +41,14 @@ export const tasksMutators = {
   taskCreate: async (tx: WriteTransaction, task: Omit<TaskType, "order">) => {
     let allTasks = await getAllTasksAndArchive()(tx);
 
-    let lastTask = allTasks.reduce((prev, current) => {
-      return prev.order > current.order ? prev : current;
-    });
+    let maxOrder = 0;
+    if (allTasks.length > 0) {
+      maxOrder = allTasks.reduce((prev, current) => {
+        return prev > current.order ? prev : current.order;
+      }, 0);
+    }
 
-    await tx.put(task.id, { ...task, order: lastTask.order + OrderIncrement });
+    await tx.put(task.id, { ...task, order: maxOrder + OrderIncrement });
   },
 
   taskUpdate: async (

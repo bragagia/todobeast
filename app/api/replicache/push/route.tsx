@@ -17,6 +17,7 @@ import {
 import { Executor, tx } from "../../../../src/backend/pg";
 import { PostgresStorage } from "../../../../src/backend/postgres-storage";
 import { ReplicacheMutators } from "../../../../src/db/mutators";
+import dayjs from "dayjs";
 
 const mutationSchema = z.object({
   id: z.number(),
@@ -37,15 +38,23 @@ type PushRequest = z.infer<typeof pushRequestSchema>;
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
-  const { data } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getUser();
   const user = data.user;
 
-  if (!user) {
+  if (error || !user || user.id === "") {
+    if (error) {
+      console.log("Error while fetching user data: ", error);
+    }
+
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let requestBody = await request.json();
-  console.log("Processing push", JSON.stringify(requestBody, null, ""));
+  console.log(
+    "PUSH received",
+    dayjs().toISOString(),
+    JSON.stringify(requestBody, null, "")
+  );
 
   const push = pushRequestSchema.parse(requestBody);
 
@@ -55,16 +64,20 @@ export async function POST(request: Request) {
     switch (e) {
       case authError:
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
       case clientStateNotFoundError:
         return NextResponse.json(
           { error: "ClientStateNotFound" },
           { status: 401 }
         );
+
       default:
         console.error("Error processing push:", e);
         return NextResponse.error();
     }
   }
+
+  console.log("PUSH end success", dayjs().toISOString());
 
   return NextResponse.json({ status: "OK" });
 }

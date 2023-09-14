@@ -1,4 +1,5 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import dayjs from "dayjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { PullResponse } from "replicache";
@@ -22,15 +23,26 @@ const authError = {};
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
-  const { data } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getUser();
   const user = data.user;
 
-  if (!user) {
+  if (error || !user || user.id === "") {
+    if (error) {
+      console.log("Error while fetching user data: ", error);
+    }
+
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  //console.log(`Processing pull`, JSON.stringify(requestBody, null, ""));
-  const pullRequest = pullRequestSchema.parse(await request.json());
+  let requestBody = await request.json();
+
+  console.log(
+    `PULL received`,
+    dayjs().toISOString(),
+    JSON.stringify(requestBody, null, "")
+  );
+
+  const pullRequest = pullRequestSchema.parse(requestBody);
 
   let pullResponse: PullResponse;
   try {
@@ -40,9 +52,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     } else {
       console.error("Error processing pull:", e);
+
       return NextResponse.error();
     }
   }
+
+  console.log("PULL end success", dayjs().toISOString());
 
   return NextResponse.json(pullResponse);
 }

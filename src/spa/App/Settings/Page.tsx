@@ -1,5 +1,6 @@
 import { useTheme } from "next-themes";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UrlSettingsUpdatePassword } from "../../AppRouter";
 import { useSupabase } from "../../SupabaseProvider";
 import { IconSettings } from "../../utils/Icons";
 import { PageHeader } from "../Components/PageTitle";
@@ -24,13 +25,13 @@ export function SettingsPage() {
             <p className="text-xl">Settings</p>
           </div>
 
-          <button className="button-visible bg-gray-100" onClick={signout}>
+          <button className="button-full-red" onClick={signout}>
             Sign out
           </button>
         </div>
       </PageHeader>
 
-      <div className="page-padding page-container">
+      <div className="page-padding page-container flex flex-col gap-4">
         <div>
           <label className="font-bold">Theme</label>
 
@@ -83,6 +84,14 @@ export function SettingsPage() {
               </div>
             </div>
           </fieldset>
+        </div>
+
+        <div>
+          <h3 className="font-bold mb-2">Account</h3>
+
+          <Link to={UrlSettingsUpdatePassword()} className="button-full-gray">
+            Change password
+          </Link>
         </div>
       </div>
     </>

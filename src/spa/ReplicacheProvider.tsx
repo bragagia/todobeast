@@ -39,8 +39,8 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
     if (!userId) return null;
 
     return new Replicache({
-      licenseKey: "le17c8453f94e462e92cae4e1797cd24b",
-      name: userId, // TODO: Add a cookie per-device key ?
+      licenseKey: process.env.NEXT_PUBLIC_REPLICACHE_LICENSE!,
+      name: userId,
       pushURL: `/api/replicache/push`,
       pullURL: `/api/replicache/pull`,
       mutators: ReplicacheMutators,
@@ -55,6 +55,8 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setLoading(true);
+
+    if (!user.id || user.id == "") return;
 
     const rep = createRep(user.id);
     setRep(rep);
@@ -72,10 +74,8 @@ export function ReplicacheProvider({ children }: { children: ReactNode }) {
     setLoading(false);
 
     return () => {
-      window.addEventListener("beforeunload", () => {
-        unlisten();
-        rep.close();
-      });
+      unlisten();
+      rep.close();
     };
   }, [user.id, supabase]);
 

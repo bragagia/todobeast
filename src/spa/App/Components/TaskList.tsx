@@ -108,8 +108,6 @@ export function TaskList({
         displayedList[key] = sortedTasksPerProjectAndDone[key].slice(0, 4);
       });
 
-    console.log(displayedList);
-
     return displayedList;
   }, [mode, sortedTasksPerProjectAndDone]);
 

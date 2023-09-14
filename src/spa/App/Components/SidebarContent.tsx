@@ -18,6 +18,7 @@ import {
   UrlNavLinkPlanner,
   UrlPriorityPeek,
   UrlProject,
+  UrlSettings,
 } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import {
@@ -138,7 +139,7 @@ export function SidebarContent() {
           Todobeast
         </h1>
         <NavLink
-          to="/settings"
+          to={UrlSettings()}
           className={({ isActive, isPending }) =>
             classNames("text-gray-600 button", {
               "button-active": isActive,
