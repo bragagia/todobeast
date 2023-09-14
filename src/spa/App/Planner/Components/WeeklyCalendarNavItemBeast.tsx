@@ -7,8 +7,7 @@ export function WeeklyCalendarNavItemBeast({ date }: { date: DayjsDate }) {
   return (
     <div className="flex flex-col items-center mr-2">
       <span
-        className="text-xs font-bold text-center text-red-600 whitespace-nowrap dark:text-red-500"
-        style={{}}
+        className="text-xs font-bold text-center text-red-600 whitespace-nowrap dark:text-red-500 hidden" // TODO:
       >
         Streak 2
       </span>
