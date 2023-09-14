@@ -1,5 +1,7 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import Script from "next/script";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -59,7 +61,10 @@ export default function RootLayout({
         </Script>
       </head>
 
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
