@@ -99,7 +99,7 @@ body {
 }
 
 .popover-button {
-  @apply mx-1 rounded px-2 py-2 text-sm flex flex-row items-center justify-between hover:bg-gray-100 self-stretch;
+  @apply mx-1 rounded px-2 py-[0.4rem] text-sm flex flex-row items-center justify-between hover:bg-gray-100 self-stretch;
 }
 
 .popover-button-active {

@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { Check } from "lucide-react";
 import { useState } from "react";
 import { PriorityType, TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
@@ -10,7 +9,6 @@ import {
   IconFire,
   IconFlag,
 } from "../../utils/Icons";
-import { Command, CommandGroup, CommandItem } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export function TaskPriority({ task }: { task: TaskType }) {
@@ -92,45 +90,36 @@ export function TaskPriority({ task }: { task: TaskType }) {
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="">
-        <Command>
-          <CommandGroup className="max-h-[16rem] overflow-scroll">
-            {priorities.map((priority) => (
-              <CommandItem
-                key={priority.value}
-                onSelect={() => {
-                  setOpen(false);
-                  if (priority.value === task.priority) return;
+      <PopoverContent className="flex flex-col items-start py-1">
+        {priorities.map((priority) => (
+          <div
+            key={priority.value}
+            onSelect={() => {
+              setOpen(false);
+              if (priority.value === task.priority) return;
 
-                  setTaskPriority(task.id, priority.value);
-                }}
-                className="w-full pr-4"
+              setTaskPriority(task.id, priority.value);
+            }}
+            className={classNames("popover-button", {
+              "popover-button-active": task.priority === priority.value,
+            })}
+          >
+            <div className="flex flex-row items-center">
+              <div
+                className={classNames(
+                  "flex items-center justify-center w-4 h-4",
+                  priority.icon_color
+                )}
               >
-                <Check
-                  className={classNames(
-                    "mr-2 h-4 w-4 shrink-0",
-                    task.priority === priority.value ? "visible" : "invisible"
-                  )}
-                />
+                {priority.icon}
+              </div>
 
-                <div className="flex flex-row items-center">
-                  <div
-                    className={classNames(
-                      "flex items-center justify-center w-4 h-4",
-                      priority.icon_color
-                    )}
-                  >
-                    {priority.icon}
-                  </div>
-
-                  <span className={classNames("ml-1", priority.text_color)}>
-                    {priority.text}
-                  </span>
-                </div>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
+              <span className={classNames("ml-1", priority.text_color)}>
+                {priority.text}
+              </span>
+            </div>
+          </div>
+        ))}
       </PopoverContent>
     </Popover>
   );

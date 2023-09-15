@@ -118,7 +118,7 @@ export function TaskDate({
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="flex flex-col items-start py-1 gap-1">
+      <PopoverContent className="flex flex-col items-start py-1">
         <button
           className={classNames("popover-button text-gray-400", {
             "popover-button-active": !taskDate,
@@ -144,7 +144,7 @@ export function TaskDate({
             <div className="relative flex items-center justify-center w-4 h-4">
               <IconCalendar />
 
-              <span className="absolute top-[0.04rem] text-[0.4rem]">
+              <span className="absolute top-[0.03rem] text-[0.4rem]">
                 {today.format("DD")}
               </span>
             </div>
@@ -189,7 +189,7 @@ export function TaskDate({
           <span className="text-gray-400">{nextWeek.format("ddd")}</span>
         </button>
 
-        <div className="border-b border-gray-200 w-full"></div>
+        <div className="border-b border-gray-200 w-full my-1"></div>
 
         <DayPicker
           mode="single"

@@ -1,12 +1,10 @@
 import classNames from "classnames";
-import { Check } from "lucide-react";
 import { useState } from "react";
 import { useSubscribe } from "replicache-react";
 import { getAllProjects, getProject } from "../../../db/projects";
 import { TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
 import { ProjectName } from "./ProjectName";
-import { Command, CommandEmpty, CommandGroup, CommandItem } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export function TaskProject({ task }: { task: TaskType }) {
@@ -53,45 +51,33 @@ export function TaskProject({ task }: { task: TaskType }) {
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-48">
-        <Command>
-          {/* <CommandInput placeholder="Search project..." /> */}
+      <PopoverContent className="w-48 flex flex-col items-start py-1">
+        {allProjects?.map((project) => (
+          <div
+            key={project.id}
+            onSelect={() => {
+              setOpen(false);
+              if (project.id === task.projectId) return;
 
-          <CommandEmpty>No project found.</CommandEmpty>
-
-          <CommandGroup className="max-h-[16rem] overflow-scroll">
-            {allProjects?.map((project) => (
-              <CommandItem
-                key={project.id}
-                onSelect={() => {
-                  setOpen(false);
-                  if (project.id === task.projectId) return;
-
-                  setTaskProject(task.id, project.id);
-                }}
-                className="w-full"
-              >
-                <Check
-                  className={classNames(
-                    "mr-2 h-4 w-4 shrink-0",
-                    task.projectId === project.id ? "visible" : "invisible"
-                  )}
-                />
-                {project?.special === "inbox" ? (
-                  <ProjectName
-                    project={project}
-                    className="text-gray-400"
-                    iconClassName="w-4 h-4"
-                    overrideColor="text-gray-400"
-                    overrideName="No project"
-                  />
-                ) : (
-                  <ProjectName project={project} iconClassName="w-4 h-4" />
-                )}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
+              setTaskProject(task.id, project.id);
+            }}
+            className={classNames("popover-button", {
+              "popover-button-active": project.id === task.projectId,
+            })}
+          >
+            {project?.special === "inbox" ? (
+              <ProjectName
+                project={project}
+                className="text-gray-400"
+                iconClassName="w-4 h-4"
+                overrideColor="text-gray-400"
+                overrideName="No project"
+              />
+            ) : (
+              <ProjectName project={project} iconClassName="w-4 h-4" />
+            )}
+          </div>
+        ))}
       </PopoverContent>
     </Popover>
   );
