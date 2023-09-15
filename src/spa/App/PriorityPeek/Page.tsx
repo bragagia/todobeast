@@ -51,7 +51,10 @@ export function PriorityPeekPage() {
       </PageHeader>
 
       <button
-        className="flex flex-row items-center page-padding py-2 text-gray-800 gap-1 hover:bg-gray-100 w-full text-lg"
+        className={classNames(
+          "flex flex-row items-center page-padding py-2 text-gray-800 gap-1 hover:bg-gray-100 w-full text-lg",
+          { "bg-gray-100 border-b border-gray-200": !todaysCollapsed }
+        )}
         onClick={() => setTodaysCollapsed(!todaysCollapsed)}
       >
         <span className="flex items-center justify-center w-4 h-4">

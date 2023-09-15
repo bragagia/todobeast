@@ -103,7 +103,7 @@ body {
 }
 
 .popover-button-active {
-  @apply bg-gray-100 font-bold;
+  @apply bg-gray-100 font-medium;
 }
 
 /* Shadcn shit */

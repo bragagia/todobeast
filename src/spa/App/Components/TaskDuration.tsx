@@ -21,10 +21,18 @@ export function TaskDuration({ task }: { task: TaskType }) {
 
   const durations = [
     {
+      value: null as DurationType,
+      text: "No duration",
+      icon: <IconHourglass />,
+      icon_color: "text-gray-400",
+      text_color: "text-gray-400",
+    },
+    {
       value: "zero" as DurationType,
       text: "zero",
       icon: <span>0</span>,
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -37,6 +45,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
         </span>
       ),
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -49,6 +58,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
         </span>
       ),
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -61,6 +71,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
         </span>
       ),
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -73,6 +84,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
         </span>
       ),
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -85,6 +97,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
         </span>
       ),
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -97,6 +110,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
         </span>
       ),
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -109,6 +123,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
         </span>
       ),
       icon_color: "",
+      text_color: "text-black",
       hide_selector_icon: true,
     },
     {
@@ -116,27 +131,9 @@ export function TaskDuration({ task }: { task: TaskType }) {
       text: "Longer",
       icon: <span>∞</span>,
       icon_color: "",
-    },
-    {
-      value: null as DurationType,
-      text: "No duration",
-      icon: <span className="text-lg">-</span>,
-      icon_color: "text-gray-500",
+      text_color: "text-black",
     },
   ];
-
-  function getDurationIcon(duration: (typeof durations)[0]) {
-    return (
-      <div
-        className={classNames(
-          "flex items-center justify-center w-5 h-5",
-          duration.icon_color
-        )}
-      >
-        {duration.icon}
-      </div>
-    );
-  }
 
   const TaskDuration =
     durations.find((duration) => duration.value === task.duration) ||
@@ -145,16 +142,20 @@ export function TaskDuration({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex h-full items-center w-full text-lg font-light button-gray-200 text-gray-300 hover:text-gray-500">
-          {TaskDuration.value ? (
-            <div className="w-4 h-4 flex items-center justify-center text-gray-700">
-              {getDurationIcon(TaskDuration)}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center w-4 h-4">
-              <IconHourglass />
-            </div>
+        <button
+          className={classNames(
+            "flex h-full items-center w-full text-lg font-light button-gray-200",
+            { "text-gray-300 hover:text-gray-500": !TaskDuration.value }
           )}
+        >
+          <div
+            className={classNames(
+              "flex items-center justify-center w-5 h-5",
+              TaskDuration.value ? TaskDuration.icon_color : ""
+            )}
+          >
+            {TaskDuration.icon}
+          </div>
         </button>
       </PopoverTrigger>
 
@@ -180,10 +181,21 @@ export function TaskDuration({ task }: { task: TaskType }) {
                 />
                 <div className="flex flex-row items-center">
                   <div className="text-sm w-5">
-                    {!duration.hide_selector_icon && getDurationIcon(duration)}
+                    {!duration.hide_selector_icon && (
+                      <div
+                        className={classNames(
+                          "flex items-center justify-center w-5 h-5",
+                          duration.icon_color
+                        )}
+                      >
+                        {duration.icon}
+                      </div>
+                    )}
                   </div>
 
-                  <span className="ml-1">{duration.text}</span>
+                  <span className={classNames("ml-1", duration.text_color)}>
+                    {duration.text}
+                  </span>
                 </div>
               </CommandItem>
             ))}

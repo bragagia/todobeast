@@ -32,49 +32,41 @@ export function TaskPriority({ task }: { task: TaskType }) {
 
   const priorities = [
     {
+      value: null as PriorityType,
+      text: "No priority",
+      icon: <IconFlag />,
+      icon_color: "text-gray-400",
+      text_color: "text-gray-400",
+    },
+    {
       value: "urgent" as PriorityType,
       text: "Urgent",
       icon: <IconFire />,
       icon_color: "text-red-500",
+      text_color: "text-black",
     },
     {
       value: "high" as PriorityType,
       text: "High",
       icon: <IconChartFull />,
       icon_color: "",
+      text_color: "text-black",
     },
     {
       value: "medium" as PriorityType,
       text: "Medium",
       icon: <IconChartMid />,
       icon_color: "",
+      text_color: "text-black",
     },
     {
       value: "low" as PriorityType,
       text: "Low",
       icon: <IconChartLow />,
       icon_color: "",
-    },
-    {
-      value: null as PriorityType,
-      text: "No priority",
-      icon: <span className="text-lg">-</span>,
-      icon_color: "text-gray-500",
+      text_color: "text-black",
     },
   ];
-
-  function getPriorityIcon(priority: (typeof priorities)[0]) {
-    return (
-      <div
-        className={classNames(
-          "flex items-center justify-center w-4 h-4",
-          priority.icon_color
-        )}
-      >
-        {priority.icon}
-      </div>
-    );
-  }
 
   const TaskPriority =
     priorities.find((priority) => priority.value === task.priority) ||
@@ -83,16 +75,20 @@ export function TaskPriority({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex h-full items-center justify-center text-xs font-light button-gray-200 text-gray-300 hover:text-gray-500">
-          {TaskPriority.value ? (
-            <span className="text-gray-700">
-              {getPriorityIcon(TaskPriority)}
-            </span>
-          ) : (
-            <div className="flex items-center justify-center w-4 h-4">
-              <IconFlag />
-            </div>
+        <button
+          className={classNames(
+            "flex h-full items-center justify-center text-xs font-light button-gray-200",
+            { "text-gray-300 hover:text-gray-500": !TaskPriority.value }
           )}
+        >
+          <div
+            className={classNames(
+              "flex items-center justify-center w-4 h-4",
+              TaskPriority.value ? TaskPriority.icon_color : ""
+            )}
+          >
+            {TaskPriority.icon}
+          </div>
         </button>
       </PopoverTrigger>
 
@@ -116,9 +112,20 @@ export function TaskPriority({ task }: { task: TaskType }) {
                     task.priority === priority.value ? "visible" : "invisible"
                   )}
                 />
+
                 <div className="flex flex-row items-center">
-                  {getPriorityIcon(priority)}
-                  <span className="ml-1">{priority.text}</span>
+                  <div
+                    className={classNames(
+                      "flex items-center justify-center w-4 h-4",
+                      priority.icon_color
+                    )}
+                  >
+                    {priority.icon}
+                  </div>
+
+                  <span className={classNames("ml-1", priority.text_color)}>
+                    {priority.text}
+                  </span>
                 </div>
               </CommandItem>
             ))}

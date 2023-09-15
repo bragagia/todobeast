@@ -32,7 +32,10 @@
   @apply font-light text-gray-700;
 }
 
-.rdp-my-selected:disabled,
+.rdp-my-selected:disabled {
+  @apply font-bold rounded-lg bg-gray-300 text-black;
+}
+
 .rdp-my-selected:not([disabled]) {
   @apply font-bold rounded-lg bg-gray-200;
 }

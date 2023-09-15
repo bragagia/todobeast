@@ -4,7 +4,12 @@ import { useCallback, useMemo, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
-import { IconCalendar, IconCircleArrowUp } from "../../utils/Icons";
+import {
+  IconCalendar,
+  IconChevronDoubleRight,
+  IconChevronRight,
+  IconCircleArrowUp,
+} from "../../utils/Icons";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -115,13 +120,39 @@ export function TaskDate({
 
       <PopoverContent className="flex flex-col items-start py-1 gap-1">
         <button
+          className={classNames("popover-button text-gray-400", {
+            "popover-button-active": !taskDate,
+          })}
+          onClick={() => setTaskDate(undefined)}
+        >
+          <div className="flex flex-row items-center gap-2">
+            <div className="flex items-center justify-center w-4 h-4">
+              <IconCalendar />
+            </div>
+
+            <span>No date</span>
+          </div>
+        </button>
+
+        <button
           className={classNames("popover-button", {
             "popover-button-active": taskDate?.isSame(today),
           })}
           onClick={() => setTaskDate(today.toDate())}
         >
-          <span>Today</span>
-          <span className="text-gray-500">{today.format("ddd")}</span>
+          <div className="flex flex-row items-center gap-2">
+            <div className="relative flex items-center justify-center w-4 h-4">
+              <IconCalendar />
+
+              <span className="absolute top-[0.04rem] text-[0.4rem]">
+                {today.format("DD")}
+              </span>
+            </div>
+
+            <span>Today</span>
+          </div>
+
+          <span className="text-gray-400">{today.format("ddd")}</span>
         </button>
 
         <button
@@ -130,8 +161,15 @@ export function TaskDate({
           })}
           onClick={() => setTaskDate(tomorrow.toDate())}
         >
-          <span>Tomorrow</span>
-          <span className="text-gray-500">{tomorrow.format("ddd")}</span>
+          <div className="flex flex-row items-center gap-2">
+            <div className="flex items-center justify-center w-4 h-4">
+              <IconChevronRight />
+            </div>
+
+            <span>Tomorrow</span>
+          </div>
+
+          <span className="text-gray-400">{tomorrow.format("ddd")}</span>
         </button>
 
         <button
@@ -140,17 +178,15 @@ export function TaskDate({
           })}
           onClick={() => setTaskDate(nextWeek.toDate())}
         >
-          <span>Next week</span>
-          <span className="text-gray-500">{nextWeek.format("ddd")}</span>
-        </button>
+          <div className="flex flex-row items-center gap-2">
+            <div className="flex items-center justify-center w-4 h-4">
+              <IconChevronDoubleRight />
+            </div>
 
-        <button
-          className={classNames("popover-button", {
-            "popover-button-active": !taskDate,
-          })}
-          onClick={() => setTaskDate(undefined)}
-        >
-          <span>No date</span>
+            <span>Next week</span>
+          </div>
+
+          <span className="text-gray-400">{nextWeek.format("ddd")}</span>
         </button>
 
         <div className="border-b border-gray-200 w-full"></div>
