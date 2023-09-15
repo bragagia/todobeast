@@ -31,11 +31,11 @@ body {
 }
 
 .fld {
-  @apply py-1 px-2 rounded-lg border border-gray-700 border-opacity-20 hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40 focus:bg-white hover:bg-white focus-within:bg-white;
+  @apply py-1 px-2 rounded-lg border border-gray-700 border-opacity-20 hover:border-gray-700 hover:border-opacity-30 focus-within:border-gray-700 focus-within:border-opacity-50 focus:bg-white hover:bg-white focus-within:bg-white hover:focus-within:border-opacity-50 hover:focus-within:border-gray-700;
 }
 
 .fld-not-visible {
-  @apply py-1 px-2 rounded-lg border border-transparent hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40 focus:bg-white hover:bg-white focus-within:bg-white;
+  @apply py-1 px-2 rounded-lg border border-transparent hover:border-gray-700 hover:border-opacity-20 focus-within:border-gray-700 focus-within:border-opacity-50 focus:bg-white hover:bg-white focus-within:bg-white hover:focus-within:border-opacity-50 hover:focus-within:border-gray-700;
 }
 
 /* TODO: Remove all paddings from button class + make active and disabled by css */
