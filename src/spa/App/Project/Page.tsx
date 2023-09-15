@@ -23,7 +23,7 @@ import {
   PopoverTrigger,
 } from "../Components/ui/popover";
 
-const iconColors = [
+export const ProjectIconColors = [
   "text-black",
   "text-gray-500",
   "text-pink-500",
@@ -175,7 +175,7 @@ export function ProjectPage() {
   return (
     <>
       <PageHeader>
-        <div className="flex flex-row items-center justify-normal w-full py-3 task-padding">
+        <div className="flex flex-row items-center justify-normal w-full py-3 page-padding">
           <div className="flex flex-row items-center">
             <Popover
               open={iconPickerOpen}
@@ -184,15 +184,7 @@ export function ProjectPage() {
               <PopoverTrigger asChild>
                 <button
                   disabled={project.special ? true : false}
-                  className={classNames(
-                    "-mr-2",
-                    {
-                      "button-disabled": project.special,
-                    },
-                    {
-                      button: !project.special,
-                    }
-                  )}
+                  className={classNames("-mr-2 button")}
                 >
                   <ProjectIcon project={project} />
                 </button>
@@ -219,7 +211,7 @@ export function ProjectPage() {
                   })}
                 </div>
                 <div className="flex flex-row flex-wrap justify-around p-3">
-                  {iconColors.map((iconColor) => {
+                  {ProjectIconColors.map((iconColor) => {
                     let Icon = projectIconMap[project.icon];
 
                     return (
@@ -245,10 +237,10 @@ export function ProjectPage() {
             <div
               className={classNames(
                 {
-                  "button-disabled": project.special,
+                  "fld-disabled": project.special,
                 },
                 {
-                  button: !project.special,
+                  "fld-not-visible": !project.special,
                 }
               )}
             >
@@ -257,7 +249,7 @@ export function ProjectPage() {
           </div>
 
           {tasksTodoCount > 0 ? (
-            <div className="text-xl font-light text-gray-400">
+            <div className="ml-1 text-xl font-light text-gray-400">
               {tasksTodoCount}
             </div>
           ) : null}
@@ -277,7 +269,7 @@ export function ProjectPage() {
         <TaskCreator projectId={projectId} />
       </PageHeader>
 
-      <div className="task-padding">
+      <div className="page-padding">
         {project.special === "archive" ? (
           <p className="mt-4 italic text-gray-500 text-sm">
             Tasks assigned to this project will be hidden from every other

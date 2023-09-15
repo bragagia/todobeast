@@ -39,7 +39,7 @@ export function PriorityPeekPage() {
   return (
     <>
       <PageHeader>
-        <div className="flex flex-row items-center justify-normal w-full pt-5 pb-1 task-padding">
+        <div className="flex flex-row items-center justify-normal w-full pt-5 pb-1 page-padding">
           <div className="flex flex-row items-center gap-2">
             <span className="text-purple-600">
               <IconBolt />
@@ -51,7 +51,7 @@ export function PriorityPeekPage() {
       </PageHeader>
 
       <button
-        className="flex flex-row items-center task-padding py-2 text-gray-800 gap-1 hover:bg-gray-50 w-full text-lg"
+        className="flex flex-row items-center page-padding py-2 text-gray-800 gap-1 hover:bg-gray-100 w-full text-lg"
         onClick={() => setTodaysCollapsed(!todaysCollapsed)}
       >
         <span className="flex items-center justify-center w-4 h-4">
@@ -65,7 +65,7 @@ export function PriorityPeekPage() {
         <TaskList tasks={todayTasks} className="mb-16" />
       </div>
 
-      <div className="task-padding">
+      <div className="page-padding">
         <div className="flex flex-row items-center py-2 mt-4 text-gray-800 gap-1 w-full text-lg">
           <span className="flex items-center justify-center w-4 h-4">
             {<IconFire />}

@@ -1,5 +1,5 @@
 .rdp {
-  --rdp-cell-size: 40px;
+  --rdp-cell-size: 32px;
 
   --rdp-accent-color: rgb(243 244 246);
   --rdp-background-color: rgb(243 244 246);
@@ -7,12 +7,14 @@
   --rdp-background-color-dark: rgba(31, 41, 55);
 
   /* Outline border for focused elements */
-  --rdp-outline: 2px solid var(--rdp-accent-color);
+  --rdp-outline: none;
   /* Outline border for focused and selected elements */
-  --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0.75);
+  --rdp-outline-selected: none;
+
+  @apply m-1;
 }
 
-.rdp-my-today {
+.rdp-my-today:not([disabled]) {
   /* Disable default style */
 }
 
@@ -20,8 +22,9 @@
   @apply rounded-lg border;
 }
 
-.rdp-button:hover:not([disabled]) {
-  @apply border border-gray-300;
+.rdp-button:hover:not([disabled]),
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  @apply bg-gray-200;
 }
 
 .rdp-head_cell {
@@ -29,10 +32,27 @@
   @apply font-light text-gray-700;
 }
 
+.rdp-my-selected:disabled,
 .rdp-my-selected:not([disabled]) {
-  @apply border font-bold border-black rounded-lg bg-gray-100;
+  @apply font-bold rounded-lg bg-gray-200;
 }
 
-.rdp-my-selected:hover:not([disabled]) {
-  @apply bg-white; /* Not working for some reason but make the result okayish because whatever */
+.rdp-caption_label {
+  @apply text-sm font-medium;
+}
+
+.rdp-nav {
+  @apply flex flex-row items-center;
+}
+
+.rdp-nav_button {
+  @apply p-1 h-7 w-7;
+}
+
+.rdp-nav_button svg {
+  @apply h-4 w-4;
+}
+
+.rdp-day {
+  @apply border-none;
 }

@@ -41,19 +41,19 @@ export function TaskPriority({ task }: { task: TaskType }) {
       value: "high" as PriorityType,
       text: "High",
       icon: <IconChartFull />,
-      icon_color: "text-black",
+      icon_color: "",
     },
     {
       value: "medium" as PriorityType,
       text: "Medium",
       icon: <IconChartMid />,
-      icon_color: "text-black",
+      icon_color: "",
     },
     {
       value: "low" as PriorityType,
       text: "Low",
       icon: <IconChartLow />,
-      icon_color: "text-black",
+      icon_color: "",
     },
     {
       value: null as PriorityType,
@@ -83,11 +83,13 @@ export function TaskPriority({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex h-full items-center justify-center text-xs font-light button">
+        <button className="flex h-full items-center justify-center text-xs font-light button text-gray-300 hover:text-gray-500">
           {TaskPriority.value ? (
-            getPriorityIcon(TaskPriority)
+            <span className="text-gray-700">
+              {getPriorityIcon(TaskPriority)}
+            </span>
           ) : (
-            <div className="flex items-center justify-center w-4 h-4 text-gray-300">
+            <div className="flex items-center justify-center w-4 h-4">
               <IconFlag />
             </div>
           )}

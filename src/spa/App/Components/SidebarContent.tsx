@@ -31,6 +31,7 @@ import {
   projectIconMap,
 } from "../../utils/Icons";
 import { calcNewOrder } from "../../utils/Orderring";
+import { ProjectIconColors } from "../Project/Page";
 import { SidemenuItem } from "./SidebarItem";
 
 export function SidebarContent() {
@@ -59,8 +60,8 @@ export function SidebarContent() {
     await rep.mutate.projectCreate({
       id: id,
       name: "",
-      icon: "dot",
-      icon_color: "black",
+      icon: "dot", // TODO: centralize
+      icon_color: ProjectIconColors[0],
       special: null,
     });
 

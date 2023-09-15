@@ -2,6 +2,106 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-white text-black;
+}
+
+.without-ring {
+  @apply focus:ring-0 focus:ring-offset-0  focus-visible:outline-none;
+}
+
+.button {
+  @apply py-1 px-2 rounded-lg hover:bg-opacity-10 hover:bg-gray-500;
+}
+
+.button:disabled {
+  @apply py-1 px-2 rounded-lg hover:bg-opacity-0;
+}
+
+.button-active {
+  @apply py-1 px-2 rounded-lg bg-opacity-10 bg-gray-500;
+}
+
+.fld-disabled {
+  @apply py-1 px-2 rounded-lg border border-transparent;
+}
+
+.fld {
+  @apply py-1 px-2 rounded-lg border border-gray-700 border-opacity-20 hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40 focus:bg-white hover:bg-white focus-within:bg-white;
+}
+
+.fld-not-visible {
+  @apply py-1 px-2 rounded-lg border border-transparent hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40 focus:bg-white hover:bg-white focus-within:bg-white;
+}
+
+/* TODO: Remove all paddings from button class + make active and disabled by css */
+.button-full-red {
+  @apply text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center;
+}
+
+.button-full-gray {
+  @apply text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center;
+}
+
+.page-padding {
+  @apply px-2 sm:px-4;
+}
+
+.page-container {
+  @apply max-w-3xl mx-auto;
+}
+
+.tiptap {
+  @apply without-ring;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  @apply text-gray-400;
+}
+
+@keyframes bounce-h {
+  0%,
+  100% {
+    transform: translateX(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateX(25%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes bounce-h-out {
+  0% {
+    transform: translateX(0%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  100% {
+    transform: translateX(1000%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.animate-bounce-h-fast {
+  animation: bounce-h 0.4s infinite;
+}
+
+.animate-bounce-h-fast-out {
+  animation: bounce-h-out 0.5s 1;
+}
+
+.popover-button {
+  @apply mx-1 rounded px-2 py-2 text-sm flex flex-row items-center justify-between hover:bg-gray-100 self-stretch;
+}
+
+.popover-button-active {
+  @apply bg-gray-100 font-bold;
+}
+
 /* Shadcn shit */
 @layer base {
   :root {
@@ -73,112 +173,3 @@
   }
 }
 /* End of shadcn shit */
-
-body {
-  @apply bg-white text-black;
-}
-
-.without-ring {
-  @apply focus:ring-0 focus:ring-offset-0  focus-visible:outline-none;
-}
-
-/* internal class */
-.button-base {
-  @apply py-1 px-2 border rounded-lg;
-}
-
-.button-base-thin {
-  @apply py-[1px] px-2 border rounded-lg;
-}
-/* end */
-
-.button-disabled {
-  @apply button-base border-transparent;
-}
-
-.button {
-  @apply button-base border-transparent hover:border-opacity-20 hover:border-gray-700;
-}
-
-.button-thin {
-  @apply button-base-thin border-transparent hover:border-opacity-20 hover:border-gray-700;
-}
-
-.button-active {
-  @apply button-base border-gray-700 !border-opacity-20 bg-gray-50;
-}
-
-.button-visible {
-  @apply button-base border-gray-700 border-opacity-10 hover:border-gray-700 hover:border-opacity-30 focus:border-opacity-40 focus:border-gray-700 focus-within:border-gray-700 focus-within:border-opacity-40;
-}
-
-.button-full-red {
-  @apply text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center;
-}
-
-.button-full-gray {
-  @apply text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm self-stretch px-5 py-2.5 text-center;
-}
-
-.page-padding {
-  @apply px-2 sm:px-4;
-}
-
-.task-padding {
-  @apply px-2 sm:px-4;
-}
-
-.page-container {
-  @apply max-w-3xl mx-auto;
-}
-
-.tiptap {
-  @apply without-ring;
-}
-
-.tiptap p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-  @apply text-gray-400;
-}
-
-@keyframes bounce-h {
-  0%,
-  100% {
-    transform: translateX(-25%);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  50% {
-    transform: translateX(25%);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-}
-
-@keyframes bounce-h-out {
-  0% {
-    transform: translateX(0%);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-  100% {
-    transform: translateX(1000%);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-}
-
-.animate-bounce-h-fast {
-  animation: bounce-h 0.4s infinite;
-}
-
-.animate-bounce-h-fast-out {
-  animation: bounce-h-out 0.5s 1;
-}
-
-.popover-button {
-  @apply px-6 py-2 text-sm flex flex-row items-center justify-between border-b border-gray-200 hover:bg-gray-100 w-full;
-}
-
-.popover-button-active {
-  @apply bg-gray-100 font-bold;
-}

@@ -35,7 +35,7 @@ export function Task({
     <div
       ref={taskRef}
       className={classNames(
-        "flex flex-row justify-normal py-1 task-padding border-b border-gray-200 bg-white hover:bg-gray-50",
+        "flex flex-row justify-normal py-1 page-padding bg-white hover:bg-gray-50",
         { "animate-pulse-fast": blinking }
       )}
     >
@@ -51,7 +51,7 @@ export function Task({
 
           <div className="flex flex-col justify-start overflow-visible lg:items-center grow lg:flex-row lg:self-stretch min-h-[2.5rem] gap-1 py-1 lg:py-0">
             {/* TODO: py-0 on pointer-fine */}
-            <div className="flex flex-row items-center flex-shrink-0 text-gray-600 md:text-black lg:basis-60 lg:self-stretch gap-2">
+            <div className="flex flex-row items-center flex-shrink-0 text-gray-700 lg:self-stretch gap-2">
               <div className="lg:self-stretch">
                 <TaskProject task={task} />
               </div>

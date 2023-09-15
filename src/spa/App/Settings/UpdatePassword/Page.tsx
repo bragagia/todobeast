@@ -74,7 +74,7 @@ export function SettingsUpdatePasswordPage() {
 
   return (
     <>
-      <PageHeader className="page-container py-4 task-padding">
+      <PageHeader className="page-container py-4 page-padding">
         <div className="flex flex-row justify-between w-full">
           <div className="flex flex-row items-center gap-2">
             <Link to={UrlSettings()} className="button">

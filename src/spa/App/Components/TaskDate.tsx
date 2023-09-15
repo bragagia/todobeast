@@ -30,20 +30,23 @@ export function TaskDate({
   let tomorrow = useMemo(() => today.addDays(1), [today]);
   let nextWeek = useMemo(() => today.addDays(7).startOfWeek(), [today]);
 
-  let taskIsLate =
-    taskDate &&
-    taskDate.isBefore(today) &&
-    (!task.done_at || dayjs(task.done_at).startOf("day").isAfter(task.date));
+  let taskIsLate = taskDate && taskDate.isBefore(today) && !task.done_at;
 
   let dateFormatted = "Set date";
+  let dateTooltip: string | undefined;
   let noDate = true;
 
   if (mode == "default") {
     if (taskDate) {
       noDate = false;
+      dateTooltip = taskDate.format("dddd, MMMM D, YYYY");
 
       if (taskDate.isSame(today)) {
         dateFormatted = "Today";
+      } else if (taskDate.isSame(today.addDays(-1))) {
+        dateFormatted = "Yesterday";
+      } else if (taskIsLate) {
+        dateFormatted = taskDate.relativeFrom(today);
       } else if (
         taskDate.isAfter(today) &&
         taskDate.addDays(-7).isBefore(today)
@@ -87,10 +90,11 @@ export function TaskDate({
     <Popover open={open} onOpenChange={handleButtonClick}>
       <PopoverTrigger asChild>
         <button
+          title={dateTooltip}
           className={classNames(
             "h-full text-xs font-light flex flex-row gap-2 items-center button lg:w-28",
-            { "text-gray-300": noDate },
-            { "!font-bold text-red-700": taskIsLate }
+            { "text-gray-300 hover:text-gray-500": noDate },
+            { "text-red-700": taskIsLate }
           )}
         >
           <div className="flex items-center justify-center w-4 h-4">
@@ -109,7 +113,7 @@ export function TaskDate({
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="flex flex-col items-start">
+      <PopoverContent className="flex flex-col items-start py-1 gap-1">
         <button
           className={classNames("popover-button", {
             "popover-button-active": taskDate?.isSame(today),
@@ -148,6 +152,8 @@ export function TaskDate({
         >
           <span>No date</span>
         </button>
+
+        <div className="border-b border-gray-200 w-full"></div>
 
         <DayPicker
           mode="single"

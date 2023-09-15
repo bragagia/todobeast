@@ -48,7 +48,7 @@ export function WeeklyCalendarNav({
   }
 
   return (
-    <div className="flex flex-row items-center justify-center w-full mx-auto group">
+    <div className="flex flex-row items-center justify-center w-full mx-auto group gap-1 page-padding">
       <button
         onClick={handlePreviousWeek}
         className="flex items-center self-stretch justify-center w-12 text-gray-500 md:w-16 grow pointer-fine:invisible group-hover:visible hover:text-black button"
@@ -59,7 +59,7 @@ export function WeeklyCalendarNav({
       <AnimatedTranslate
         childKey={"week-planner/week/" + selectedWeekStartDate.toString()}
       >
-        <div className="flex flex-row items-center justify-center w-full">
+        <div className="flex flex-row items-center justify-center w-full gap-1">
           {weekDates.map((date) => {
             return (
               <WeeklyCalendarNavItem

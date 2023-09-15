@@ -32,9 +32,12 @@ export function TaskProject({ task }: { task: TaskType }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          title={project?.name}
           className={classNames(
             "flex h-full justify-normal items-center w-full text-xs font-light button max-w-[8rem] lg:max-w-[7rem] lg:w-[7rem] overflow-hidden",
-            { "text-gray-300": project?.special === "inbox" }
+            {
+              "text-gray-300 hover:text-gray-500": project?.special === "inbox",
+            }
           )}
         >
           {project?.special === "inbox" ? (

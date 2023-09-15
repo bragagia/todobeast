@@ -24,7 +24,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
       value: "zero" as DurationType,
       text: "zero",
       icon: <span>0</span>,
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
@@ -36,7 +36,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
           <span>min</span>
         </span>
       ),
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
@@ -48,7 +48,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
           <span>hour</span>
         </span>
       ),
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
@@ -60,7 +60,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
           <span>hours</span>
         </span>
       ),
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
@@ -72,7 +72,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
           <span>hours</span>
         </span>
       ),
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
@@ -84,7 +84,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
           <span>day</span>
         </span>
       ),
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
@@ -96,7 +96,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
           <span>days</span>
         </span>
       ),
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
@@ -108,14 +108,14 @@ export function TaskDuration({ task }: { task: TaskType }) {
           <span>days</span>
         </span>
       ),
-      icon_color: "text-black",
+      icon_color: "",
       hide_selector_icon: true,
     },
     {
       value: "longer" as DurationType,
       text: "Longer",
       icon: <span>∞</span>,
-      icon_color: "text-black",
+      icon_color: "",
     },
     {
       value: null as DurationType,
@@ -145,16 +145,14 @@ export function TaskDuration({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex h-full items-center w-full text-lg font-light button">
+        <button className="flex h-full items-center w-full text-lg font-light button text-gray-300 hover:text-gray-500">
           {TaskDuration.value ? (
-            <div className="w-4 h-4 flex items-center justify-center">
+            <div className="w-4 h-4 flex items-center justify-center text-gray-700">
               {getDurationIcon(TaskDuration)}
             </div>
           ) : (
             <div className="flex items-center justify-center w-4 h-4">
-              <div className="flex items-center justify-center w-4 h-4 text-gray-300">
-                <IconHourglass />
-              </div>
+              <IconHourglass />
             </div>
           )}
         </button>

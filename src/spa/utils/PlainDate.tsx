@@ -2,8 +2,11 @@ import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
 import utc from "dayjs/plugin/utc";
 
+import relativeTime from "dayjs/plugin/relativeTime";
+
 dayjs.extend(utc);
 dayjs.extend(isoWeek);
+dayjs.extend(relativeTime);
 
 export class DayjsDate {
   readonly year: number;
@@ -61,6 +64,10 @@ export class DayjsDate {
 
   format(template: string): string {
     return this.toDayjs().format(template);
+  }
+
+  relativeFrom(date: DayjsDate) {
+    return this.toDayjs().from(date.toDayjs());
   }
 
   addDays(days: number): DayjsDate {

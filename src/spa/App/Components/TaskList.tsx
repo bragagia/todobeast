@@ -8,9 +8,11 @@ import {
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import { ProjectType, getAllProjects } from "../../../db/projects";
 import { PriorityType, TaskType } from "../../../db/tasks";
+import { UrlProject } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import { IconCollapsed, IconCollapsible } from "../../utils/Icons";
 import { dragAndDropGeneric as dragAndDropMultidropableGeneric } from "../../utils/Orderring";
@@ -208,31 +210,37 @@ export function TaskList({
   return (
     <div className={classNames(className)}>
       <DragDropContext onDragEnd={onDragTask}>
-        {Object.keys(displayedTasksList).map((projectAndDoneId) => {
+        {Object.keys(displayedTasksList).map((projectOrDoneId) => {
           return (
-            <div key={"project-container/" + projectAndDoneId}>
-              {!hideProjectBar && projectAndDoneId !== doneProjectKey ? (
-                <div className="py-1 task-padding bg-gray-50 border-y border-gray-200 flex flex-row items-center sticky top-0">
+            <div key={"project-container/" + projectOrDoneId}>
+              {!hideProjectBar && projectOrDoneId !== doneProjectKey ? (
+                <Link
+                  className="py-1 page-padding bg-gray-100 flex flex-row items-center sticky top-0"
+                  to={UrlProject(
+                    projectOrDoneId,
+                    allProjectsById[projectOrDoneId].name
+                  )}
+                >
                   {/* TODO: Sticky doesn't work because of page header */}
                   <span>
                     <ProjectName
-                      project={allProjectsById[projectAndDoneId]}
+                      project={allProjectsById[projectOrDoneId]}
                       className="text-sm ml-1 gap-2"
                       iconClassName="w-4 h-4"
                     />
                   </span>
                   <span className="ml-2 text-sm font-light text-gray-400">
-                    {displayedTasksList[projectAndDoneId].length}
+                    {displayedTasksList[projectOrDoneId].length}
                   </span>
-                </div>
+                </Link>
               ) : null}
 
-              {projectAndDoneId === doneProjectKey ? (
+              {projectOrDoneId === doneProjectKey ? (
                 <>
                   <button
                     className={classNames(
-                      "py-1 task-padding flex flex-row mt-3 items-center text-gray-500 text-sm hover:bg-gray-50 w-full border-y border-transparent hover:border-gray-200",
-                      { "bg-gray-50 border-gray-200": !doneCollapsed }
+                      "py-1 page-padding flex flex-row mt-3 items-center text-gray-500 text-sm w-full",
+                      { "bg-gray-100 border-gray-200": !doneCollapsed }
                     )}
                     onClick={() => setDoneCollapsed(!doneCollapsed)}
                   >
@@ -249,24 +257,21 @@ export function TaskList({
                       </div>
                     </span>
                     <span className="ml-2 text-sm font-light text-gray-400">
-                      {displayedTasksList[projectAndDoneId].length}
+                      {displayedTasksList[projectOrDoneId].length}
                     </span>
                   </button>
                 </>
               ) : null}
 
-              {projectAndDoneId !== doneProjectKey || !doneCollapsed ? (
-                <Droppable
-                  key={projectAndDoneId}
-                  droppableId={projectAndDoneId}
-                >
+              {projectOrDoneId !== doneProjectKey || !doneCollapsed ? (
+                <Droppable key={projectOrDoneId} droppableId={projectOrDoneId}>
                   {(provided) => (
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
                       className="pb-6"
                     >
-                      {displayedTasksList[projectAndDoneId].map((task, id) => (
+                      {displayedTasksList[projectOrDoneId].map((task, id) => (
                         <Draggable
                           key={task.id}
                           draggableId={task.id}

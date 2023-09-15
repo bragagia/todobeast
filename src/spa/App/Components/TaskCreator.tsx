@@ -93,8 +93,8 @@ export function TaskCreator({
   );
 
   return (
-    <div className="task-padding">
-      <div className="flex flex-row items-center w-full button-visible">
+    <div className="page-padding">
+      <div className="flex flex-row items-center w-full fld">
         <span className="text-gray-500">
           <IconPlus />
         </span>
