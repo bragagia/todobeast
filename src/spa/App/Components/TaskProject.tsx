@@ -53,9 +53,9 @@ export function TaskProject({ task }: { task: TaskType }) {
 
       <PopoverContent className="w-48 flex flex-col items-start py-1">
         {allProjects?.map((project) => (
-          <div
+          <button
             key={project.id}
-            onSelect={() => {
+            onClick={() => {
               setOpen(false);
               if (project.id === task.projectId) return;
 
@@ -76,7 +76,7 @@ export function TaskProject({ task }: { task: TaskType }) {
             ) : (
               <ProjectName project={project} iconClassName="w-4 h-4" />
             )}
-          </div>
+          </button>
         ))}
       </PopoverContent>
     </Popover>

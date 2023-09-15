@@ -92,9 +92,9 @@ export function TaskPriority({ task }: { task: TaskType }) {
 
       <PopoverContent className="flex flex-col items-start py-1">
         {priorities.map((priority) => (
-          <div
+          <button
             key={priority.value}
-            onSelect={() => {
+            onClick={() => {
               setOpen(false);
               if (priority.value === task.priority) return;
 
@@ -118,7 +118,7 @@ export function TaskPriority({ task }: { task: TaskType }) {
                 {priority.text}
               </span>
             </div>
-          </div>
+          </button>
         ))}
       </PopoverContent>
     </Popover>

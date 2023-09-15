@@ -159,9 +159,9 @@ export function TaskDuration({ task }: { task: TaskType }) {
 
       <PopoverContent className="max-h-[80vh] overflow-scroll flex flex-col items-start py-1">
         {durations.map((duration) => (
-          <div
+          <button
             key={duration.value}
-            onSelect={() => {
+            onClick={() => {
               setOpen(false);
               if (duration.value === task.duration) return;
 
@@ -189,7 +189,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
                 {duration.text}
               </span>
             </div>
-          </div>
+          </button>
         ))}
       </PopoverContent>
     </Popover>
