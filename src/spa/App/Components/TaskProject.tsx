@@ -34,7 +34,7 @@ export function TaskProject({ task }: { task: TaskType }) {
         <button
           title={project?.name}
           className={classNames(
-            "flex h-full justify-normal items-center w-full text-xs font-light button max-w-[8rem] lg:max-w-[7rem] lg:w-[7rem] overflow-hidden",
+            "flex h-full justify-normal items-center w-full text-xs font-light button-gray-200 max-w-[8rem] lg:max-w-[7rem] lg:w-[7rem] overflow-hidden group",
             {
               "text-gray-300 hover:text-gray-500": project?.special === "inbox",
             }
@@ -44,7 +44,7 @@ export function TaskProject({ task }: { task: TaskType }) {
             <ProjectName
               project={project}
               iconClassName="w-4 h-4"
-              overrideColor="text-gray-300"
+              overrideColor="text-gray-300 group-hover:text-gray-500"
               overrideName="Set project"
             />
           ) : (

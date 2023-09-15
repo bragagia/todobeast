@@ -92,7 +92,7 @@ export function TaskDate({
         <button
           title={dateTooltip}
           className={classNames(
-            "h-full text-xs font-light flex flex-row gap-2 items-center button lg:w-28",
+            "h-full text-xs font-light flex flex-row gap-2 items-center button-gray-200 lg:w-28",
             { "text-gray-300 hover:text-gray-500": noDate },
             { "text-red-700": taskIsLate }
           )}

@@ -83,7 +83,7 @@ export function TaskPriority({ task }: { task: TaskType }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className="flex h-full items-center justify-center text-xs font-light button text-gray-300 hover:text-gray-500">
+        <button className="flex h-full items-center justify-center text-xs font-light button-gray-200 text-gray-300 hover:text-gray-500">
           {TaskPriority.value ? (
             <span className="text-gray-700">
               {getPriorityIcon(TaskPriority)}

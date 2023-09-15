@@ -35,7 +35,7 @@ export function Task({
     <div
       ref={taskRef}
       className={classNames(
-        "flex flex-row justify-normal py-1 page-padding bg-white hover:bg-gray-50",
+        "flex flex-row justify-normal py-1 page-padding bg-white hover:bg-gray-50 dark:hover:bg-[#0C111A]",
         { "animate-pulse-fast": blinking }
       )}
     >
