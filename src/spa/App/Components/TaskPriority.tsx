@@ -68,7 +68,7 @@ export function TaskPriority({ task }: { task: TaskType }) {
 
   const TaskPriority =
     priorities.find((priority) => priority.value === task.priority) ||
-    priorities[priorities.length - 1];
+    priorities[0];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

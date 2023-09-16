@@ -135,7 +135,7 @@ export function TaskDuration({ task }: { task: TaskType }) {
 
   const TaskDuration =
     durations.find((duration) => duration.value === task.duration) ||
-    durations[durations.length - 1];
+    durations[0];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
