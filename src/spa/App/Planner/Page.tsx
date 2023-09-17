@@ -6,6 +6,8 @@ import { useReplicache } from "../../ReplicacheProvider";
 import { DayjsDate } from "../../utils/PlainDate";
 import useDate from "../../utils/UseDate";
 import { AnimatedTranslate } from "../Components/AnimatedTranslate";
+import { PageContainer } from "../Components/PageContainer";
+import { PageContent } from "../Components/PageContent";
 import { PageHeader } from "../Components/PageHeader";
 import { TaskCreator } from "../Components/TaskCreator";
 import { TaskList } from "../Components/TaskList";
@@ -28,7 +30,7 @@ export function PlannerPage() {
   ]);
 
   return (
-    <>
+    <PageContainer>
       <PageHeader>
         <div className="py-4 page-container">
           <WeeklyCalendarNav tasksByDays={tasksByDays} />
@@ -37,13 +39,15 @@ export function PlannerPage() {
         <TaskCreator date={urlDate} />
       </PageHeader>
 
-      <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
-        <TaskList
-          tasks={tasksByDays[urlDate.toString()]}
-          autoUncollapseDone={urlDate.isBefore(todayDate)}
-          className="mb-32"
-        />
-      </AnimatedTranslate>
-    </>
+      <PageContent>
+        <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
+          <TaskList
+            tasks={tasksByDays[urlDate.toString()]}
+            autoUncollapseDone={urlDate.isBefore(todayDate)}
+            className="mb-32"
+          />
+        </AnimatedTranslate>
+      </PageContent>
+    </PageContainer>
   );
 }

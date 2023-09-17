@@ -94,7 +94,7 @@ export function TaskCreator({
 
   return (
     <div className="page-padding">
-      <div className="flex flex-row items-center w-full fld">
+      <div className="flex flex-row items-center w-full fld !rounded-3xl">
         <span className="text-gray-500">
           <IconPlus />
         </span>

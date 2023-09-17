@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { UrlSettings } from "../../../AppRouter";
 import { useSupabase } from "../../../SupabaseProvider";
 import { IconChevronLeft } from "../../../utils/Icons";
+import { PageContainer } from "../../Components/PageContainer";
+import { PageContent } from "../../Components/PageContent";
 import { PageHeader } from "../../Components/PageHeader";
 
 export function SettingsUpdatePasswordPage() {
@@ -73,9 +75,9 @@ export function SettingsUpdatePasswordPage() {
   }, [supabase, navigate]);
 
   return (
-    <>
+    <PageContainer>
       <PageHeader className="page-container py-4 page-padding">
-        <div className="flex flex-row justify-between w-full">
+        <div className="flex flex-row justify-between">
           <div className="flex flex-row items-center gap-2">
             <Link to={UrlSettings()} className="button">
               <IconChevronLeft />
@@ -88,57 +90,59 @@ export function SettingsUpdatePasswordPage() {
         </div>
       </PageHeader>
 
-      <div className="page-padding page-container gap-2 flex flex-col">
-        <div className="self-stretch max-w-sm">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
-            Password
-          </label>
+      <PageContent>
+        <div className="page-padding page-container gap-2 flex flex-col">
+          <div className="self-stretch max-w-sm">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Password
+            </label>
 
-          <input
-            type="password"
-            id="password"
-            ref={passwordRef}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
-            required
-          />
+            <input
+              type="password"
+              id="password"
+              ref={passwordRef}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
+              required
+            />
+          </div>
+
+          <div className="self-stretch max-w-sm">
+            <label
+              htmlFor="confirm_password"
+              className="block mb-2 text-sm font-medium text-gray-900 "
+            >
+              Confirm password
+            </label>
+
+            <input
+              type="password"
+              id="confirm_password"
+              ref={passwordConfirmRef}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
+              required
+            />
+          </div>
+
+          {helperText && (
+            <p
+              className={classNames("font-bold text-sm", {
+                "text-red-600": helperText.error,
+              })}
+            >
+              {helperText.text}
+            </p>
+          )}
+
+          <div>
+            <button className="button-full-red" onClick={handleResetPassword}>
+              {smallLoading ? "Loading..." : "Set password"}
+            </button>
+          </div>
         </div>
-
-        <div className="self-stretch max-w-sm">
-          <label
-            htmlFor="confirm_password"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            Confirm password
-          </label>
-
-          <input
-            type="password"
-            id="confirm_password"
-            ref={passwordConfirmRef}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-red-500 focus-visible:border-red-500  block w-full p-2.5 without-ring"
-            required
-          />
-        </div>
-
-        {helperText && (
-          <p
-            className={classNames("font-bold text-sm", {
-              "text-red-600": helperText.error,
-            })}
-          >
-            {helperText.text}
-          </p>
-        )}
-
-        <div>
-          <button className="button-full-red" onClick={handleResetPassword}>
-            {smallLoading ? "Loading..." : "Set password"}
-          </button>
-        </div>
-      </div>
-    </>
+      </PageContent>
+    </PageContainer>
   );
 }

@@ -10,6 +10,8 @@ import {
   IconFire,
 } from "../../utils/Icons";
 import useDate from "../../utils/UseDate";
+import { PageContainer } from "../Components/PageContainer";
+import { PageContent } from "../Components/PageContent";
 import { PageHeader } from "../Components/PageHeader";
 import { TaskList } from "../Components/TaskList";
 
@@ -37,7 +39,7 @@ export function PriorityPeekPage() {
   const todayTodosCount = todayTasks.filter((task) => !task.done_at).length;
 
   return (
-    <>
+    <PageContainer>
       <PageHeader>
         <div className="flex flex-row items-center justify-normal w-full pt-5 pb-1 page-padding">
           <div className="flex flex-row items-center gap-2">
@@ -50,49 +52,51 @@ export function PriorityPeekPage() {
         </div>
       </PageHeader>
 
-      <button
-        className={classNames(
-          "flex flex-row items-center page-padding py-2 text-gray-800 gap-1 hover:bg-gray-100 w-full text-lg",
-          { "bg-gray-100 border-b border-gray-200": !todaysCollapsed }
-        )}
-        onClick={() => setTodaysCollapsed(!todaysCollapsed)}
-      >
-        <span className="flex items-center justify-center w-4 h-4">
-          {todaysCollapsed ? <IconCollapsed /> : <IconCollapsible />}
-        </span>
-        <span>Today</span>
-        <span className="font-light text-gray-400">{todayTodosCount}</span>
-      </button>
-
-      <div className={classNames({ hidden: todaysCollapsed })}>
-        <TaskList tasks={todayTasks} className="mb-16" />
-      </div>
-
-      <div className="page-padding">
-        <div className="flex flex-row items-center py-2 mt-4 text-gray-800 gap-1 w-full text-lg">
+      <PageContent>
+        <button
+          className={classNames(
+            "flex flex-row items-center page-padding py-2 text-gray-800 gap-1 hover:bg-gray-100 w-full text-lg",
+            { "bg-gray-100 border-b border-gray-200": !todaysCollapsed }
+          )}
+          onClick={() => setTodaysCollapsed(!todaysCollapsed)}
+        >
           <span className="flex items-center justify-center w-4 h-4">
-            {<IconFire />}
+            {todaysCollapsed ? <IconCollapsed /> : <IconCollapsible />}
           </span>
+          <span>Today</span>
+          <span className="font-light text-gray-400">{todayTodosCount}</span>
+        </button>
 
-          <span>Top priority</span>
+        <div className={classNames({ hidden: todaysCollapsed })}>
+          <TaskList tasks={todayTasks} className="mb-16" />
         </div>
 
-        <p className="text-gray-500 text-sm">
-          Plan your day like a beast with the four highest priority tasks from
-          each project highlighted here.{" "}
-          <span className="text-gray-400 font-light">
-            (Planned tasks are excluded)
-          </span>
-        </p>
-      </div>
+        <div className="page-padding">
+          <div className="flex flex-row items-center py-2 mt-4 text-gray-800 gap-1 w-full text-lg">
+            <span className="flex items-center justify-center w-4 h-4">
+              {<IconFire />}
+            </span>
 
-      <div className="mt-3">
-        <TaskList
-          tasks={priorityPeekTasks}
-          mode="priority-peek"
-          className="mb-32"
-        />
-      </div>
-    </>
+            <span>Top priority</span>
+          </div>
+
+          <p className="text-gray-500 text-sm">
+            Plan your day like a beast with the four highest priority tasks from
+            each project highlighted here.{" "}
+            <span className="text-gray-400 font-light">
+              (Planned tasks are excluded)
+            </span>
+          </p>
+        </div>
+
+        <div className="mt-3">
+          <TaskList
+            tasks={priorityPeekTasks}
+            mode="priority-peek"
+            className="mb-32"
+          />
+        </div>
+      </PageContent>
+    </PageContainer>
   );
 }

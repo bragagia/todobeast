@@ -22,6 +22,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../Components/ui/popover";
+import { PageContainer } from "../Components/PageContainer";
+import { PageContent } from "../Components/PageContent";
 
 export const ProjectIconColors = [
   "text-black",
@@ -173,7 +175,7 @@ export function ProjectPage() {
   }
 
   return (
-    <>
+    <PageContainer>
       <PageHeader>
         <div className="flex flex-row items-center justify-normal w-full py-3 page-padding">
           <div className="flex flex-row items-center">
@@ -269,21 +271,23 @@ export function ProjectPage() {
         <TaskCreator projectId={projectId} />
       </PageHeader>
 
-      <div className="page-padding">
-        {project.special === "archive" ? (
-          <p className="mt-4 italic text-gray-500 text-sm">
-            Tasks assigned to this project will be hidden from every other
-            views.
-          </p>
-        ) : null}
-      </div>
+      <PageContent>
+        <div className="page-padding">
+          {project.special === "archive" ? (
+            <p className="mt-4 italic text-gray-500 text-sm">
+              Tasks assigned to this project will be hidden from every other
+              views.
+            </p>
+          ) : null}
+        </div>
 
-      <TaskList
-        key={"list/" + projectId}
-        tasks={tasksofProject}
-        hideProjectBar
-        className="mb-32"
-      />
-    </>
+        <TaskList
+          key={"list/" + projectId}
+          tasks={tasksofProject}
+          hideProjectBar
+          className="mb-32"
+        />
+      </PageContent>
+    </PageContainer>
   );
 }

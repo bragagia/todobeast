@@ -30,11 +30,7 @@ export function InAppLayout() {
           <SidebarContent />
         </div>
 
-        <div className="w-full h-full overflow-scroll">
-          <div className="mx-auto">
-            <Outlet />
-          </div>
-        </div>
+        <Outlet />
 
         <nav className="w-full text-black border-t border-gray-100 h-14 sm:hidden">
           <MobileNavContent />

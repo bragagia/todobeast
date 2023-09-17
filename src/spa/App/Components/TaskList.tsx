@@ -215,7 +215,7 @@ export function TaskList({
             <div key={"project-container/" + projectOrDoneId}>
               {!hideProjectBar && projectOrDoneId !== doneProjectKey ? (
                 <Link
-                  className="py-1 page-padding bg-gray-100 flex flex-row items-center sticky top-0"
+                  className="py-1 page-padding bg-gray-100 flex flex-row items-center sticky top-0 z-10"
                   to={UrlProject(
                     projectOrDoneId,
                     allProjectsById[projectOrDoneId].name
@@ -239,7 +239,7 @@ export function TaskList({
                 <>
                   <button
                     className={classNames(
-                      "py-1 page-padding flex flex-row mt-3 items-center text-gray-500 text-sm w-full",
+                      "py-1 page-padding flex flex-row mt-3 items-center text-gray-500 text-sm w-full sticky top-0 z-10",
                       { "bg-gray-100 border-gray-200": !doneCollapsed }
                     )}
                     onClick={() => setDoneCollapsed(!doneCollapsed)}
