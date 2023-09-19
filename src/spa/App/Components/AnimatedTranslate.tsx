@@ -8,9 +8,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export function AnimatedTranslate({
   children,
   childKey,
+  animationVAlign = "center",
 }: {
   children: JSX.Element;
   childKey: string;
+  animationVAlign?: "bottom" | "top" | "center";
 }) {
   //
   const [currentChild, setCurrentChild] = useState({
@@ -31,25 +33,30 @@ export function AnimatedTranslate({
   const [parentHeight, setParentHeight] = useState(0);
 
   const transitions = useTransition([currentChild], {
-    initial: { transform: "translateX(0%)", opacity: 1 },
+    initial: { transform: "translateX(0%)", opacity: 1, scaleY: 1, scaleX: 1 },
 
     from: {
       transform: direction
         ? `translateX(${direction === "next" ? 100 : -100}%)`
         : "translateX(0%)",
+      scaleY: 0,
+      scaleX: 0,
       opacity: 0,
     },
 
-    enter: { transform: "translateX(0%)", opacity: 1 },
+    enter: { transform: "translateX(0%)", opacity: 1, scaleY: 1, scaleX: 1 },
 
     leave: {
       transform: direction
         ? `translateX(${direction === "next" ? -100 : 100}%)`
         : "translateX(0%)",
+      scaleY: 0,
+      scaleX: 0,
       opacity: 0,
     },
 
     config: {
+      mass: 1.5,
       tension: 500,
       friction: 40,
     },
@@ -124,7 +131,7 @@ export function AnimatedTranslate({
   // If animating or if a new child as just been mounted, render transition instead of direct child
   return (
     <div
-      className={classNames("w-full", {
+      className={classNames("w-full h-full", {
         "relative overflow-hidden": animating,
       })}
       style={animating ? { height: `${parentHeight}px` } : {}}
@@ -134,8 +141,12 @@ export function AnimatedTranslate({
           key={item.key}
           id={item.key}
           ref={childRef}
-          style={animating ? props : { transform: "none" }}
-          className={classNames("w-full", { absolute: animating })}
+          style={
+            animating
+              ? { ...props, transformOrigin: `${animationVAlign} center` }
+              : { transform: "none" }
+          }
+          className={classNames("w-full h-full", { absolute: animating })}
         >
           {item.key === childKey ? children : item.elem}
         </animated.div>

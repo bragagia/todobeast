@@ -39,15 +39,18 @@ export function PlannerPage() {
         <TaskCreator date={urlDate} />
       </PageHeader>
 
-      <PageContent>
-        <AnimatedTranslate childKey={"planner-day/" + urlDate.toString()}>
+      <AnimatedTranslate
+        childKey={"planner-day/" + urlDate.toString()}
+        animationVAlign="top"
+      >
+        <PageContent>
           <TaskList
             tasks={tasksByDays[urlDate.toString()]}
             autoUncollapseDone={urlDate.isBefore(todayDate)}
             className="mb-32"
           />
-        </AnimatedTranslate>
-      </PageContent>
+        </PageContent>
+      </AnimatedTranslate>
     </PageContainer>
   );
 }

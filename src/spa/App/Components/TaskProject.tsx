@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { useSubscribe } from "replicache-react";
-import { getAllProjects, getProject } from "../../../db/projects";
+import { getAllProjects, getProject, projectInbox } from "../../../db/projects";
 import { TaskType } from "../../../db/tasks";
 import { useReplicache } from "../../ReplicacheProvider";
 import { ProjectName } from "./ProjectName";
@@ -12,7 +12,7 @@ export function TaskProject({ task }: { task: TaskType }) {
 
   const [open, setOpen] = useState(false);
 
-  const project = useSubscribe(rep, getProject(task.projectId), null, [
+  const project = useSubscribe(rep, getProject(task.projectId), projectInbox, [
     rep,
     task,
   ]);

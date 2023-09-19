@@ -924,7 +924,7 @@ export function IconHourglass() {
       fill="currentColor"
       strokeWidth={1.5}
       viewBox="0 0 256 256"
-      className="w-6 h-6"
+      className="w-6 h-6 py-[2px]"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

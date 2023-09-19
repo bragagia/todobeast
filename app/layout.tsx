@@ -6,7 +6,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Todobeast",
-  description: "An app to actually do your todos",
+  description: "Just do your todos.",
 };
 
 export default function RootLayout({
