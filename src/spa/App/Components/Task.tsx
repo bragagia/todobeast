@@ -37,13 +37,13 @@ export function Task({
     <div
       ref={taskRef}
       className={classNames(
-        "group flex flex-row justify-normal py-1 page-padding bg-white hover:bg-gray-50 dark:hover:bg-[#0C111A]",
+        "group flex flex-row justify-normal py-1 px-1 bg-white hover:bg-gray-50 dark:hover:bg-[#0C111A]",
         { "animate-pulse-fast": blinking }
       )}
     >
       <div className="flex flex-row items-center w-full">
         <div
-          className="flex items-center self-stretch w-6 pointer-fine:invisible group-hover:visible text-gray-400 hover:text-gray-600 shrink-0 pl-1"
+          className="flex items-center self-stretch w-6 pointer-fine:invisible group-hover:visible text-gray-400 hover:text-gray-600 shrink-0 justify-center"
           {...dragHandleProps}
         >
           <div className="flex items-center justify-center w-3 h-3">
