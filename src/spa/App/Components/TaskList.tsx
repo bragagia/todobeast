@@ -282,9 +282,12 @@ export function TaskList({
                               key={task.id}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              {...provided.dragHandleProps}
                             >
-                              <Task task={task} mode={mode} />
+                              <Task
+                                task={task}
+                                mode={mode}
+                                dragHandleProps={provided.dragHandleProps}
+                              />
                             </div>
                           )}
                         </Draggable>

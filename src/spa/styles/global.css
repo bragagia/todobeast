@@ -51,7 +51,7 @@ body {
 }
 
 .page-padding {
-  @apply px-2 sm:px-4;
+  @apply px-1 sm:px-2 md:px-3;
 }
 
 .page-container {

@@ -13,9 +13,11 @@ import { TaskTitle } from "./TaskTitle";
 export function Task({
   task,
   mode = "default",
+  dragHandleProps,
 }: {
   task: TaskType;
   mode?: "default" | "priority-peek";
+  dragHandleProps?: any;
 }) {
   const taskRef = useRef<HTMLDivElement>(null);
   const [blinking, setBlinking] = useState(false);
@@ -35,13 +37,18 @@ export function Task({
     <div
       ref={taskRef}
       className={classNames(
-        "flex flex-row justify-normal py-1 page-padding bg-white hover:bg-gray-50 dark:hover:bg-[#0C111A]",
+        "group flex flex-row justify-normal py-1 page-padding bg-white hover:bg-gray-50 dark:hover:bg-[#0C111A]",
         { "animate-pulse-fast": blinking }
       )}
     >
-      <div className="flex flex-row items-center w-full gap-2">
-        <div className="flex items-center justify-center w-3 h-3 text-gray-300">
-          <IconDrag />
+      <div className="flex flex-row items-center w-full">
+        <div
+          className="flex items-center self-stretch w-6 pointer-fine:invisible group-hover:visible text-gray-400 hover:text-gray-600 shrink-0 pl-1"
+          {...dragHandleProps}
+        >
+          <div className="flex items-center justify-center w-3 h-3">
+            <IconDrag />
+          </div>
         </div>
 
         <div className="flex flex-row-reverse items-center w-full gap-2 sm:flex-row">
