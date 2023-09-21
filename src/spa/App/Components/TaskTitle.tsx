@@ -46,6 +46,7 @@ export function TaskTitle({ task }: { task: TaskType }) {
             return {
               Enter: () => {
                 updateTaskTitle(this.editor.getText());
+                this.editor.commands.blur();
                 return true;
               },
             };

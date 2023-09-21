@@ -1,5 +1,5 @@
 {
-  "name": "todo",
+  "name": "todobeast",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -40,6 +40,7 @@
     "match-sorter": "^6.3.1",
     "nanoid": "^5.0.1",
     "next": "^13.4.19",
+    "next-pwa": "^5.6.0",
     "next-themes": "^0.2.1",
     "nightwind": "^1.1.13",
     "pg-promise": "^11.5.4",
@@ -51,6 +52,7 @@
     "replicache": "^13.0.1",
     "replicache-react": "^3.1.0",
     "replicache-transaction": "^0.3.1",
+    "sharp": "^0.32.5",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.2.2"
@@ -62,6 +64,7 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^9.0.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-touch": "^1.0.1"
   }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { DayjsDate } from "../../../utils/PlainDate";
 
-import beastHappy from "../../../../../public/the-beast.png";
+import beastHappy from "../../../../assets/the-beast.png";
 
 export function WeeklyCalendarNavItemBeast({ date }: { date: DayjsDate }) {
   return (

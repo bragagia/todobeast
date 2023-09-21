@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
-import beastHappy from "../../public/the-beast.png";
+import beastHappy from "../assets/the-beast.png";
 
 // LoaderPage will act as a infinite loader if no children, and will act as a smooth transition out of loader if children are provided
 export function LoaderPage({ children }: { children?: ReactNode }) {

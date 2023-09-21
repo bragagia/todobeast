@@ -131,8 +131,9 @@ export function AnimatedTranslate({
   // If animating or if a new child as just been mounted, render transition instead of direct child
   return (
     <div
-      className={classNames("w-full h-full", {
+      className={classNames("w-full", {
         "relative overflow-hidden": animating,
+        "h-full": !animating,
       })}
       style={animating ? { height: `${parentHeight}px` } : {}}
     >
@@ -146,7 +147,10 @@ export function AnimatedTranslate({
               ? { ...props, transformOrigin: `${animationVAlign} center` }
               : { transform: "none" }
           }
-          className={classNames("w-full h-full", { absolute: animating })}
+          className={classNames("w-full", {
+            absolute: animating,
+            "h-full": !animating || item.key !== childKey,
+          })}
         >
           {item.key === childKey ? children : item.elem}
         </animated.div>

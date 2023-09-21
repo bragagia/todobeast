@@ -17,6 +17,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="nightwind">
       <head>
+        <meta name="application-name" content="Todobeast" />
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Todobeast" />
+
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+
         <link rel="icon" href="/favicon.ico" />
 
         <link rel="manifest" href="/site.webmanifest" />
