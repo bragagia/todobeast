@@ -69,13 +69,13 @@ export default function RootLayout({
           `}
         </Script>
 
-        <Script id="register-service-worker">
+        {/* <Script id="register-service-worker">
           {`
             if ("serviceWorker" in navigator) {
               window.navigator.serviceWorker.register("/sw.js");
             }
           `}
-        </Script>
+        </Script> */}
       </head>
 
       <body suppressHydrationWarning>
