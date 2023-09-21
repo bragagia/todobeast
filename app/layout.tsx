@@ -28,7 +28,7 @@ export default function RootLayout({
 
         <link rel="icon" href="/favicon.ico" />
 
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="manifest" href="/manifest.json" />
 
         <link
           rel="apple-touch-icon"

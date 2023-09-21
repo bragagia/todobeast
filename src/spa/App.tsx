@@ -1,14 +1,20 @@
 import "./styles/global.css";
 
 import { ThemeProvider } from "next-themes";
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { AppRouter } from "./AppRouter";
 import { AuthProvider } from "./AuthProvider";
+import { LoaderPage } from "./Loader";
 import { ReplicacheProvider } from "./ReplicacheProvider";
 import { SupabaseProvider } from "./SupabaseProvider";
-import { LoaderPage } from "./Loader";
 
 export default function TodobeastApp() {
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
+  }, []);
+
   return (
     <ThemeProvider
       attribute="class"
