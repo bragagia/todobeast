@@ -25,3 +25,7 @@ yarn-error.log*
 
 # Next
 .next
+
+# Next PWA
+/public/sw.js*
+/public/workbox-*.js*
