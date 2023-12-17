@@ -148,6 +148,8 @@ export function TaskList({
       tasksPerCategory[doneProjectKey] = doneProject;
     }
 
+    console.log(tasksPerCategory);
+
     return tasksPerCategory;
   }, [tasks, dailyViewDate, allProjectsById]);
 
@@ -194,22 +196,22 @@ export function TaskList({
         displayedTasksList,
         {
           projectId: (task) => {
-            if (task.done_at) return doneProjectKey;
-            if (task.orderInDay) return dailyPlanProjectKey;
+            if (!dailyViewDate && task.done_at) return doneProjectKey;
+            if (dailyViewDate && task.orderInDay) return dailyPlanProjectKey;
 
             return task.projectId;
           },
           priority: (task) => {
-            if (task.done_at) return null;
-            if (task.orderInDay) return null;
+            if (!dailyViewDate && task.done_at) return null;
+            if (dailyViewDate && task.orderInDay) return null;
 
             return task.priority;
           },
         },
 
         (item: TaskType) => {
-          if (item.done_at) return 0;
-          if (item.orderInDay) return item.orderInDay;
+          if (!dailyViewDate && item.done_at) return 0;
+          if (dailyViewDate && item.orderInDay) return item.orderInDay;
 
           return item.order;
         },
