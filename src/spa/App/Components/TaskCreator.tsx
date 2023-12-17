@@ -69,6 +69,7 @@ export function TaskCreator({
                   done_at: null,
                   priority: null,
                   duration: null,
+                  orderInDay: null,
                 });
 
                 return this.editor.commands.setContent(null);

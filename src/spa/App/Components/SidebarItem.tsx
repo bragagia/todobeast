@@ -11,7 +11,6 @@ export function SidemenuItem({
   emoji = "",
   chip = "",
   className = "",
-  active,
 }: {
   to: string;
   children: ReactNode;
@@ -21,7 +20,6 @@ export function SidemenuItem({
   emoji?: string;
   chip?: string;
   className?: string;
-  active?: boolean;
 }) {
   return (
     <div className={className}>
@@ -47,7 +45,7 @@ export function SidemenuItem({
           <div className="flex-shrink-0 w-4 text-center">{emoji}</div>
         )}
 
-        <span className="flex-1 ml-3 overflow-hidden font-light whitespace-nowrap text-ellipsis">
+        <span className="flex-1 ml-2 overflow-hidden font-light whitespace-nowrap text-ellipsis">
           {children}
         </span>
 

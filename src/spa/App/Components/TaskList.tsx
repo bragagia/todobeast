@@ -8,7 +8,6 @@ import {
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { useSubscribe } from "replicache-react";
 import { ProjectType, getAllProjects } from "../../../db/projects";
 import { PriorityType, TaskType } from "../../../db/tasks";
@@ -16,8 +15,12 @@ import { UrlProject } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import { IconCollapsed, IconCollapsible } from "../../utils/Icons";
 import { dragAndDropGeneric as dragAndDropMultidropableGeneric } from "../../utils/Orderring";
+import { ListHeader } from "./ListHeader";
 import { ProjectName } from "./ProjectName";
 import { Task } from "./Task";
+
+const doneProjectKey = "done";
+const dailyPlanProjectKey = "dailyPlan";
 
 export function TaskList({
   tasks: uncachedTasks,
@@ -25,12 +28,14 @@ export function TaskList({
   mode = "default",
   className = "",
   autoUncollapseDone = false,
+  dailyViewDate,
 }: {
   tasks: TaskType[];
   hideProjectBar?: boolean;
   mode?: "default" | "priority-peek";
   className?: string;
   autoUncollapseDone?: boolean;
+  dailyViewDate?: string;
 }) {
   const [tasks, setTasks] = useState(uncachedTasks);
   useEffect(() => setTasks(uncachedTasks ?? []), [uncachedTasks]);
@@ -51,69 +56,116 @@ export function TaskList({
     return allProjectsById;
   }, [allProjects]);
 
-  const sortedTasks = useMemo(() => {
+  // tasksPerCategory may or may not contain additional category "done" and "dailyPlan" depending on component input parameters
+  const tasksPerCategory = useMemo(() => {
     if (!allProjectsById || !tasks) return null;
 
-    return tasks.sort((a, b) => {
-      if (!a.done_at && b.done_at) return -1;
-      if (a.done_at && !b.done_at) return 1;
+    let tasksPerCategory: {
+      [key: string]: TaskType[];
+    } = {};
 
-      if (
-        allProjectsById[a.projectId].order < allProjectsById[b.projectId].order
-      )
-        return -1;
-      if (
-        allProjectsById[a.projectId].order > allProjectsById[b.projectId].order
-      )
-        return 1;
+    let remainingTasks = tasks;
 
-      const priorityOrder: PriorityType[] = [
-        null,
-        "low",
-        "medium",
-        "high",
-        "urgent",
-      ];
+    // Daily view category
+    if (dailyViewDate) {
+      let dailyPlanProject: TaskType[] = []; // We always want dailyPlan, even if empty
 
-      if (priorityOrder.indexOf(a.priority) < priorityOrder.indexOf(b.priority))
-        return 1;
-      if (priorityOrder.indexOf(a.priority) > priorityOrder.indexOf(b.priority))
-        return -1;
+      remainingTasks = remainingTasks.filter((task) => {
+        // If a task has an orderInDay but its date is not the current dailyViewDate, it means it is late and need to be displayed in project list
+        if (task.orderInDay && task.date === dailyViewDate) {
+          dailyPlanProject.push(task);
+          return false;
+        }
 
-      return a.order - b.order;
-    });
-  }, [allProjectsById, tasks]);
+        return true;
+      });
 
-  // tasksPerProject also include done tasks under a virtual project "done"
-  const doneProjectKey = "done";
-  const sortedTasksPerProjectAndDone = useMemo(() => {
-    if (!sortedTasks) return null;
+      dailyPlanProject = dailyPlanProject.sort((a, b) => {
+        if (a.orderInDay && b.orderInDay) return a.orderInDay - b.orderInDay;
 
-    return sortedTasks.reduce((prev, current, i, arr) => {
-      let projectId = current.done_at ? doneProjectKey : current.projectId;
+        return 0;
+      });
 
-      (prev[projectId] ??= []).push(current);
+      tasksPerCategory[dailyPlanProjectKey] = dailyPlanProject;
+    }
 
-      return prev;
-    }, {} as { [key: string]: TaskType[] });
-  }, [sortedTasks]);
+    // Done category
+    const hasSeparateDoneCategory = !dailyViewDate;
+    let doneProject: TaskType[] = [];
+    if (hasSeparateDoneCategory) {
+      remainingTasks = remainingTasks.filter((task) => {
+        if (task.done_at) {
+          doneProject.push(task);
+          return false;
+        }
+
+        return true;
+      });
+
+      doneProject = doneProject.sort((a, b) =>
+        dayjs(a.done_at).isBefore(b.done_at) ? 1 : -1
+      );
+    }
+
+    // Project categories
+    remainingTasks
+      .sort((a, b) => {
+        if (
+          allProjectsById[a.projectId].order !==
+          allProjectsById[b.projectId].order
+        ) {
+          return (
+            allProjectsById[a.projectId].order -
+            allProjectsById[b.projectId].order
+          );
+        }
+
+        const priorityOrder: PriorityType[] = [
+          null,
+          "low",
+          "medium",
+          "high",
+          "urgent",
+        ];
+
+        if (
+          priorityOrder.indexOf(a.priority) < priorityOrder.indexOf(b.priority)
+        )
+          return 1;
+        if (
+          priorityOrder.indexOf(a.priority) > priorityOrder.indexOf(b.priority)
+        )
+          return -1;
+
+        return a.order - b.order;
+      })
+      .forEach((task) => {
+        (tasksPerCategory[task.projectId] ??= []).push(task);
+      });
+
+    // We had the done project at the end to display it below everyting else
+    if (doneProject.length > 0) {
+      tasksPerCategory[doneProjectKey] = doneProject;
+    }
+
+    return tasksPerCategory;
+  }, [tasks, dailyViewDate, allProjectsById]);
 
   const displayedTasksList = useMemo(() => {
-    if (!sortedTasksPerProjectAndDone) return null;
+    if (!tasksPerCategory) return null;
 
-    if (mode === "default") return sortedTasksPerProjectAndDone;
+    if (mode === "default") return tasksPerCategory;
 
-    // mode = "priority-peek"
-
+    // if mode = "priority-peek"
     let displayedList: { [key: string]: TaskType[] } = {};
-    Object.keys(sortedTasksPerProjectAndDone)
+    Object.keys(tasksPerCategory)
       .filter((key) => key !== doneProjectKey)
       .forEach((key) => {
-        displayedList[key] = sortedTasksPerProjectAndDone[key].slice(0, 4);
+        displayedList[key] = tasksPerCategory[key].slice(0, 4);
       });
 
     return displayedList;
-  }, [mode, sortedTasksPerProjectAndDone]);
+  }, [mode, tasksPerCategory]);
 
   const [doneCollapsed, setDoneCollapsed] = useState(true);
 
@@ -141,31 +193,56 @@ export function TaskList({
         { source, destination },
         displayedTasksList,
         {
-          projectId: (task) => task.projectId,
-          priority: (task) => task.priority,
+          projectId: (task) => {
+            if (task.done_at) return doneProjectKey;
+            if (task.orderInDay) return dailyPlanProjectKey;
+
+            return task.projectId;
+          },
+          priority: (task) => {
+            if (task.done_at) return null;
+            if (task.orderInDay) return null;
+
+            return task.priority;
+          },
         },
+
+        (item: TaskType) => {
+          if (item.done_at) return 0;
+          if (item.orderInDay) return item.orderInDay;
+
+          return item.order;
+        },
+
         (source, destination, sourceItem, newOrder, newSubvalues) => {
+          // We do not allow removing a task from daily plan with d&d
+          if (
+            source.droppableId === dailyPlanProjectKey &&
+            destination.droppableId !== dailyPlanProjectKey
+          )
+            return;
+
+          // We do not allow moving in/out done
+          if (
+            source.droppableId === doneProjectKey ||
+            destination.droppableId === doneProjectKey
+          )
+            return;
+
           // We create the task update instruction with only the required valeus
           let taskUpdate: Required<Pick<TaskType, "id">> & Partial<TaskType> = {
             id: sourceItem.id,
-            order: newOrder,
           };
 
-          // If task is moving from not done to the done bucket, we don't update project and priority (but we do if moving from done to done)
-          if (
-            source.droppableId !== doneProjectKey &&
-            destination.droppableId === doneProjectKey
-          ) {
-            taskUpdate = { ...taskUpdate, done_at: dayjs().toString() };
-          } else if (
-            source.droppableId === doneProjectKey &&
-            destination.droppableId !== doneProjectKey
-          ) {
-            taskUpdate = { ...taskUpdate, done_at: null };
-          }
+          if (destination.droppableId === dailyPlanProjectKey) {
+            taskUpdate = {
+              ...taskUpdate,
+              orderInDay: newOrder,
+              date: dailyViewDate,
+            };
+          } else {
+            taskUpdate = { ...taskUpdate, order: newOrder };
 
-          // We do not want to change projectId and priority if moving inside the done category
-          if (destination.droppableId !== doneProjectKey) {
             if (newSubvalues["projectId"] !== sourceItem.projectId) {
               taskUpdate = {
                 ...taskUpdate,
@@ -192,7 +269,7 @@ export function TaskList({
         }
       );
     },
-    [displayedTasksList, tasks, rep]
+    [displayedTasksList, tasks, rep, dailyViewDate]
   );
 
   if (!allProjectsById || !displayedTasksList) {
@@ -210,33 +287,33 @@ export function TaskList({
   return (
     <div className={classNames(className)}>
       <DragDropContext onDragEnd={onDragTask}>
-        {Object.keys(displayedTasksList).map((projectOrDoneId) => {
-          return (
-            <div key={"project-container/" + projectOrDoneId}>
-              {!hideProjectBar && projectOrDoneId !== doneProjectKey ? (
-                <Link
-                  className="py-1 page-padding bg-gray-100 flex flex-row items-center sticky top-0 z-10"
-                  to={UrlProject(
-                    projectOrDoneId,
-                    allProjectsById[projectOrDoneId].name
-                  )}
-                >
-                  {/* TODO: Sticky doesn't work because of page header */}
-                  <span>
+        <div>
+          {Object.keys(displayedTasksList).map((projectOrDoneId) => {
+            const isDailyPlan = projectOrDoneId === dailyPlanProjectKey;
+            const isDoneProject = projectOrDoneId === doneProjectKey;
+            const isStandardProject = !isDailyPlan && !isDoneProject;
+
+            const isCollapsed = isDoneProject && doneCollapsed;
+
+            return (
+              <div key={"project-container/" + projectOrDoneId}>
+                {!hideProjectBar && isStandardProject ? (
+                  <ListHeader
+                    to={UrlProject(
+                      projectOrDoneId,
+                      allProjectsById[projectOrDoneId].name
+                    )}
+                    chip={displayedTasksList[projectOrDoneId].length}
+                  >
                     <ProjectName
                       project={allProjectsById[projectOrDoneId]}
-                      className="text-sm ml-1 gap-2"
+                      className="gap-2"
                       iconClassName="w-4 h-4"
                     />
-                  </span>
-                  <span className="ml-2 text-sm font-light text-gray-400">
-                    {displayedTasksList[projectOrDoneId].length}
-                  </span>
-                </Link>
-              ) : null}
+                  </ListHeader>
+                ) : null}
 
-              {projectOrDoneId === doneProjectKey ? (
-                <>
+                {isDoneProject && (
                   <button
                     className={classNames(
                       "py-1 page-padding flex flex-row mt-3 items-center text-gray-500 text-sm w-full sticky top-0 z-10",
@@ -260,46 +337,64 @@ export function TaskList({
                       {displayedTasksList[projectOrDoneId].length}
                     </span>
                   </button>
-                </>
-              ) : null}
+                )}
 
-              {projectOrDoneId !== doneProjectKey || !doneCollapsed ? (
-                <Droppable key={projectOrDoneId} droppableId={projectOrDoneId}>
-                  {(provided) => (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      className="pb-6"
-                    >
-                      {displayedTasksList[projectOrDoneId].map((task, id) => (
-                        <Draggable
-                          key={task.id}
-                          draggableId={task.id}
-                          index={id}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              key={task.id}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                            >
-                              <Task
-                                task={task}
-                                mode={mode}
-                                dragHandleProps={provided.dragHandleProps}
-                              />
+                {isDailyPlan && <ListHeader>Daily plan</ListHeader>}
+
+                {!isCollapsed ? (
+                  <Droppable
+                    key={projectOrDoneId}
+                    droppableId={projectOrDoneId}
+                  >
+                    {(provided) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className="pb-6"
+                      >
+                        {isDailyPlan &&
+                          displayedTasksList[dailyPlanProjectKey].length ===
+                            0 && (
+                            <div className="h-16 p-2">
+                              <div className="rounded-xl bg-gray-50 flex flex-row items-center justify-center h-full">
+                                <p className="text-sm font-medium text-gray-400">
+                                  Drag your tasks here in the order you plan to
+                                  do them
+                                </p>
+                              </div>
                             </div>
                           )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              ) : null}
-            </div>
-          );
-        })}
+
+                        {displayedTasksList[projectOrDoneId].map((task, id) => (
+                          <Draggable
+                            key={task.id}
+                            draggableId={task.id}
+                            index={id}
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                key={task.id}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                              >
+                                <Task
+                                  task={task}
+                                  mode={mode}
+                                  dragHandleProps={provided.dragHandleProps}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
       </DragDropContext>
     </div>
   );

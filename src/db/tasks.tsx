@@ -35,6 +35,7 @@ export type TaskType = {
   readonly priority: PriorityType;
   readonly duration: DurationType;
   readonly order: number;
+  readonly orderInDay: number | null;
 };
 
 export const tasksMutators = {

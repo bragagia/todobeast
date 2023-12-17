@@ -99,7 +99,8 @@ export function SidebarContent() {
       let newOrder = calcNewOrder(
         draggedId < destinationId,
         destinationId,
-        allNonSpecialProjects
+        allNonSpecialProjects,
+        (item: ProjectType) => item.order
       );
 
       const projectUpdate = {
@@ -146,8 +147,8 @@ export function SidebarContent() {
         <SidemenuItem
           to={UrlNavLinkPlanner()}
           Icon={IconCalendar}
-          iconColor="text-green-600"
-          active
+          // iconColor="text-green-600"
+          iconColor="text-gray-600"
         >
           Today
         </SidemenuItem>
@@ -155,8 +156,8 @@ export function SidebarContent() {
         <SidemenuItem
           to={UrlPriorityPeek()}
           Icon={IconBolt}
-          iconColor="text-purple-600"
-          active
+          // iconColor="text-purple-600"
+          iconColor="text-gray-600"
         >
           Priority Peek
         </SidemenuItem>

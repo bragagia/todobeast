@@ -78,6 +78,7 @@ export function TaskDate({
       await rep.mutate.taskUpdate({
         id: task.id,
         date: date ? new DayjsDate(date.toISOString()).toString() : null,
+        orderInDay: null,
       });
     },
     [task, rep]
@@ -90,6 +91,17 @@ export function TaskDate({
       setTaskDate(today.toDate());
     }
   }, [open, mode, today, setTaskDate]);
+
+  // const handleTimeUpdated = async (ev: ChangeEvent<HTMLInputElement>) => {
+  //   console.log(
+  //     ev.target.value ? dayjs(ev.target.value).toString() : "No time"
+  //   );
+  //   return;
+  //   await rep.mutate.taskUpdate({
+  //     id: task.id,
+  //     time: ev.target.value,
+  //   });
+  // };
 
   return (
     <Popover open={open} onOpenChange={handleButtonClick}>
@@ -208,6 +220,28 @@ export function TaskDate({
               new DayjsDate(date.toISOString()).format("ddd"),
           }}
         />
+
+        {/*
+        <div className="border-b border-gray-200 w-full my-1"></div>
+
+        <div className="pl-2 pr-1 w-full flex flew-row gap-1">
+          <input
+            aria-label="Time"
+            type="time"
+            className="w-full bg-transparent outline-none"
+            value={task.time || undefined}
+            onChange={handleTimeUpdated}
+          />
+
+          <button
+            className="mx-1 rounded flex flex-row items-center justify-center hover:bg-gray-100"
+            onClick={() => setTaskDate(today.toDate())}
+          >
+            <div className="flex items-center h-5 w-5">
+              <IconX />
+            </div>
+          </button>
+        </div> */}
       </PopoverContent>
     </Popover>
   );

@@ -2,26 +2,28 @@ import { DraggableLocation } from "@hello-pangea/dnd";
 
 export const OrderIncrement = 1000;
 
-export type Orderable = { order: number };
-
-export function calcNewOrder<T extends Orderable>(
+export function calcNewOrder<T>(
   sourceIsMovingDestinationDown: boolean,
   destinationId: number,
-  bucket: T[]
+  bucket: T[],
+  getOrder: (item: T) => number
 ) {
+  // Moving to empty bucket
+  if (bucket.length === 0) return OrderIncrement;
+
   if (sourceIsMovingDestinationDown) destinationId += 1;
 
   // If destination is first item, we simulate a fake order of destination / 4 instead of zero to reduce the tendency of orders toward zero
   let prevItemOrder =
     destinationId == 0
-      ? bucket[destinationId].order / 4
-      : bucket[destinationId - 1].order;
+      ? getOrder(bucket[destinationId]) / 4
+      : getOrder(bucket[destinationId - 1]);
 
   // If destination is last item, we generate a fake order of 2 times the increment for the same reason
   let nextItemOrder =
     destinationId == bucket.length
-      ? bucket[bucket.length - 1].order + 2 * OrderIncrement
-      : bucket[destinationId].order;
+      ? getOrder(bucket[bucket.length - 1]) + 2 * OrderIncrement
+      : getOrder(bucket[destinationId]);
 
   let newOrder = (prevItemOrder + nextItemOrder) / 2;
 
@@ -37,7 +39,7 @@ export function calcNewOrder<T extends Orderable>(
 // The use case is for when you have multiple list (for ex.: categories) of the same type of items, and that
 // inside a single list, those items are themselves sorted by some criteria (subvalues), then by an order number
 // dragAndDropGeneric will do the all the hard calculations and call an itemUpdater with the new order and subvalues
-export function dragAndDropGeneric<T extends Orderable>(
+export function dragAndDropGeneric<T>(
   {
     source,
     destination,
@@ -47,6 +49,7 @@ export function dragAndDropGeneric<T extends Orderable>(
   },
   droppablesData: { [key: string]: T[] },
   subValueAccessors: { [key: string]: (arg0: T) => any },
+  getOrder: (item: T) => number,
   itemUpdater: (
     source: DraggableLocation,
     destination: DraggableLocation,
@@ -87,7 +90,7 @@ export function dragAndDropGeneric<T extends Orderable>(
     : destination.index - 1;
 
   // If this is the first or last item of dropableData, we consider englobing task to be = destination task
-  let itemEnglobingDestination: T;
+  let itemEnglobingDestination: T | undefined;
   if (
     itemEnglobingDestinationIndex <= 0 ||
     itemEnglobingDestinationIndex >= droppablesDataDestination.length
@@ -107,6 +110,7 @@ export function dragAndDropGeneric<T extends Orderable>(
     // We deduce the subvalue to which we must assign the task, we try to preserve original subvalue if possible
     newSubValues[subValueKey] = getValue(sourceItem);
     if (
+      itemEnglobingDestination &&
       getValue(itemEnglobingDestination) !== getValue(sourceItem) &&
       getValue(destinationItem) !== getValue(sourceItem)
     ) {
@@ -151,7 +155,8 @@ export function dragAndDropGeneric<T extends Orderable>(
   let newOrder = calcNewOrder(
     sourceIsMovingDestinationDown,
     inBucketDestinationIndex,
-    destinationBucket
+    destinationBucket,
+    getOrder
   );
 
   itemUpdater(source, destination, sourceItem, newOrder, newSubValues);

@@ -47,7 +47,7 @@ export function PlannerPage() {
           <TaskList
             tasks={tasksByDays[urlDate.toString()]}
             autoUncollapseDone={urlDate.isBefore(todayDate)}
-            className="mb-32"
+            dailyViewDate={urlDate.toString()}
           />
         </PageContent>
       </AnimatedTranslate>
