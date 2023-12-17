@@ -38,7 +38,8 @@ export function Task({
       ref={taskRef}
       className={classNames(
         "group flex flex-row justify-normal py-1 px-1 bg-white hover:bg-gray-50 dark:hover:bg-[#0C111A]",
-        { "animate-pulse-fast": blinking }
+        { "animate-pulse-fast": blinking },
+        { "opacity-30 hover:opacity-40": task.done_at }
       )}
     >
       <div className="flex flex-row items-center w-full">

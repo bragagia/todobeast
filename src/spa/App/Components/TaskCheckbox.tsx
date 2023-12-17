@@ -22,14 +22,14 @@ export function TaskCheckbox({ task }: { task: TaskType }) {
       <div
         className={classNames(
           "w-5 h-5 self-strech border rounded-full p-1 flex items-center justify-center mr-2 sm:mr-0",
-          { "bg-gray-600 text-white border-gray-600": task?.done_at },
+          { "text-black border-black": task?.done_at },
           {
             "border-gray-800 text-opacity-0 hover:text-opacity-100 text-gray-500":
               !task?.done_at,
           }
         )}
       >
-        <div className="flex items-center justify-center w-4 h-4">
+        <div className="flex items-center justify-center w-3 h-3">
           <IconCheck />
         </div>
       </div>
