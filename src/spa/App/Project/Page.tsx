@@ -13,6 +13,8 @@ import { getTasksOfProject } from "../../../db/tasks";
 import { UrlPlanner } from "../../AppRouter";
 import { useReplicache } from "../../ReplicacheProvider";
 import { IconTrash, projectIconMap } from "../../utils/Icons";
+import { PageContainer } from "../Components/PageContainer";
+import { PageContent } from "../Components/PageContent";
 import { PageHeader } from "../Components/PageHeader";
 import { ProjectIcon } from "../Components/ProjectIcon";
 import { TaskCreator } from "../Components/TaskCreator";
@@ -22,8 +24,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../Components/ui/popover";
-import { PageContainer } from "../Components/PageContainer";
-import { PageContent } from "../Components/PageContent";
 
 export const ProjectIconColors = [
   "text-black",
@@ -177,7 +177,7 @@ export function ProjectPage() {
   return (
     <PageContainer>
       <PageHeader>
-        <div className="flex flex-row items-center justify-normal w-full py-3 page-padding">
+        <div className="flex flex-row items-center justify-normal w-full py-3 page-padding group">
           <div className="flex flex-row items-center">
             <Popover
               open={iconPickerOpen}
