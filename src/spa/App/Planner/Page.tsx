@@ -42,8 +42,11 @@ export function PlannerPage() {
       <AnimatedTranslate
         childKey={"planner-day/" + urlDate.toString()}
         animationVAlign="top"
+        className="overflow-scroll"
       >
-        <PageContent>
+        <PageContent
+        // Not so sure about using that component here because the main point is the overflow scroll that is on the animated translate
+        >
           <TaskList
             tasks={tasksByDays[urlDate.toString()]}
             autoUncollapseDone={urlDate.isBefore(todayDate)}

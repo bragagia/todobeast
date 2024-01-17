@@ -9,10 +9,12 @@ export function AnimatedTranslate({
   children,
   childKey,
   animationVAlign = "center",
+  className,
 }: {
   children: JSX.Element;
   childKey: string;
   animationVAlign?: "bottom" | "top" | "center";
+  className?: string;
 }) {
   //
   const [currentChild, setCurrentChild] = useState({
@@ -131,10 +133,14 @@ export function AnimatedTranslate({
   // If animating or if a new child as just been mounted, render transition instead of direct child
   return (
     <div
-      className={classNames("w-full", {
-        "relative overflow-hidden": animating,
-        "h-full": !animating,
-      })}
+      className={classNames(
+        "w-full",
+        {
+          "relative overflow-hidden": animating,
+          "h-full": !animating,
+        },
+        className
+      )}
       style={animating ? { height: `${parentHeight}px` } : {}}
     >
       {transitions((props, item, state) => (
